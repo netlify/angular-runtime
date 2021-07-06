@@ -1,0 +1,53 @@
+{
+  "name": "netlify-plugin-angular-serverless",
+  "version": "0.0.1",
+  "description": "Netlify Build plugin Angular Serverless - Run Angular Universal seamlessly on Netlify.",
+  "main": "src/index.js",
+  "files": [
+    "src/**/*.js",
+    "manifest.yml"
+  ],
+  "scripts": {
+    "format": "run-s format:check-fix:*",
+    "format:ci": "run-s format:check:*",
+    "format:check-fix:lint": "run-e format:check:lint format:fix:lint",
+    "format:check:lint": "cross-env-shell eslint $npm_package_config_eslint",
+    "format:fix:lint": "cross-env-shell eslint --fix $npm_package_config_eslint",
+    "format:check-fix:prettier": "run-e format:check:prettier format:fix:prettier",
+    "format:check:prettier": "cross-env-shell prettier --check $npm_package_config_prettier",
+    "format:fix:prettier": "cross-env-shell prettier --write $npm_package_config_prettier"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/netlify/netlify-plugin-angular-serverless.git"
+  },
+  "author": "@lindsaylevine",
+  "license": "ISC",
+  "bugs": {
+    "url": "https://github.com/netlify/netlify-plugin-angular-serverless/issues"
+  },
+  "homepage": "https://github.com/netlify/netlify-plugin-angular-serverless#readme",
+  "keywords": [
+    "netlify-plugin",
+    "netlify",
+    "angular"
+  ],
+  "config": {
+    "eslint": "--cache --format=codeframe --max-warnings=0 \"{src,scripts,tests,.github}/**/*.{js,md,html}\" \"*.{js,md,html}\" \".*.{js,md,html}\"",
+    "prettier": "--loglevel=warn \"{src,scripts,tests,.github}/**/*.{js,md,yml,json,html}\" \"*.{js,yml,json,html}\" \".*.{js,yml,json,html}\" \"!package-lock.json\""
+  },
+  "husky": {
+    "hooks": {
+      "commit-msg": "commitlint -E HUSKY_GIT_PARAMS",
+      "pre-push": "npm run format"
+    }
+  },
+  "engines": {
+    "node": ">=12.18.0"
+  },
+  "devDependencies": {
+    "@netlify/eslint-config-node": "^3.1.7",
+    "husky": "^4.3.0",
+    "prettier": "^2.1.2"
+  }
+}
