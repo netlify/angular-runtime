@@ -1,8 +1,5 @@
 module.exports = {
-  async onPreBuild({ }) {
-  },
-  async onBuild({ }) {
-  },
-  async onPostBuild({ }) {
-  },
+  async onPreBuild() {},
+  async onBuild() {},
+  async onPostBuild() {},
 }
