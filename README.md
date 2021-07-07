@@ -22,12 +22,12 @@ This build plugin is a utility for supporting Angular Universal on Netlify. This
 TBD
 ```
 
-2. From your project's base directory, add this plugin to `devDependencies` in
+2. From your project's base directory, add this plugin to `dependencies` in
    `package.json`.
 
 ```bash
-# yarn add -D @netlify/plugin-angular-serverless
-npm install -D @netlify/plugin-angular-serverless
+# yarn add --save @netlify/plugin-angular-serverless
+npm install --save @netlify/plugin-angular-serverless
 ```
 
 Read more about
