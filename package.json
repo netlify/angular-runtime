@@ -47,7 +47,16 @@
   },
   "devDependencies": {
     "@netlify/eslint-config-node": "^3.1.7",
+    "@types/node": "^16.3.1",
     "husky": "^4.3.0",
     "prettier": "^2.1.2"
+  },
+  "dependencies": {
+    "@angular/common": "^12.1.1",
+    "@netlify/functions": "^0.7.2",
+    "aws-serverless-express": "^3.4.0",
+    "chalk": "^2.4.2",
+    "fs-extra": "^9.1.0",
+    "zone.js": "^0.11.4"
   }
 }

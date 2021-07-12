@@ -2,7 +2,7 @@
 
 # Essential Angular Serverless Plugin
 
-This build plugin is a utility for supporting Angular Universal on Netlify. This plugin will be installed by running a Netlify-specific Angular schematic, but it can also be installed manually.
+This build plugin is a utility for supporting Angular Universal on Netlify. This plugin should be installed by running a Netlify-specific Angular schematic.
 
 ## Table of Contents
 
@@ -11,25 +11,22 @@ This build plugin is a utility for supporting Angular Universal on Netlify. This
 ## Installation and Configuration
 
 ### Angular Schematic
-- TBD
-
-### Manual Installation
-
-1. Create a `netlify.toml` in the root of your project. Your file should include
-   the plugins section below:
-
-```toml
-TBD
-```
-
-2. From your project's base directory, add this plugin to `dependencies` in
-   `package.json`.
 
 ```bash
-# yarn add --save @netlify/plugin-angular-serverless
-npm install --save @netlify/plugin-angular-serverless
+ng add netlify-schematics
 ```
 
-Read more about
-[file-based plugin installation](https://docs.netlify.com/configure-builds/build-plugins/#file-based-installation)
-in our docs.
+```bash
+ng generate netlify-schematics:netlify-serverless`
+```
+
+The schematic commands will create a `netlify.toml` in the root of your project, if it doesn't already exist. Your file should include the correct build command, publish directory, and plugins section below. Note: the build command requires you to include your custom project name (as indicated in your angular.json) where designated below:
+
+```toml
+[build]
+  command = "ng build --configuration production && ng run {projectName}:serverless:production"
+  publish = "dist/netlify-serverless/browser"
+
+[[plugins]]
+  package = "@netlify/plugin-angular-serverless"
+```
