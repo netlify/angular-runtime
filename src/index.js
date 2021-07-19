@@ -1,4 +1,5 @@
 const addAngularServerlessFiles = require('./helpers/addAngularServerlessFiles')
+const copyProjectDist = require('./helpers/copyProjectDist')
 const getAngularJson = require('./helpers/getAngularJson')
 const setUpBuilderFunction = require('./helpers/setUpBuilderFunction')
 const setUpFunctionsConfig = require('./helpers/setUpFunctionsConfig')
@@ -8,27 +9,29 @@ const validateNetlifyConfig = require('./helpers/validateNetlifyConfig')
 const validateSchematicWasRun = require('./helpers/validateSchematicWasRun')
 
 // Currently unsupported:
-// - monorepo structure
-// - angular.json with multiple projects (or project that isnt the default)
+// - monorepo structures
 
 module.exports = {
-  async onPreBuild({ netlifyConfig, utils }) {
+  async onPreBuild({ netlifyConfig, utils, inputs }) {
     const { failBuild } = utils.build
+    const { projectName } = inputs
 
     validateAngularUniversalUsage({ failBuild })
 
     const angularJson = getAngularJson({ failBuild })
 
-    validateSchematicWasRun({ failBuild, angularJson })
+    validateSchematicWasRun({ failBuild, angularJson, projectName })
 
-    validateNetlifyConfig({ failBuild, netlifyConfig, angularJson })
+    validateNetlifyConfig({ failBuild, netlifyConfig, projectName })
+
+    addAngularServerlessFiles()
   },
-  async onBuild({ netlifyConfig, constants: { FUNCTIONS_SRC } }) {
+  async onBuild({ netlifyConfig, constants: { FUNCTIONS_SRC = 'netlify/functions' }, inputs }) {
+    copyProjectDist({ projectName: inputs.projectName })
+
     setUpRedirects({ netlifyConfig })
 
     setUpFunctionsConfig({ netlifyConfig })
-
-    addAngularServerlessFiles()
 
     setUpBuilderFunction({ FUNCTIONS_SRC })
   },

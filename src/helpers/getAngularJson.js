@@ -1,17 +1,18 @@
 const { existsSync, readFileSync } = require('fs')
+const path = require('path')
 
 // Get contents of project's angular.json file
 const getAngularJson = function ({ failBuild }) {
-  if (!existsSync('/angular.json')) {
+  const siteRoot = process.cwd()
+  if (!existsSync(path.join(siteRoot, 'angular.json'))) {
     return failBuild(`No angular.json found at project root`)
-  } else {
-    try {
-      const angularJsonFile = readFileSync('/angular.json', 'utf-8')
-      const angularJson = JSON.parse(angularJsonFile)
-      return angularJson
-    } catch (e) {
-      return failBuild(`Could not parse contents of angular.json`)
-    }
+  }
+  try {
+    const angularJsonFile = readFileSync(path.join(siteRoot, 'angular.json'), 'utf-8')
+    const angularJson = JSON.parse(angularJsonFile)
+    return angularJson
+  } catch (error) {
+    return failBuild(`Could not parse contents of angular.json`)
   }
 }
 

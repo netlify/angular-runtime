@@ -1,2 +1,4 @@
-name: 'netlify-plugin-angular-serverless'
-inputs: []
+name: 'netlify-plugin-angular-universal'
+inputs:
+  - name: projectName
+    description: The Angular project name as defined in angular.json

@@ -1,11 +1,12 @@
 // Modify [functions] of netlify config
 const setUpFunctionsConfig = function ({ netlifyConfig }) {
-  // TO-DO: is this supported by new config changes or does this need to be manual
-  // if manual maybe it should be done via schematic
-
-  // [functions]
-  // included_files=["dist/angular-bfdx/browser/index.html"]
-  // node_bundler="esbuild"
+  // netlifyConfig.functions.node_bundler = 'esbuild'
+  // const includedDist = 'dist/netlify-serverless'
+  // if (Array.isArray(netlifyConfig.functions.included_files)) {
+  //   netlifyConfig.functions.included_files.push(includedDist)
+  // } else {
+  //   netlifyConfig.functions.included_files = [includedDist]
+  // }
 }
 
 module.exports = setUpFunctionsConfig

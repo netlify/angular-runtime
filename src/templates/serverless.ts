@@ -17,6 +17,10 @@ const indexHtml = existsSync(join(distFolder, 'index.original.html'))
   ? 'index.original.html'
   : 'index'
 
+  console.log('TESTING TESTING TESTING TESTING')
+  console.log({ rootFolder, distFolder, indexHtml, cwd: process.cwd() })
+  console.log('EXISTS', existsSync(join(distFolder, 'index.html')))
+
 // Our Universal express-engine (found @ https://github.com/angular/universal/tree/master/modules/express-engine)
 app.engine(
   'html',
@@ -30,7 +34,6 @@ app.set('views', distFolder)
 
 // All regular routes use the Universal engine
 app.get('*', (req, res) => {
-  console.log({ req })
   res.render(
     indexHtml,
     {
