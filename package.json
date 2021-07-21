@@ -1,7 +1,7 @@
 {
-  "name": "netlify-plugin-angular-serverless",
+  "name": "netlify-plugin-angular-universal",
   "version": "0.0.1",
-  "description": "Netlify Build plugin Angular Serverless - Run Angular Universal seamlessly on Netlify.",
+  "description": "Netlify Build plugin Angular Universal - Run Angular Universal seamlessly on Netlify.",
   "main": "src/index.js",
   "files": [
     "src/**/*.js",
@@ -19,14 +19,14 @@
   },
   "repository": {
     "type": "git",
-    "url": "git+https://github.com/netlify/netlify-plugin-angular-serverless.git"
+    "url": "git+https://github.com/netlify/netlify-plugin-angular-universal.git"
   },
   "author": "@lindsaylevine",
   "license": "ISC",
   "bugs": {
-    "url": "https://github.com/netlify/netlify-plugin-angular-serverless/issues"
+    "url": "https://github.com/netlify/netlify-plugin-angular-universal/issues"
   },
-  "homepage": "https://github.com/netlify/netlify-plugin-angular-serverless#readme",
+  "homepage": "https://github.com/netlify/netlify-plugin-angular-universal#readme",
   "keywords": [
     "netlify-plugin",
     "netlify",
