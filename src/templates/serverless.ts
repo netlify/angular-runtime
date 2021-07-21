@@ -17,10 +17,6 @@ const indexHtml = existsSync(join(distFolder, 'index.original.html'))
   ? 'index.original.html'
   : 'index'
 
-  console.log('TESTING TESTING TESTING TESTING')
-  console.log({ rootFolder, distFolder, indexHtml, cwd: process.cwd() })
-  console.log('EXISTS', existsSync(join(distFolder, 'index.html')))
-
 // Our Universal express-engine (found @ https://github.com/angular/universal/tree/master/modules/express-engine)
 app.engine(
   'html',
@@ -40,20 +36,6 @@ app.get('*', (req, res) => {
       res,
       req,
       providers: [{ provide: APP_BASE_HREF, useValue: req.baseUrl }],
-    },
-    (err: Error, html: string) => {
-      console.log({ err });
-      res
-        .status(html ? 200 : 500)
-        .send(
-          html +
-            `<!--${process.cwd()} ${readdirSync(process.cwd())} ${
-              existsSync(distFolder)
-                ? readdirSync(distFolder)
-                : distFolder + `does not exist`
-            } -->` ||
-            err.message + JSON.stringify(process.env) + ' cwd ' + process.cwd()
-        )
     }
   )
 })

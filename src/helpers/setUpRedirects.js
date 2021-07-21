@@ -6,7 +6,7 @@ const setUpRedirects = function ({ netlifyConfig }) {
   }
   netlifyConfig.redirects.push({
     from: '/*',
-    to: '/.netlify/functions/angular_builder',
+    to: '/.netlify/functions/angular-builder',
     status: '200',
   })
 }
