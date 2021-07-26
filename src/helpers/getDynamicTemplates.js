@@ -1,10 +1,11 @@
-const getAngularBuilder = (projectName) => `
+const getAngularBuilder = ({ functionServerPath }) => `
   const { builder } = require('@netlify/functions')
   const awsServerlessExpress = require('aws-serverless-express')
   const awsServerlessExpressMiddleware = require('aws-serverless-express/middleware')
 
   // eslint-disable-next-line node/no-missing-require, node/no-unpublished-require
-  const server = require('../../dist/${projectName}/serverless/main')
+
+  const server = require('${functionServerPath}')
 
   // makes event and context available to app
   server.app.use(awsServerlessExpressMiddleware.eventContext())
@@ -16,7 +17,7 @@ const getAngularBuilder = (projectName) => `
   exports.handler = builder(handler)
 `
 
-const getServerlessTs = (projectName) => `
+const getServerlessTs = ({ projectName, siteRoot }) => `
   import 'zone.js/dist/zone-node'
 
   import { ngExpressEngine } from '@nguniversal/express-engine'
@@ -28,9 +29,9 @@ const getServerlessTs = (projectName) => `
   import { existsSync, readdirSync } from 'fs'
 
   export const app = express()
-  const rootFolder = existsSync(join(process.cwd(), 'dist'))
-  ? process.cwd()
-  : join(process.cwd(), 'src')
+  const rootFolder = existsSync(join('${siteRoot}', 'dist'))
+  ? '${siteRoot}'
+  : join('${siteRoot}', 'src')
   const distFolder = join(rootFolder, 'dist/${projectName}/browser')
   const indexHtml = existsSync(join(distFolder, 'index.original.html'))
   ? 'index.original.html'

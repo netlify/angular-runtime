@@ -1,6 +1,8 @@
 [build]
-  command = "npm run build:sls"
-  publish = "dist/angular-bfdx/browser"
+command = "npm run build:demo"
+functions = "demo/netlify/functions"
+publish = "demo/dist/angular-bfdx/browser"
+base="."
 
 # TO-DO: remove after cli redirect fix is out https://github.com/netlify/cli/pull/2920
 # any additional redirects for the site should come *before* this one
@@ -9,10 +11,5 @@
   to = "/.netlify/functions/angular-builder"
   status = 200
 
-# TO-DO: remove when config-mutating bug is diagnosed by workflow
-[functions]
-included_files=["dist/angular-bfdx/browser/index.html"]
-node_bundler="esbuild"
-
 [[plugins]]
-  package = "../"
+  package="."
