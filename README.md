@@ -28,8 +28,9 @@ Create a `netlify.toml` in the root of your project. Your file should include th
 If you'd like to install this plugin at a fixed version, install it via your package manager:
 
 ```bash
-yarn add @netlify/plugin-angular-universal
 npm install @netlify/plugin-angular-universal
+# or
+yarn add @netlify/plugin-angular-universal
 ```
 
 Read more about [file-based plugin installation](https://docs.netlify.com/configure-builds/build-plugins/#file-based-installation)
