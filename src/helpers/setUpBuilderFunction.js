@@ -1,17 +1,13 @@
 const { join } = require('path')
 
-const { writeFileSync, existsSync } = require('fs-extra')
-const makeDir = require('make-dir')
+const { writeFileSync, ensureDirSync, existsSync } = require('fs-extra')
 
 const { getAngularBuilder } = require('./getDynamicTemplates')
 
-const setUpBuilderFunction = async ({ FUNCTIONS_SRC, projectName }) => {
+const setUpBuilderFunction = ({ FUNCTIONS_SRC, projectName }) => {
   const FUNCTION_DEST = join(FUNCTIONS_SRC, 'angular-builder.js')
 
-  if (!existsSync(FUNCTIONS_SRC)) {
-    await makeDir(FUNCTIONS_SRC)
-  }
-
+  ensureDirSync(FUNCTIONS_SRC)
   writeFileSync(FUNCTION_DEST, getAngularBuilder(projectName))
 }
 

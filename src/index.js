@@ -36,6 +36,6 @@ module.exports = {
 
     setUpFunctionsConfig({ netlifyConfig, projectName })
 
-    await setUpBuilderFunction({ FUNCTIONS_SRC: INTERNAL_FUNCTIONS_SRC || FUNCTIONS_SRC, projectName })
+    setUpBuilderFunction({ FUNCTIONS_SRC: INTERNAL_FUNCTIONS_SRC || FUNCTIONS_SRC, projectName })
   },
 }
