@@ -29,7 +29,7 @@ If you'd like to install this plugin at a fixed version, install it via your pac
 
 ```bash
 yarn add @netlify/plugin-angular-universal
-npm install --save @netlify/plugin-angular-universal
+npm install @netlify/plugin-angular-universal
 ```
 
 Read more about [file-based plugin installation](https://docs.netlify.com/configure-builds/build-plugins/#file-based-installation)
