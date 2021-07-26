@@ -16,7 +16,7 @@ const updateAngularJson = function ({ failBuild, angularJson, projectName, siteR
     angularJson.projects[projectName].architect.serverless = {
       builder: '@angular-devkit/build-angular:server',
       options: {
-        outputPath: `dist/netlify-serverless/serverless`,
+        outputPath: `dist/${projectName}/serverless`,
         main: 'serverless.ts',
         tsConfig: 'tsconfig.serverless.json',
       },

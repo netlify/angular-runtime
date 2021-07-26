@@ -12,19 +12,6 @@ This build plugin is a utility for supporting Angular Universal on Netlify.
 
 ## Installation and Configuration
 
-The schematic commands will create a `netlify.toml` in the root of your project, if it doesn't already exist. Your file should include the correct build command, publish directory, and plugins section below. Note: the build command requires you to include your custom project name (as indicated in your angular.json) where designated below:
-
-```toml
-[build]
-  command = "ng build --configuration production && ng run {projectName}:serverless:production"
-  publish = "dist/netlify-serverless/browser"
-
-[[plugins]]
-  package = "@netlify/plugin-angular-serverless"
-```
-
-## Installation and Configuration
-
 ### Manual Installation
 
 Create a `netlify.toml` in the root of your project. Your file should include the plugins section below:
@@ -32,7 +19,7 @@ Create a `netlify.toml` in the root of your project. Your file should include th
 ```toml
 [build]
   command = "ng build --configuration production && ng run {projectName}:serverless:production"
-  publish = "dist/netlify-serverless/browser"
+  publish = "dist/{projectName}/browser"
 
 [[plugins]]
   package = "@netlify/plugin-angular-serverless"
@@ -41,7 +28,7 @@ Create a `netlify.toml` in the root of your project. Your file should include th
 If you'd like to install this plugin at a fixed version, install it via your package manager:
 
 ```bash
-# yarn add @netlify/plugin-angular-universal
+yarn add @netlify/plugin-angular-universal
 npm install --save @netlify/plugin-angular-universal
 ```
 
@@ -49,6 +36,17 @@ Read more about [file-based plugin installation](https://docs.netlify.com/config
 in our docs.
 
 ## CLI Usage
+
+### Plugin Side Effects
+
+This plugin will make direct changes to your project source when run via the CLI:
+
+1. It will modify your angular.json to add a `serverless` project configuration.
+2. It will add `serverless.ts` and `tsconfig.serverless.json` files.
+
+It is up to you whether to commit these changes to your project. If the plugin makes updates to these files or configurations, it will overwrite what you'd previously committed, and you can commit the new updates. Otherwise, you can stash and ignore them.
+
+### Workflow
 
 If you'd like to build and deploy your project using the
 [Netlify CLI](https://docs.netlify.com/cli/get-started/), we recommend this

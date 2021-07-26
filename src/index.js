@@ -1,5 +1,4 @@
 const addAngularServerlessFiles = require('./helpers/addAngularServerlessFiles')
-const copyProjectDist = require('./helpers/copyProjectDist')
 const getAngularJson = require('./helpers/getAngularJson')
 const setUpBuilderFunction = require('./helpers/setUpBuilderFunction')
 const setUpFunctionsConfig = require('./helpers/setUpFunctionsConfig')
@@ -25,19 +24,18 @@ module.exports = {
 
     validateNetlifyConfig({ failBuild, netlifyConfig, projectName })
 
-    addAngularServerlessFiles()
+    addAngularServerlessFiles({ projectName })
   },
   async onBuild({ utils, netlifyConfig, constants: { INTERNAL_FUNCTIONS_SRC, FUNCTIONS_SRC = 'netlify/functions' } }) {
     const { failBuild } = utils.build
     const siteRoot = process.cwd()
     const angularJson = getAngularJson({ failBuild, siteRoot })
-
-    copyProjectDist({ projectName: angularJson.defaultProject })
+    const projectName = angularJson.defaultProject
 
     setUpRedirects({ netlifyConfig })
 
-    setUpFunctionsConfig({ netlifyConfig })
+    setUpFunctionsConfig({ netlifyConfig, projectName })
 
-    setUpBuilderFunction({ FUNCTIONS_SRC: INTERNAL_FUNCTIONS_SRC || FUNCTIONS_SRC })
+    await setUpBuilderFunction({ FUNCTIONS_SRC: INTERNAL_FUNCTIONS_SRC || FUNCTIONS_SRC, projectName })
   },
 }

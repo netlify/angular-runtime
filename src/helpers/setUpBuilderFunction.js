@@ -1,15 +1,18 @@
 const { join } = require('path')
 
-const { copySync } = require('fs-extra')
+const { writeFileSync, existsSync } = require('fs-extra')
+const makeDir = require('make-dir')
 
-const setUpBuilderFunction = ({ FUNCTIONS_SRC }) => {
-  const TEMPLATES_DIR = join('..', 'src', 'templates')
-  const FUNCTIONS_DEST = join(FUNCTIONS_SRC, 'angular-builder.js')
+const { getAngularBuilder } = require('./getDynamicTemplates')
 
-  copySync(join(TEMPLATES_DIR, 'angularBuilder.js'), join(FUNCTIONS_SRC, 'angular-builder.js'), {
-    overwrite: true,
-    dereference: true,
-  })
+const setUpBuilderFunction = async ({ FUNCTIONS_SRC, projectName }) => {
+  const FUNCTION_DEST = join(FUNCTIONS_SRC, 'angular-builder.js')
+
+  if (!existsSync(FUNCTIONS_SRC)) {
+    await makeDir(FUNCTIONS_SRC)
+  }
+
+  writeFileSync(FUNCTION_DEST, getAngularBuilder(projectName))
 }
 
 module.exports = setUpBuilderFunction
