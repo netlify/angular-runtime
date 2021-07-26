@@ -1,5 +1,12 @@
 ### Node ###
 
+# Demo
+/demo/netlify
+/demo/serverless.ts
+/demo/tsconfig.serverless.json
+/demo/_redirects
+/demo/node_modules
+
 # Logs
 logs
 *.log
@@ -141,4 +148,5 @@ Temporary Items
 
 # End of https://www.toptal.com/developers/gitignore/api/osx,node
 
-.netlify
+demo/.netlify/functions
+demo/.netlify/functions-serve
