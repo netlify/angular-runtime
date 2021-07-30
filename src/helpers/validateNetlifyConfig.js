@@ -9,8 +9,11 @@ const validateNetlifyConfig = function ({ failBuild, netlifyConfig, projectName 
   if (!build.command) {
     return failBuild(`Missing build command in your netlify.toml or UI configuration. It should be: ${BUILD_COMMAND}`)
   }
-  const commandWarning = `The Angular Universal plugin expects your build command to be (or include): ${BUILD_COMMAND}.`
-  console.log(yellowBright(commandWarning))
+
+  if (build.command !== BUILD_COMMAND || !build.command.includes(BUILD_COMMAND)) {
+    const commandWarning = `FYI: You seem to be using a custom build script. Please make sure your script includes: ${BUILD_COMMAND}.`
+    console.log(yellowBright(commandWarning))
+  }
 }
 
 module.exports = validateNetlifyConfig

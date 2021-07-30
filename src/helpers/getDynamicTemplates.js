@@ -17,6 +17,7 @@ const getAngularBuilder = ({ functionServerPath }) => `
   exports.handler = builder(handler)
 `
 
+// TO-DO: improve error handling
 const getServerlessTs = ({ projectName, siteRoot }) => `
   import 'zone.js/dist/zone-node'
 
@@ -29,9 +30,10 @@ const getServerlessTs = ({ projectName, siteRoot }) => `
   import { existsSync, readdirSync } from 'fs'
 
   export const app = express()
-  const rootFolder = existsSync(join('${siteRoot}', 'dist'))
-  ? '${siteRoot}'
-  : join('${siteRoot}', 'src')
+  const rootFolder = '${siteRoot}'
+  if (!existsSync(join(rootFolder, 'dist'))) {
+    throw new Error('Page not found')
+  }
   const distFolder = join(rootFolder, 'dist/${projectName}/browser')
   const indexHtml = existsSync(join(distFolder, 'index.original.html'))
   ? 'index.original.html'
@@ -39,10 +41,10 @@ const getServerlessTs = ({ projectName, siteRoot }) => `
 
   // Our Universal express-engine (found @ https://github.com/angular/universal/tree/master/modules/express-engine)
   app.engine(
-  'html',
-  ngExpressEngine({
+    'html',
+    ngExpressEngine({
       bootstrap: AppServerModule,
-  })
+    })
   )
 
   app.set('view engine', 'html')
@@ -50,14 +52,14 @@ const getServerlessTs = ({ projectName, siteRoot }) => `
 
   // All regular routes use the Universal engine
   app.get('*', (req, res) => {
-  res.render(
+    res.render(
       indexHtml,
       {
-      res,
-      req,
-      providers: [{ provide: APP_BASE_HREF, useValue: req.baseUrl }],
+        res,
+        req,
+        providers: [{ provide: APP_BASE_HREF, useValue: req.baseUrl }],
       }
-  )
+    )
   })
 
   export * from './src/main.server'
