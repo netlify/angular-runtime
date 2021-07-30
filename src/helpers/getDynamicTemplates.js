@@ -1,10 +1,11 @@
-const getAngularBuilder = (projectName) => `
+const getAngularBuilder = ({ functionServerPath }) => `
   const { builder } = require('@netlify/functions')
   const awsServerlessExpress = require('aws-serverless-express')
   const awsServerlessExpressMiddleware = require('aws-serverless-express/middleware')
 
   // eslint-disable-next-line node/no-missing-require, node/no-unpublished-require
-  const server = require('../../dist/${projectName}/serverless/main')
+
+  const server = require('${functionServerPath}')
 
   // makes event and context available to app
   server.app.use(awsServerlessExpressMiddleware.eventContext())
@@ -16,7 +17,8 @@ const getAngularBuilder = (projectName) => `
   exports.handler = builder(handler)
 `
 
-const getServerlessTs = (projectName) => `
+// TO-DO: improve error handling
+const getServerlessTs = ({ projectName, siteRoot }) => `
   import 'zone.js/dist/zone-node'
 
   import { ngExpressEngine } from '@nguniversal/express-engine'
@@ -28,9 +30,10 @@ const getServerlessTs = (projectName) => `
   import { existsSync, readdirSync } from 'fs'
 
   export const app = express()
-  const rootFolder = existsSync(join(process.cwd(), 'dist'))
-  ? process.cwd()
-  : join(process.cwd(), 'src')
+  const rootFolder = '${siteRoot}'
+  if (!existsSync(join(rootFolder, 'dist'))) {
+    throw new Error('Page not found')
+  }
   const distFolder = join(rootFolder, 'dist/${projectName}/browser')
   const indexHtml = existsSync(join(distFolder, 'index.original.html'))
   ? 'index.original.html'
@@ -38,10 +41,10 @@ const getServerlessTs = (projectName) => `
 
   // Our Universal express-engine (found @ https://github.com/angular/universal/tree/master/modules/express-engine)
   app.engine(
-  'html',
-  ngExpressEngine({
+    'html',
+    ngExpressEngine({
       bootstrap: AppServerModule,
-  })
+    })
   )
 
   app.set('view engine', 'html')
@@ -49,14 +52,14 @@ const getServerlessTs = (projectName) => `
 
   // All regular routes use the Universal engine
   app.get('*', (req, res) => {
-  res.render(
+    res.render(
       indexHtml,
       {
-      res,
-      req,
-      providers: [{ provide: APP_BASE_HREF, useValue: req.baseUrl }],
+        res,
+        req,
+        providers: [{ provide: APP_BASE_HREF, useValue: req.baseUrl }],
       }
-  )
+    )
   })
 
   export * from './src/main.server'

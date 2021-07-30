@@ -1,17 +1,20 @@
-const { join } = require('path')
+const path = require('path')
 
-const { copySync, existsSync, removeSync, writeFileSync } = require('fs-extra')
+const { copySync, writeFileSync } = require('fs-extra')
 
 const { getServerlessTs } = require('./getDynamicTemplates')
 
-const addAngularServerlessFiles = ({ projectName }) => {
-  const TEMPLATES_DIR = join('..', 'src', 'templates')
+const addAngularServerlessFiles = ({ projectName, siteRoot }) => {
+  const TEMPLATES_DIR = path.join('src', 'templates')
 
   // Write file with injected project name
-  writeFileSync('./serverless.ts', getServerlessTs(projectName))
+  writeFileSync(
+    path.join(siteRoot, 'serverless.ts'),
+    getServerlessTs({ projectName, siteRoot: path.relative(process.cwd(), siteRoot) }),
+  )
 
   // We can copy this file over without writing because it's not dependent on projectName
-  copySync(join(TEMPLATES_DIR, 'tsconfig.serverless.json'), './tsconfig.serverless.json', {
+  copySync(path.join(TEMPLATES_DIR, 'tsconfig.serverless.json'), path.join(siteRoot, 'tsconfig.serverless.json'), {
     overwrite: true,
   })
 }

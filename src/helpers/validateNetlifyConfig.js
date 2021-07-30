@@ -1,26 +1,18 @@
-const { redBright, yellowBright } = require('chalk')
+const { yellowBright } = require('chalk')
 
 // Validate config build command publish dir
 const validateNetlifyConfig = function ({ failBuild, netlifyConfig, projectName }) {
   const { build } = netlifyConfig
 
   const BUILD_COMMAND = `ng build --configuration production && ng run ${projectName}:serverless:production`
-  const PUBLISH_DIR = `dist/${projectName}/browser`
 
-  // If they have a command or publish directory already set, we inform them what the plugin expects it to be
-  // Otherwise, we set it for them
   if (!build.command) {
-    build.command = BUILD_COMMAND
-  } else {
-    const commandWarning = `⚠️  Heads up: It looks like you've already set your build command. The plugin expects your build command to be or include: ${BUILD_COMMAND}.  ⚠️`
-    console.log(redBright(commandWarning))
+    return failBuild(`Missing build command in your netlify.toml or UI configuration. It should be: ${BUILD_COMMAND}`)
   }
 
-  if (!build.publish) {
-    build.publish = PUBLISH_DIR
-  } else {
-    const publishWarning = `⚠️  Heads up: It looks like you've already set your publish directory: ${build.publish}. The plugin expects your publish directory to be: '{BASE_DIR}/${PUBLISH_DIR}'.  ⚠️`
-    console.log(redBright(publishWarning))
+  if (build.command !== BUILD_COMMAND || !build.command.includes(BUILD_COMMAND)) {
+    const commandWarning = `FYI: You seem to be using a custom build script. Please make sure your script includes: ${BUILD_COMMAND}.`
+    console.log(yellowBright(commandWarning))
   }
 }
 
