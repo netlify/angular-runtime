@@ -1,6 +1,6 @@
 ![Netlify Build plugin Angular Serverless – Run Angular Universal seamlessly on Netlify](netlify-plugin-angular.png)
 
-# Angular Universal Plugin
+# Essential Angular Universal Plugin
 
 This build plugin is a utility for supporting Angular Universal on Netlify.
 
