@@ -2,7 +2,7 @@
 const setUpFunctionsConfig = function ({ netlifyConfig, PUBLISH_DIR }) {
   netlifyConfig.functions.node_bundler = 'esbuild'
 
-  const includedDist = [`${PUBLISH_DIR}/index.html`]
+  const includedDist = [`${PUBLISH_DIR}/index.html`, `${PUBLISH_DIR}/styles.css`]
   if (Array.isArray(netlifyConfig.functions.included_files)) {
     netlifyConfig.functions.included_files.push(...includedDist)
   } else {
