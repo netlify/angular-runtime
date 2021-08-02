@@ -41,7 +41,7 @@ module.exports = {
 
     setUpRedirects({ netlifyConfig })
 
-    setUpFunctionsConfig({ netlifyConfig, projectName, PUBLISH_DIR })
+    setUpFunctionsConfig({ angularJson, netlifyConfig, PUBLISH_DIR })
 
     setUpBuilderFunction({
       FUNCTIONS_SRC: INTERNAL_FUNCTIONS_SRC || FUNCTIONS_SRC,
