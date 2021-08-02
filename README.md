@@ -1,6 +1,6 @@
 ![Netlify Build plugin Angular Serverless – Run Angular Universal seamlessly on Netlify](netlify-plugin-angular.png)
 
-# Angular Universal Plugin
+# Essential Angular Universal Plugin
 
 This build plugin is a utility for supporting Angular Universal on Netlify.
 
@@ -9,6 +9,9 @@ This build plugin is a utility for supporting Angular Universal on Netlify.
 - [Installation and Configuration](#installation-and-configuration)
 - [CLI Usage](#cli-usage)
 - [Caveats](#caveats)
+- [Getting Help](#getting-help)
+- [Contributing](#contributing)
+- [License](#license)
 
 ## Installation and Configuration
 
@@ -70,3 +73,22 @@ This plugin is currently in beta.
 Right now:
 - it does not include out of the box monorepo support
 - it does not support Angular Universal prerendering
+
+## Getting Help
+
+We love to hear from you so if you have questions, comments or find a bug in the
+project, let us know! You can either:
+
+- Open an issue on this repository
+- Tweet at us! We're [@Netlify on Twitter](https://twitter.com/Netlify)
+- Or, [join the community forums](https://answers.netlify.com)
+
+## Contributing
+
+We welcome contributions ❤️ - see the [CONTRIBUTING.md](docs/CONTRIBUTING.md) file
+for details.
+
+## License
+
+This project is licensed under the MIT License - see the
+[LICENSE.md](LICENSE.md) file for details
