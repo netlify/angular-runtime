@@ -1,4 +1,8 @@
-const getAngularBuilder = ({ functionServerPath }) => `
+const { outdent } = require('outdent')
+// this is here so this works: https://marketplace.visualstudio.com/items?itemName=zjcompt.es6-string-javascript
+const javascript = outdent
+
+const getAngularBuilder = ({ functionServerPath }) => javascript`
   const { builder } = require('@netlify/functions')
   const serverlessExpress = require('@vendia/serverless-express')
 
@@ -19,7 +23,7 @@ const getAngularBuilder = ({ functionServerPath }) => `
   exports.handler = builder(handler)
 `
 
-const getServerlessTs = ({ projectName, siteRoot }) => `
+const getServerlessTs = ({ projectName, siteRoot }) => javascript`
   import 'zone.js/dist/zone-node'
 
   import { ngExpressEngine } from '@nguniversal/express-engine'
