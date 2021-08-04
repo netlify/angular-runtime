@@ -40,30 +40,9 @@ const getServerlessTs = ({ projectName, siteRoot }) => javascript`
   import { existsSync } from 'fs'
 
   import { APP_BASE_HREF } from '@angular/common' // todo: use this
-  import { ErrorHandler, NgModule } from '@angular/core'
-  import { CommonEngine, RenderOptions as CommonRenderOptions } from '@nguniversal/common/engine';
+  import { CommonEngine, RenderOptions } from '@nguniversal/common/engine';
 
   import { AppServerModule } from './src/main.server'
-  import { AppComponent } from './src/app/app.component'; // todo: we don't really want to do this import
-
-  const errorCallbackProvider = "_serverless_error_callback_provider"
-  type ErrorCallback = (error: Error) => void
-
-  class ServerlessErrorHandler implements ErrorHandler {
-    constructor(private error_callback: ErrorCallback) {}
-
-    handleError(error) {
-      this.error_callback(error)
-    }
-  }
-  const errorHandlerFactory = (cb: ErrorCallback) => new ServerlessErrorHandler(cb)
-
-  @NgModule({
-    imports: [AppServerModule],
-    providers: [{ provide: ErrorHandler, useFactory: errorHandlerFactory, deps: [errorCallbackProvider] }],
-    bootstrap: [AppComponent],
-  })
-  class HandledServerModule {}
 
   const rootFolder = '${siteRoot}'
   const distFolder = join(rootFolder, 'dist');
@@ -77,23 +56,36 @@ const getServerlessTs = ({ projectName, siteRoot }) => javascript`
     ? originalIndex
     : join(browserFolder, 'index.html')
 
-  const engine = new CommonEngine(HandledServerModule);
+  const engine = new CommonEngine(AppServerModule);
 
   export function render({ path, headers }, context): Promise<string> {
     // todo: missing query string params, might want to use event.rawUrl instead
     const url = "https://" + headers.host + path;
 
+    const renderOptions: RenderOptions = {
+      bootstrap: AppServerModule,
+      url,
+      publicPath: browserFolder,
+      documentFilePath: indexHtml, // todo: check if this works with prerendering!
+      providers: [
+        // todo: inject a bunch of useful things
+      ],
+    }
+
     return new Promise((resolve, reject) => {
-      engine.render({
-        bootstrap: HandledServerModule,
-        url,
-        publicPath: browserFolder,
-        documentFilePath: indexHtml, // todo: check if this works with prerendering!
-        providers: [
-          { provide: errorCallbackProvider, useValue: reject },
-          // todo: inject a bunch more things
-        ]
-      }).then(resolve).catch(reject)
+      // @ts-ignore
+      Zone.current
+        .fork({
+          name: 'ServerlessErrorHandlerZone',
+          onHandleError: (parentZoneDelegate, currentZone, targetZone, error) => {
+            reject(error)
+          },
+        })
+        .runGuarded(function () {
+          return engine.render(renderOptions)
+        })
+        .then(resolve)
+        .catch(reject)
     })
   }
 `
