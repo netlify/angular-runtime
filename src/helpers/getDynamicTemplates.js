@@ -11,13 +11,21 @@ const getAngularBuilder = ({ functionServerPath }) => javascript`
     try {
       const html = await render(event, context)
       return {
+        // todo: how would people change the status code from inside angular code?
         statusCode: 200,
         body: html,
       };
-    } catch (e) {
+    } catch (error) {
+      // for now all errors bubbling up from angular turn into a 500
+      //
+      // it would be lovely to match the noMatch error from the
+      // angular router here, but it's a generic Error object, not a
+      // special class/type.
+      // we should recommend people to put a fallback route into their
+      // router config, so they can show a proper 404 page.
       return {
         statusCode: 500,
-        body: e.toString(),
+        body: error.toString(),
       }
     }
   }
