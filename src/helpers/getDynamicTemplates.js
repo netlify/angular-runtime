@@ -42,7 +42,6 @@ const getServerlessTs = ({ projectName, siteRoot }) => javascript`
   import { join } from 'path'
   import { existsSync } from 'fs'
 
-  import { APP_BASE_HREF } from '@angular/common' // todo: use this
   import { CommonEngine, RenderOptions } from '@nguniversal/common/engine';
   import { REQUEST, RESPONSE } from '@nguniversal/express-engine/tokens';
   import MockExpressRequest from 'mock-express-request';
