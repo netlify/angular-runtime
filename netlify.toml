@@ -4,12 +4,5 @@ functions = "demo/netlify/functions"
 publish = "demo/dist/angular-bfdx/browser"
 base="."
 
-# TO-DO: remove after cli redirect fix is out https://github.com/netlify/cli/pull/2920
-# any additional redirects for the site should come *before* this one
-[[redirects]]
-  from = "/*"
-  to = "/.netlify/functions/angular-builder"
-  status = 200
-
 [[plugins]]
   package="."

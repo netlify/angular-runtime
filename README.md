@@ -41,6 +41,12 @@ in our docs.
 
 ## CLI Usage
 
+### Requirements
+
+To use the Essential Angular Universal plugin while building and deploying with the CLI, you need to have `netlify-cli v5.4.13` installed (or a later version).
+
+Please also make sure to use `ntl deploy --build --prod` (rather than `ntl build`).
+
 ### Plugin Side Effects
 
 When this plugin is run as part of the build process using the Netlify CLI, direct changes will be made to your project source:
