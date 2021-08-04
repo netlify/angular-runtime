@@ -4,18 +4,20 @@ const javascript = outdent
 
 const getAngularBuilder = ({ functionServerPath }) => javascript`
   const { builder } = require('@netlify/functions')
-  const serverlessExpress = require('@vendia/serverless-express')
 
-  const server = require('${functionServerPath}')
+  const { render } = require('${functionServerPath}')
 
   const handler = async (event, context) => {
     try {
-      const serverlessHandler = await serverlessExpress({ app: server.app, eventSourceName: 'AWS_API_GATEWAY_V1' })
-      const response = await serverlessHandler(event, context)
-      return response
+      const html = await render(event, context)
+      return {
+        statusCode: 200,
+        body: html,
+      };
     } catch (e) {
       return {
-        statusCode: 404
+        statusCode: 500,
+        body: e.toString(),
       }
     }
   }
@@ -26,48 +28,40 @@ const getAngularBuilder = ({ functionServerPath }) => javascript`
 const getServerlessTs = ({ projectName, siteRoot }) => javascript`
   import 'zone.js/dist/zone-node'
 
-  import { ngExpressEngine } from '@nguniversal/express-engine'
-  import * as express from 'express'
   import { join } from 'path'
-
-  import { AppServerModule } from './src/main.server'
-  import { APP_BASE_HREF } from '@angular/common'
   import { existsSync, readdirSync } from 'fs'
 
-  export const app = express()
+  import { APP_BASE_HREF } from '@angular/common' // todo: use this
+  import { CommonEngine, RenderOptions as CommonRenderOptions } from '@nguniversal/common/engine';
+
+  import { AppServerModule } from './src/main.server'
+
   const rootFolder = '${siteRoot}'
-  if (!existsSync(join(rootFolder, 'dist'))) {
+  const distFolder = join(rootFolder, 'dist');
+  if (!existsSync(distFolder)) {
     throw new Error('Page not found')
   }
-  const distFolder = join(rootFolder, 'dist/${projectName}/browser')
-  const indexHtml = existsSync(join(distFolder, 'index.original.html'))
-  ? 'index.original.html'
-  : 'index'
+  const browserFolder = join(distFolder, '${projectName}', 'browser')
 
-  // Our Universal express-engine (found @ https://github.com/angular/universal/tree/master/modules/express-engine)
-  app.engine(
-    'html',
-    ngExpressEngine({
-      bootstrap: AppServerModule,
+  const originalIndex = join(browserFolder, 'index.original.html')
+  const indexHtml = existsSync(originalIndex)
+    ? originalIndex
+    : join(browserFolder, 'index.html')
+
+  const engine = new CommonEngine(AppServerModule);
+
+  export function render({ path, headers }, context): Promise<string> {
+    const url = "https://" + headers.host + path;
+    return new Promise((res, rej) => {
+      //const errorHandler = new ServerlessErrorHandler(rej);
+      engine.render({
+        bootstrap: AppServerModule,
+        url,
+        publicPath: browserFolder,
+        documentFilePath: indexHtml, // does likely not work with prerendering!
+      }).then(res).catch(rej)
     })
-  )
-
-  app.set('view engine', 'html')
-  app.set('views', distFolder)
-
-  // All regular routes use the Universal engine
-  app.get('*', (req, res) => {
-    res.render(
-      indexHtml,
-      {
-        res,
-        req,
-        providers: [{ provide: APP_BASE_HREF, useValue: req.baseUrl }],
-      }
-    )
-  })
-
-  export * from './src/main.server'
+  }
 `
 
 module.exports = {
