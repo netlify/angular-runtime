@@ -9,11 +9,14 @@ const getAngularBuilder = ({ functionServerPath }) => javascript`
 
   const handler = async (event, context) => {
     try {
-      const html = await render(event, context)
+      const { html, headers, status } = await render(event, context)
       return {
-        // todo: how would people change the status code from inside angular code?
-        statusCode: 200,
+        statusCode: status,
         body: html,
+        multiValueHeaders: {
+          "Content-Type": ["text/html; charset=utf-8"],
+          ...headers,
+        }
       };
     } catch (error) {
       // for now all errors bubbling up from angular turn into a 500
@@ -41,6 +44,9 @@ const getServerlessTs = ({ projectName, siteRoot }) => javascript`
 
   import { APP_BASE_HREF } from '@angular/common' // todo: use this
   import { CommonEngine, RenderOptions } from '@nguniversal/common/engine';
+  import { REQUEST, RESPONSE } from '@nguniversal/express-engine/tokens';
+  import MockExpressRequest from 'mock-express-request';
+  import MockExpressResponse from 'mock-express-response';
 
   import { AppServerModule } from './src/main.server'
 
@@ -58,21 +64,35 @@ const getServerlessTs = ({ projectName, siteRoot }) => javascript`
 
   const engine = new CommonEngine(AppServerModule);
 
-  export function render({ path, headers }, context): Promise<string> {
+  type Headers = { [k: string]: string[] }
+  interface RenderResponse {
+    html: string,
+    headers: Headers,
+    status: number,
+  }
+
+  export async function render({ method, path, headers, multiValueHeaders }, context): Promise<RenderResponse> {
     // todo: missing query string params, might want to use event.rawUrl instead
     const url = "https://" + headers.host + path;
 
+    const request = new MockExpressRequest({
+      method,
+      url: path, // todo: missing query string
+      headers: multiValueHeaders,
+    })
+    const responseBuilder = new MockExpressResponse({ request })
     const renderOptions: RenderOptions = {
       bootstrap: AppServerModule,
       url,
       publicPath: browserFolder,
       documentFilePath: indexHtml, // todo: check if this works with prerendering!
       providers: [
-        // todo: inject a bunch of useful things
+        { provide: REQUEST, useValue: request },
+        { provide: RESPONSE, useValue: responseBuilder },
       ],
     }
 
-    return new Promise((resolve, reject) => {
+    const html: string = await new Promise((resolve, reject) => {
       // @ts-ignore
       Zone.current
         .fork({
@@ -87,6 +107,11 @@ const getServerlessTs = ({ projectName, siteRoot }) => javascript`
         .then(resolve)
         .catch(reject)
     })
+    return {
+      html,
+      status: responseBuilder.statusCode,
+      headers: responseBuilder.getHeaders(),
+    }
   }
 `
 
