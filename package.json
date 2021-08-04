@@ -78,7 +78,6 @@
     "karma-coverage": "~2.0.3",
     "karma-jasmine": "~4.0.1",
     "karma-jasmine-html-reporter": "^1.6.0",
-    "outdent": "^0.8.0",
     "prettier": "^2.1.2",
     "protractor": "~7.0.0",
     "rxjs": "^6.5.3",
@@ -94,6 +93,7 @@
     "@vendia/serverless-express": "^4.3.9",
     "chalk": "^2.4.2",
     "fs-extra": "^9.1.0",
+    "outdent": "^0.8.0",
     "zone.js": "^0.11.4"
   }
 }
