@@ -32,9 +32,30 @@ const getServerlessTs = ({ projectName, siteRoot }) => javascript`
   import { existsSync, readdirSync } from 'fs'
 
   import { APP_BASE_HREF } from '@angular/common' // todo: use this
+  import { ErrorHandler, NgModule } from '@angular/core'
   import { CommonEngine, RenderOptions as CommonRenderOptions } from '@nguniversal/common/engine';
 
   import { AppServerModule } from './src/main.server'
+  import { AppComponent } from './src/app/app.component'; // todo: we don't really want to do this import
+
+  const errorCallbackProvider = "_error_callback_provider"
+  type ErrorCallback = (error: Error) => void
+
+  class ServerlessErrorHandler implements ErrorHandler {
+    constructor(private error_callback: ErrorCallback) {}
+
+    handleError(error) {
+      this.error_callback(error)
+    }
+  }
+  const errorHandlerFactory = (cb: ErrorCallback) => new ServerlessErrorHandler(cb)
+
+  @NgModule({
+    imports: [AppServerModule],
+    providers: [{ provide: ErrorHandler, useFactory: errorHandlerFactory, deps: [errorCallbackProvider] }],
+    bootstrap: [AppComponent],
+  })
+  class HandledServerModule {}
 
   const rootFolder = '${siteRoot}'
   const distFolder = join(rootFolder, 'dist');
@@ -48,17 +69,18 @@ const getServerlessTs = ({ projectName, siteRoot }) => javascript`
     ? originalIndex
     : join(browserFolder, 'index.html')
 
-  const engine = new CommonEngine(AppServerModule);
+  const engine = new CommonEngine(HandledServerModule);
 
   export function render({ path, headers }, context): Promise<string> {
     const url = "https://" + headers.host + path;
     return new Promise((res, rej) => {
       //const errorHandler = new ServerlessErrorHandler(rej);
       engine.render({
-        bootstrap: AppServerModule,
+        bootstrap: HandledServerModule,
         url,
         publicPath: browserFolder,
         documentFilePath: indexHtml, // does likely not work with prerendering!
+        providers: [{ provide: errorCallbackProvider, useValue: rej }]
       }).then(res).catch(rej)
     })
   }
