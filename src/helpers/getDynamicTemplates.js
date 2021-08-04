@@ -37,6 +37,7 @@ const getAngularBuilder = ({ functionServerPath }) => javascript`
 `
 
 const getServerlessTs = ({ projectName, siteRoot }) => javascript`
+  /// <reference types="zone.js" />
   import 'zone.js/dist/zone-node'
 
   import { join } from 'path'
@@ -117,15 +118,15 @@ const getServerlessTs = ({ projectName, siteRoot }) => javascript`
     }
 
     const html: string = await new Promise((resolve, reject) => {
-      // @ts-ignore
       Zone.current
         .fork({
           name: 'ServerlessErrorHandlerZone',
           onHandleError: (parentZoneDelegate, currentZone, targetZone, error) => {
             reject(error)
+            return true; // needed for typescript, no idea what it does
           },
         })
-        .runGuarded(function () {
+        .runGuarded<Promise<string>>(function () {
           return engine.render(renderOptions)
         })
         .then(resolve)
