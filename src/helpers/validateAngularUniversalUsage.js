@@ -1,8 +1,7 @@
 // Ensure site is using Angular Universal.
 const validateAngularUniversalUsage = function ({ failBuild }) {
-  if (!hasPackage('@angular/platform-server')) {
+  if (!hasPackage('@nguniversal/express-engine')) {
     return failBuild(
-      // todo: fix messaging on what to do (no longer needs the express engine)
       `This site does not seem to be using Angular Universal. Please run "ng add @nguniversal/express-engine" in the repository. See Angular docs for more information.`,
     )
   }
