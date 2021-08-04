@@ -38,7 +38,7 @@ const getServerlessTs = ({ projectName, siteRoot }) => javascript`
   import { AppServerModule } from './src/main.server'
   import { AppComponent } from './src/app/app.component'; // todo: we don't really want to do this import
 
-  const errorCallbackProvider = "_error_callback_provider"
+  const errorCallbackProvider = "_serverless_error_callback_provider"
   type ErrorCallback = (error: Error) => void
 
   class ServerlessErrorHandler implements ErrorHandler {
@@ -72,16 +72,20 @@ const getServerlessTs = ({ projectName, siteRoot }) => javascript`
   const engine = new CommonEngine(HandledServerModule);
 
   export function render({ path, headers }, context): Promise<string> {
+    // todo: missing query string params, might want to use event.rawUrl instead
     const url = "https://" + headers.host + path;
-    return new Promise((res, rej) => {
-      //const errorHandler = new ServerlessErrorHandler(rej);
+
+    return new Promise((resolve, reject) => {
       engine.render({
         bootstrap: HandledServerModule,
         url,
         publicPath: browserFolder,
-        documentFilePath: indexHtml, // does likely not work with prerendering!
-        providers: [{ provide: errorCallbackProvider, useValue: rej }]
-      }).then(res).catch(rej)
+        documentFilePath: indexHtml, // todo: check if this works with prerendering!
+        providers: [
+          { provide: errorCallbackProvider, useValue: reject },
+          // todo: inject a bunch more things
+        ]
+      }).then(resolve).catch(reject)
     })
   }
 `
