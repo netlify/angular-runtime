@@ -47,6 +47,7 @@ const getServerlessTs = ({ projectName, siteRoot }) => javascript`
   import { REQUEST, RESPONSE } from '@nguniversal/express-engine/tokens';
   import MockExpressRequest from 'mock-express-request';
   import MockExpressResponse from 'mock-express-response';
+  import qs from 'qs';
 
   import { AppServerModule } from './src/main.server'
 
@@ -71,13 +72,37 @@ const getServerlessTs = ({ projectName, siteRoot }) => javascript`
     status: number,
   }
 
-  export async function render({ method, path, headers, multiValueHeaders }, context): Promise<RenderResponse> {
-    // todo: missing query string params, might want to use event.rawUrl instead
-    const url = "https://" + headers.host + path;
+  // backwards compat for old CLI releases
+  function getRawQuery(event): string {
+    if (event.rawQuery) {
+      return event.rawQuery;
+    }
+
+    return qs.stringify(event.multiValueQueryStringParameters, { arrayFormat: 'repeat' })
+  }
+  function getRawUrl(event): string {
+    if (event.rawUrl) {
+      return event.rawUrl;
+    }
+
+    let query = getRawQuery(event);
+    if (!!query) {
+      query = '?' + query;
+    }
+    return "https://" + event.headers.host + event.path + query;
+  }
+
+  export async function render(event, context): Promise<RenderResponse> {
+    const { method, path, headers, multiValueHeaders } = event;
+    let query = getRawQuery(event);
+    if (!!query) {
+      query = '?' + query;
+    }
+    const url = getRawUrl(event);
 
     const request = new MockExpressRequest({
       method,
-      url: path, // todo: missing query string
+      url: path + query,
       headers: multiValueHeaders,
     })
     const responseBuilder = new MockExpressResponse({ request })
