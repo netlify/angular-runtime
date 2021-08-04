@@ -37,7 +37,7 @@ const getServerlessTs = ({ projectName, siteRoot }) => javascript`
   import 'zone.js/dist/zone-node'
 
   import { join } from 'path'
-  import { existsSync, readdirSync } from 'fs'
+  import { existsSync } from 'fs'
 
   import { APP_BASE_HREF } from '@angular/common' // todo: use this
   import { ErrorHandler, NgModule } from '@angular/core'
