@@ -1,0 +1,5 @@
+/netlify
+/serverless.ts
+/tsconfig.serverless.json
+/_redirects
+/node_modules

@@ -27,8 +27,10 @@
     "@angular/platform-server": "~12.0.4",
     "@angular/router": "~12.0.4",
     "@netlify/functions": "^0.7.2",
-    "@nguniversal/express-engine": "~12.0.1",
+    "@nguniversal/express-engine": "^12.0.1",
     "adm-zip": "^0.5.5",
+    "aws-serverless-express": "^3.4.0",
+    "express": "^4.17.1",
     "rxjs": "~7.1.0",
     "tslib": "^2.2.0",
     "zone.js": "~0.11.4"

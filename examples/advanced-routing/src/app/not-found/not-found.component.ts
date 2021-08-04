@@ -3,6 +3,7 @@ import { RESPONSE } from '@nguniversal/express-engine/tokens'
 import { ActivatedRoute } from '@angular/router'
 import { Observable } from 'rxjs'
 import { map } from 'rxjs/operators'
+import { Response } from 'express'
 
 @Component({
   selector: 'app-not-found',
@@ -20,7 +21,6 @@ export class NotFoundComponent implements OnInit {
 
   ngOnInit(): void {
     if (this.response) {
-      // @ts-ignore
       this.response.status(404)
     }
   }

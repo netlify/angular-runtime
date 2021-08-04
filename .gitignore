@@ -1,12 +1,5 @@
 ### Node ###
 
-# Demo
-/demo/netlify
-/demo/serverless.ts
-/demo/tsconfig.serverless.json
-/demo/_redirects
-/demo/node_modules
-
 # Logs
 logs
 *.log
