@@ -1,4 +1,4 @@
-const { outdent } = require('outdent')
+const outdent = require('outdent')
 // this is here so this works: https://marketplace.visualstudio.com/items?itemName=zjcompt.es6-string-javascript
 const javascript = outdent
 
