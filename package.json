@@ -1,5 +1,5 @@
 {
-  "name": "netlify-plugin-angular-universal",
+  "name": "@netlify/plugin-angular-universal",
   "version": "0.0.1",
   "description": "Netlify Build plugin Angular Universal - Run Angular Universal seamlessly on Netlify.",
   "main": "src/index.js",
@@ -21,7 +21,8 @@
     "prepublishOnly:checkout": "git checkout main",
     "prepublishOnly:pull": "git pull",
     "prepublishOnly:install": "npm ci",
-    "prepublishOnly:test": "npm test"
+    "prepublishOnly:test": "npm test",
+    "test": "jest"
   },
   "repository": {
     "type": "git",
@@ -69,9 +70,11 @@
     "@types/node": "^16.3.1",
     "adm-zip": "^0.5.5",
     "codelyzer": "^6.0.2",
+    "cpy": "^8.1.2",
     "husky": "^4.3.0",
     "jasmine-core": ">=3.8",
     "jasmine-spec-reporter": "~7.0.0",
+    "jest": "^27.0.6",
     "karma": "~6.3.3",
     "karma-chrome-launcher": "~3.1.0",
     "karma-coverage": "~2.0.3",
@@ -80,6 +83,7 @@
     "prettier": "^2.1.2",
     "protractor": "~7.0.0",
     "rxjs": "^6.5.3",
+    "tmp-promise": "^3.0.2",
     "ts-node": "~10.1.0",
     "tslib": "^2.2.0",
     "tslint": "~6.1.0",
@@ -98,5 +102,12 @@
     "outdent": "^0.8.0",
     "qs": "^6.10.1",
     "zone.js": "^0.11.4"
+  },
+  "jest": {
+    "testMatch": [
+      "**/test/**/*.js"
+    ],
+    "verbose": true,
+    "testTimeout": 60000
   }
 }

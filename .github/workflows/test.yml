@@ -32,3 +32,5 @@ jobs:
       - name: Linting
         run: npm run format:ci
         if: "${{ matrix.node-version == '*' }}"
+      - name: Run tests
+        run: npm run test
