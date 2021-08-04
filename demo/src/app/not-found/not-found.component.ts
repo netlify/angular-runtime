@@ -1,5 +1,8 @@
 import { Component, Inject, OnInit, Optional } from '@angular/core'
 import { RESPONSE } from '@nguniversal/express-engine/tokens'
+import { ActivatedRoute } from '@angular/router'
+import { Observable } from 'rxjs'
+import { map } from 'rxjs/operators'
 
 @Component({
   selector: 'app-not-found',
@@ -8,8 +11,11 @@ import { RESPONSE } from '@nguniversal/express-engine/tokens'
 })
 export class NotFoundComponent implements OnInit {
   private response: Response
-  constructor(@Optional() @Inject(RESPONSE) response: any) {
+  path: Observable<string>
+
+  constructor(route: ActivatedRoute, @Optional() @Inject(RESPONSE) response: any) {
     this.response = response
+    this.path = route.url.pipe(map((segments) => segments.join('/')))
   }
 
   ngOnInit(): void {

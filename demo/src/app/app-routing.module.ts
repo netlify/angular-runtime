@@ -1,3 +1,4 @@
+import { CommonModule } from '@angular/common'
 import { NgModule } from '@angular/core'
 import { RouterModule, Routes } from '@angular/router'
 import { HeroesComponent } from './heroes/heroes.component'
@@ -15,10 +16,12 @@ const routes: Routes = [
 
 @NgModule({
   imports: [
+    CommonModule,
     RouterModule.forRoot(routes, {
       initialNavigation: 'enabled',
     }),
   ],
   exports: [RouterModule],
+  declarations: [DashboardComponent, HeroDetailComponent, HeroesComponent, NotFoundComponent],
 })
 export class AppRoutingModule {}
