@@ -89,7 +89,7 @@ const getServerlessTs = ({ projectName, siteRoot }) => javascript`
     if (!!query) {
       query = '?' + query;
     }
-    return "https://" + event.headers.host + event.path + query;
+    return (event.headers['x-forwarded-proto'] || 'http') + "://" + event.headers.host + event.path + query;
   }
 
   export async function render(event, context): Promise<RenderResponse> {
