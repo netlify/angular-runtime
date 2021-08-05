@@ -2,6 +2,15 @@
 
 # Essential Angular Universal Plugin
 
+<p align="center">
+  <a aria-label="npm version" href="https://www.npmjs.com/package/@netlify/plugin-angular-universal">
+    <img alt="" src="https://img.shields.io/npm/v/@netlify/plugin-angular-universal">
+  </a>
+  <a aria-label="MIT License" href="https://img.shields.io/npm/l/@netlify/plugin-angular-universal">
+    <img alt="" src="https://img.shields.io/badge/License-MIT-yellow.svg">
+  </a>
+</p>
+
 This build plugin is a utility for supporting Angular Universal on Netlify.
 
 ## Table of Contents
