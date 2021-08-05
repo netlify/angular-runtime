@@ -1,6 +1,6 @@
 {
   "name": "@netlify/plugin-angular-universal",
-  "version": "0.0.1",
+  "version": "1.0.0",
   "description": "Netlify Build plugin Angular Universal - Run Angular Universal seamlessly on Netlify.",
   "main": "src/index.js",
   "files": [
