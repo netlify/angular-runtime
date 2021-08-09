@@ -84,7 +84,7 @@
     "protractor": "~7.0.0",
     "rxjs": "^6.5.3",
     "tmp-promise": "^3.0.2",
-    "ts-node": "~10.1.0",
+    "ts-node": "~10.2.0",
     "tslib": "^2.2.0",
     "tslint": "~6.1.0",
     "typescript": "~4.3.0",
