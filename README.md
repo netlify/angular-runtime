@@ -1,6 +1,6 @@
 ![Netlify Build plugin Angular Serverless – Run Angular Universal seamlessly on Netlify](netlify-plugin-angular.png)
 
-# Essential Angular Universal Plugin
+# Angular Universal Plugin
 
 <p align="center">
   <a aria-label="npm version" href="https://www.npmjs.com/package/@netlify/plugin-angular-universal">
@@ -52,7 +52,7 @@ in our docs.
 
 ### Requirements
 
-To use the Essential Angular Universal plugin while building and deploying with the CLI, you need to have `netlify-cli v5.4.13` installed (or a later version).
+To use the Angular Universal plugin while building and deploying with the CLI, you need to have `netlify-cli v5.4.13` installed (or a later version).
 
 Please also make sure to use `ntl deploy --build --prod` (rather than `ntl build`).
 
