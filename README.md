@@ -31,7 +31,7 @@ Create a `netlify.toml` in the root of your project. Your file should include th
 ```toml
 [build]
   command = "ng build --configuration production && ng run {projectName}:serverless:production"
-  publish = "dist/{projectName}/browser"
+  publish = "dist/browser"
 
 [[plugins]]
   package = "@netlify/plugin-angular-serverless"
