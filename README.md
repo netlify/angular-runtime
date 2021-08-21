@@ -34,7 +34,7 @@ Create a `netlify.toml` in the root of your project. Your file should include th
   publish = "dist/browser"
 
 [[plugins]]
-  package = "@netlify/plugin-angular-serverless"
+  package = "@netlify/plugin-angular-universal"
 ```
 
 If you'd like to install this plugin at a fixed version, install it via your package manager:
