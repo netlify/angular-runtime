@@ -1,4 +1,4 @@
-![Netlify Build plugin Angular Serverless – Run Angular Universal seamlessly on Netlify](netlify-plugin-angular.png)
+![Netlify Build plugin Angular Universal – Run Angular Universal seamlessly on Netlify](netlify-plugin-angular.png)
 
 # Angular Universal Plugin
 
@@ -31,7 +31,7 @@ Create a `netlify.toml` in the root of your project. Your file should include th
 ```toml
 [build]
   command = "ng build --configuration production && ng run {projectName}:serverless:production"
-  publish = "dist/browser"
+  publish = "dist/{projectName}/browser"
 
 [[plugins]]
   package = "@netlify/plugin-angular-universal"

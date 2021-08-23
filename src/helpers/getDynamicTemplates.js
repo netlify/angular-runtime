@@ -37,6 +37,7 @@ const getAngularBuilder = ({ functionServerPath }) => javascript`
 `
 
 const getServerlessTs = ({ projectName, siteRoot }) => javascript`
+  // @ts no-check
   /// <reference types="zone.js" />
   import 'zone.js/dist/zone-node'
 
@@ -45,8 +46,11 @@ const getServerlessTs = ({ projectName, siteRoot }) => javascript`
 
   import { CommonEngine, RenderOptions } from '@nguniversal/common/engine';
   import { REQUEST, RESPONSE } from '@nguniversal/express-engine/tokens';
+  // @ts-ignore
   import MockExpressRequest from 'mock-express-request';
+  // @ts-ignore
   import MockExpressResponse from 'mock-express-response';
+  // @ts-ignore
   import qs from 'qs';
 
   import { AppServerModule } from './src/main.server'
@@ -73,14 +77,14 @@ const getServerlessTs = ({ projectName, siteRoot }) => javascript`
   }
 
   // backwards compat for old CLI releases
-  function getRawQuery(event): string {
+  function getRawQuery(event: any): string {
     if (event.rawQuery) {
       return event.rawQuery;
     }
 
     return qs.stringify(event.multiValueQueryStringParameters, { arrayFormat: 'repeat' })
   }
-  function getRawUrl(event): string {
+  function getRawUrl(event: any): string {
     if (event.rawUrl) {
       return event.rawUrl;
     }
@@ -92,7 +96,7 @@ const getServerlessTs = ({ projectName, siteRoot }) => javascript`
     return (event.headers['x-forwarded-proto'] || 'http') + "://" + event.headers.host + event.path + query;
   }
 
-  export async function render(event, context): Promise<RenderResponse> {
+  export async function render(event: any, context: any): Promise<RenderResponse> {
     const { method, path, headers, multiValueHeaders } = event;
     let query = getRawQuery(event);
     if (!!query) {
