@@ -2,11 +2,11 @@ const path = require('path')
 
 const { copySync, writeFileSync } = require('fs-extra')
 
+const { TEMPLATES_DIR } = require('../config')
+
 const { getServerlessTs } = require('./getDynamicTemplates')
 
 const addAngularServerlessFiles = ({ projectName, siteRoot }) => {
-  const TEMPLATES_DIR = path.join('src', 'templates')
-
   // Write file with injected project name
   writeFileSync(
     path.join(siteRoot, 'serverless.ts'),
