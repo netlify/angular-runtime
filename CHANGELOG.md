@@ -1,5 +1,13 @@
 # Changelog
 
+### [1.0.1](https://www.github.com/netlify/netlify-plugin-angular-universal/compare/v1.0.0...v1.0.1) (2021-08-24)
+
+
+### Bug Fixes
+
+* **deps:** update angular monorepo to ~12.2.0 ([6f2430a](https://www.github.com/netlify/netlify-plugin-angular-universal/commit/6f2430a060dd7b7abb823303a36cbb45a286752b))
+* template path, ts in serverless.ts ([#43](https://www.github.com/netlify/netlify-plugin-angular-universal/issues/43)) ([6b1a74b](https://www.github.com/netlify/netlify-plugin-angular-universal/commit/6b1a74be64c1c9768bbe60c7e718f1d91a9e7b03))
+
 ## 1.0.0 (2021-08-04)
 
 
