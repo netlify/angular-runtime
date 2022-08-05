@@ -89,6 +89,21 @@ Right now:
 - it does not include out of the box monorepo support
 - it does not support Angular Universal prerendering
 
+### Project Name
+
+The plugin will attempt to find your default Angular project.
+Should you have multiple Angular applications in the same
+repository, you will need to add the project name to
+your `angular.json`:
+
+```json
+{
+  "$schema": "./node_modules/@angular/cli/lib/config/schema.json",
+  "defaultProject": "{projectName}",
+  ...
+}
+```
+
 ## Getting Help
 
 We love to hear from you so if you have questions, comments or find a bug in the

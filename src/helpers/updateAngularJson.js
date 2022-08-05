@@ -5,7 +5,7 @@ const { writeJsonSync } = require('fs-extra')
 // Add necessary serverless script to angular.json
 const updateAngularJson = function ({ failBuild, angularJson, projectName, siteRoot }) {
   if (!projectName) {
-    return failBuild('No value defined for projectName. Check plugin inputs in netlify.toml.')
+    return failBuild('No value defined for projectName.')
   }
 
   if (!angularJson.projects[projectName]) {

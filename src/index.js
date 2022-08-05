@@ -1,5 +1,6 @@
 const addAngularServerlessFiles = require('./helpers/addAngularServerlessFiles')
 const getAngularJson = require('./helpers/getAngularJson')
+const getAngularProjectName = require('./helpers/getAngularProjectName')
 const getAngularRoot = require('./helpers/getAngularRoot')
 const setUpBuilderFunction = require('./helpers/setUpBuilderFunction')
 const setUpFunctionsConfig = require('./helpers/setUpFunctionsConfig')
@@ -18,7 +19,7 @@ module.exports = {
 
     const angularJson = getAngularJson({ failBuild, siteRoot })
 
-    const projectName = angularJson.defaultProject
+    const projectName = getAngularProjectName({ failBuild, angularJson })
 
     updateAngularJson({ angularJson, failBuild, projectName, siteRoot })
 
@@ -37,11 +38,13 @@ module.exports = {
 
     const angularJson = getAngularJson({ failBuild, siteRoot })
 
-    const projectName = angularJson.defaultProject
+    const projectName = getAngularProjectName({ failBuild, angularJson })
+
+    const project = angularJson.projects[projectName]
 
     setUpRedirects({ netlifyConfig })
 
-    setUpFunctionsConfig({ angularJson, netlifyConfig, PUBLISH_DIR })
+    setUpFunctionsConfig({ project, netlifyConfig, PUBLISH_DIR })
 
     setUpBuilderFunction({
       FUNCTIONS_SRC: INTERNAL_FUNCTIONS_SRC || FUNCTIONS_SRC,

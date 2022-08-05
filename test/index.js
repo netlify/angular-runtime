@@ -1,8 +1,8 @@
 const cpy = require('cpy')
-const { existsSync, readdirSync, readJsonSync, removeSync } = require('fs-extra')
+const {existsSync, readdirSync, readJsonSync, writeJsonSync, removeSync} = require('fs-extra')
 const path = require('path')
 const process = require('process')
-const { dir: getTmpDir } = require('tmp-promise')
+const {dir: getTmpDir} = require('tmp-promise')
 const plugin = require('..')
 
 const utils = {
@@ -37,11 +37,11 @@ const movePluginTemplates = async function (dest) {
 // In each test, we change cwd to a temporary directory.
 // This allows us not to have to mock filesystem operations.
 beforeEach(async () => {
-  const { path: path_, cleanup } = await getTmpDir({ unsafeCleanup: true })
+  const {path: path_, cleanup} = await getTmpDir({unsafeCleanup: true})
   const restoreCwd = changeCwd(path_)
   await moveAngularSample(path_)
   await movePluginTemplates(path_)
-  Object.assign(this, { cleanup, restoreCwd })
+  Object.assign(this, {cleanup, restoreCwd})
 })
 
 afterEach(async () => {
@@ -114,6 +114,80 @@ describe('preBuild()', () => {
     expect(existsSync(path.join(process.cwd(), 'serverless.ts'))).toBe(true)
     expect(existsSync(path.join(process.cwd(), 'tsconfig.serverless.json'))).toBe(true)
   })
+
+
+  test('should build if defaultProject can be determined because there is a single project', async () => {
+    const jsonPath = path.join(process.cwd(), 'angular.json');
+    const angularJson = readJsonSync(jsonPath);
+    const project = angularJson.projects['angular-bfdx'];
+
+    const newAngularJson = {
+      ...angularJson,
+      projects: {
+        'angular-bfdx': project,
+      }
+    }
+
+    writeJsonSync(jsonPath, newAngularJson);
+
+    await plugin.onPreBuild({
+      netlifyConfig,
+      utils,
+    })
+
+    expect(existsSync(path.join(process.cwd(), 'serverless.ts'))).toBe(true)
+    expect(existsSync(path.join(process.cwd(), 'tsconfig.serverless.json'))).toBe(true)
+  })
+
+  test('should build if defaultProject is set, with multiple projects', async () => {
+    const jsonPath = path.join(process.cwd(), 'angular.json');
+    const angularJson = readJsonSync(jsonPath);
+    const project = angularJson.projects['angular-bfdx'];
+
+    const newAngularJson = {
+      ...angularJson,
+      defaultProject: 'angular-bfdx',
+      projects: {
+        'angular-bfdx': project,
+        'angular-bfdx-2': project,
+      }
+    }
+
+    writeJsonSync(jsonPath, newAngularJson);
+
+    await plugin.onPreBuild({
+      netlifyConfig,
+      utils,
+    })
+
+    expect(existsSync(path.join(process.cwd(), 'serverless.ts'))).toBe(true)
+    expect(existsSync(path.join(process.cwd(), 'tsconfig.serverless.json'))).toBe(true)
+  });
+
+
+  test('should throw if defaultProject is unset, with multiple projects', async () => {
+    const jsonPath = path.join(process.cwd(), 'angular.json');
+    const angularJson = readJsonSync(jsonPath);
+    const project = angularJson.projects['angular-bfdx'];
+
+    const newAngularJson = {
+      ...angularJson,
+      projects: {
+        'angular-bfdx': project,
+        'angular-bfdx-2': project,
+      }
+    }
+
+    writeJsonSync(jsonPath, newAngularJson);
+
+    expect(
+      plugin.onPreBuild({
+        netlifyConfig,
+        utils,
+      }),
+    ).rejects.toThrow(`Could not determine the default project name, please add it to your angular.json as "defaultProject"`)
+  })
+
 })
 
 describe('onBuild()', () => {
