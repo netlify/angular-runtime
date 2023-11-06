@@ -2,6 +2,8 @@ const { existsSync, readdirSync } = require('node:fs')
 const { writeFile, mkdir, readFile } = require('node:fs/promises')
 const { join, relative } = require('node:path')
 
+const { readJson } = require('fs-extra')
+
 /**
  * Recursively lists all files in a directory.
  */
@@ -36,6 +38,9 @@ const setUpEdgeFunction = async ({ angularJson, projectName, netlifyConfig, cons
     (path) => `/${relative(join(outputDir, 'browser'), path)}`,
   )
 
+  const { routes: prerenderedRoutes } = await readJson(join(outputDir, 'prerendered-routes.json'))
+  const excludedPaths = [...staticFiles, ...prerenderedRoutes]
+
   const polyfills = `
   import process from "node:process"
 
@@ -61,7 +66,7 @@ const setUpEdgeFunction = async ({ angularJson, projectName, netlifyConfig, cons
   
   export const config = {
     path: "/*",
-    excludedPath: ${JSON.stringify(staticFiles)},
+    excludedPath: ${JSON.stringify(excludedPaths)},
     generator: "angular-on-netlify",
     name: "Angular SSR",
   };
