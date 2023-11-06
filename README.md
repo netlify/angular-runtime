@@ -100,7 +100,7 @@ project, let us know! You can either:
 
 ## Contributing
 
-We welcome contributions ❤️ - see the [CONTRIBUTING.md](docs/CONTRIBUTING.md) file
+We welcome contributions ❤️ - see the [CONTRIBUTING.md](CONTRIBUTING.md) file
 for details.
 
 ## License

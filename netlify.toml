@@ -1,8 +1,0 @@
-[build]
-command = "npm run build:demo"
-functions = "demo/netlify/functions"
-publish = "demo/dist/angular-bfdx/browser"
-base="."
-
-[[plugins]]
-  package="."

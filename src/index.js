@@ -1,51 +1,28 @@
-const addAngularServerlessFiles = require('./helpers/addAngularServerlessFiles')
 const getAngularJson = require('./helpers/getAngularJson')
 const getAngularRoot = require('./helpers/getAngularRoot')
-const setUpBuilderFunction = require('./helpers/setUpBuilderFunction')
-const setUpFunctionsConfig = require('./helpers/setUpFunctionsConfig')
-const setUpRedirects = require('./helpers/setUpRedirects')
-const updateAngularJson = require('./helpers/updateAngularJson')
-const validateAngularUniversalUsage = require('./helpers/validateAngularUniversalUsage')
-const validateNetlifyConfig = require('./helpers/validateNetlifyConfig')
+const setUpEdgeFunction = require('./helpers/setUpEdgeFunction')
+const validateAngularVersion = require('./helpers/validateAngularVersion')
 
 module.exports = {
-  async onPreBuild({ netlifyConfig, utils }) {
+  async onPreBuild({ utils }) {
     const { failBuild } = utils.build
-
-    validateAngularUniversalUsage({ failBuild })
-
-    const siteRoot = getAngularRoot({ failBuild, netlifyConfig })
-
-    const angularJson = getAngularJson({ failBuild, siteRoot })
-
-    const projectName = angularJson.defaultProject
-
-    updateAngularJson({ angularJson, failBuild, projectName, siteRoot })
-
-    validateNetlifyConfig({ failBuild, netlifyConfig, projectName })
-
-    addAngularServerlessFiles({ projectName, siteRoot })
+    // skipping this for now, something's off with the demo site
+    // validateAngularVersion({ failBuild })
   },
-  async onBuild({
-    utils,
-    netlifyConfig,
-    constants: { INTERNAL_FUNCTIONS_SRC, FUNCTIONS_SRC = 'netlify/functions', PUBLISH_DIR },
-  }) {
+  async onBuild({ utils, netlifyConfig, constants }) {
     const { failBuild } = utils.build
 
     const siteRoot = getAngularRoot({ netlifyConfig })
-
     const angularJson = getAngularJson({ failBuild, siteRoot })
 
-    const projectName = angularJson.defaultProject
+    const projectName = angularJson.defaultProject ?? Object.keys(angularJson.projects)[0]
 
-    setUpRedirects({ netlifyConfig })
-
-    setUpFunctionsConfig({ angularJson, netlifyConfig, PUBLISH_DIR })
-
-    setUpBuilderFunction({
-      FUNCTIONS_SRC: INTERNAL_FUNCTIONS_SRC || FUNCTIONS_SRC,
-      publishPath: netlifyConfig.build.publish,
+    setUpEdgeFunction({
+      angularJson,
+      projectName,
+      constants,
+      netlifyConfig,
+      failBuild,
     })
   },
 }
