@@ -1,7 +1,0 @@
-[build]
-command = "ng build --configuration production && ng run angular-bfdx:serverless:production"
-functions = "netlify/functions"
-publish = "dist/angular-bfdx/browser"
-
-[[plugins]]
-  package = "../.."
