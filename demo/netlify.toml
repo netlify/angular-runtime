@@ -1,2 +1,2 @@
 [[plugins]]
-  package="../"
+  package="@netlify/angular-runtime"
