@@ -22,7 +22,7 @@
     "prepublishOnly:pull": "git pull",
     "prepublishOnly:install": "npm ci",
     "prepublishOnly:test": "npm test",
-    "test": "# no tests"
+    "test": ""
   },
   "repository": {
     "type": "git",
