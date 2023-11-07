@@ -6,8 +6,7 @@ const validateAngularVersion = require('./helpers/validateAngularVersion')
 module.exports = {
   async onPreBuild({ utils }) {
     const { failBuild } = utils.build
-    // skipping this for now, something's off with the demo site
-    // validateAngularVersion({ failBuild })
+    await validateAngularVersion({ failBuild, run: utils.run })
   },
   async onBuild({ utils, netlifyConfig, constants }) {
     const { failBuild } = utils.build
