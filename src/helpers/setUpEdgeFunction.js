@@ -41,6 +41,8 @@ const setUpEdgeFunction = async ({ angularJson, projectName, netlifyConfig, cons
   const { routes: prerenderedRoutes } = await readJson(join(outputDir, 'prerendered-routes.json'))
   const excludedPaths = [...staticFiles, ...prerenderedRoutes]
 
+  // buy putting this into a separate module that's imported first,
+  // we ensure this is initialised before any other module
   const polyfills = `
   import process from "node:process"
 
