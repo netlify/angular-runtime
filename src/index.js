@@ -6,9 +6,9 @@ const validateAngularVersion = require('./helpers/validateAngularVersion')
 let isValidAngularProject = true
 
 module.exports = {
-  async onPreBuild({ utils, netlifyConfig }) {
-    const { failPlugin } = utils.build
-    isValidAngularProject = await validateAngularVersion({ failPlugin, run: utils.run })
+  async onPreBuild({ netlifyConfig }) {
+    const siteRoot = getAngularRoot({ netlifyConfig })
+    isValidAngularProject = await validateAngularVersion(siteRoot)
     if (!isValidAngularProject) {
       console.warn('Skipping build plugin.')
       return
