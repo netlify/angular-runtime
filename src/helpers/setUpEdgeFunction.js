@@ -30,14 +30,19 @@ const setUpEdgeFunction = async ({ angularJson, projectName, netlifyConfig, cons
     return failBuild('Could not find build output directory')
   }
 
-  console.log(`Writing Angular SSR Edge Function for project "${projectName}" ...`)
-
   netlifyConfig.build.publish = join(outputDir, 'browser')
+
+  const serverDistRoot = join(outputDir, 'server')
+  if (!existsSync(serverDistRoot)) {
+    console.log('No server output generated, skipping SSR setup.')
+    return
+  }
+
+  console.log(`Writing Angular SSR Edge Function for project "${projectName}" ...`)
 
   const edgeFunctionDir = join(constants.INTERNAL_EDGE_FUNCTIONS_SRC, 'angular-ssr')
   await mkdir(edgeFunctionDir, { recursive: true })
 
-  const serverDistRoot = join(outputDir, 'server')
   const html = await readFile(join(serverDistRoot, 'index.server.html'), 'utf-8')
   const staticFiles = getAllFilesIn(join(outputDir, 'browser')).map(
     (path) => `/${relative(join(outputDir, 'browser'), path)}`,
