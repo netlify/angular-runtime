@@ -1,6 +1,6 @@
 import { Component, OnInit, Input } from '@angular/core';
 import { ActivatedRoute } from '@angular/router';
-import { CommonModule, Location } from '@angular/common';
+import { Location, UpperCasePipe } from '@angular/common';
 
 import { HeroService } from '../hero.service';
 import { Hero } from '../hero';
@@ -9,7 +9,7 @@ import { FormsModule } from '@angular/forms';
 @Component({
   selector: 'app-hero-detail',
   standalone: true,
-  imports: [CommonModule, FormsModule],
+  imports: [UpperCasePipe, FormsModule],
   templateUrl: './hero-detail.component.html',
   styleUrls: ['./hero-detail.component.css'],
 })
