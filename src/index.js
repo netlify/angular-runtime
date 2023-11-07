@@ -21,10 +21,10 @@ module.exports = {
       return
     }
 
-    const { failPlugin } = utils.build
+    const { failBuild } = utils.build
 
     const siteRoot = getAngularRoot({ netlifyConfig })
-    const angularJson = getAngularJson({ failPlugin, siteRoot })
+    const angularJson = getAngularJson({ failBuild, siteRoot })
 
     const projectName = angularJson.defaultProject ?? Object.keys(angularJson.projects)[0]
 

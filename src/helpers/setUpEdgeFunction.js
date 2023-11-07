@@ -1,3 +1,4 @@
+const { Buffer } = require('node:buffer')
 const { existsSync, readdirSync } = require('node:fs')
 const { writeFile, mkdir, readFile } = require('node:fs/promises')
 const { join, relative, sep, posix } = require('node:path')
@@ -54,10 +55,13 @@ const setUpEdgeFunction = async ({ angularJson, projectName, netlifyConfig, cons
 
   const ssrFunction = `
   import "./polyfill.mjs";
+  import { Buffer } from "node:buffer";
   import { renderApplication } from "${toPosix(relative(edgeFunctionDir, serverDistRoot))}/render-utils.server.mjs";
   import bootstrap from "${toPosix(relative(edgeFunctionDir, serverDistRoot))}/main.server.mjs";
   
-  const document = \`${html}\`;
+  const document = Buffer.from(${JSON.stringify(
+    Buffer.from(html, 'utf-8').toString('base64'),
+  )}, 'base64').toString("utf-8");
   
   export default async (request, context) => {
     const html = await renderApplication(bootstrap, {
