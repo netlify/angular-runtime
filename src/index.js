@@ -4,9 +4,11 @@ const setUpEdgeFunction = require('./helpers/setUpEdgeFunction')
 const validateAngularVersion = require('./helpers/validateAngularVersion')
 
 module.exports = {
-  async onPreBuild({ utils }) {
+  async onPreBuild({ utils, netlifyConfig }) {
     const { failBuild } = utils.build
     await validateAngularVersion({ failBuild, run: utils.run })
+
+    netlifyConfig.build.command ??= 'npm run build'
   },
   async onBuild({ utils, netlifyConfig, constants }) {
     const { failBuild } = utils.build
@@ -16,7 +18,7 @@ module.exports = {
 
     const projectName = angularJson.defaultProject ?? Object.keys(angularJson.projects)[0]
 
-    setUpEdgeFunction({
+    await setUpEdgeFunction({
       angularJson,
       projectName,
       constants,
