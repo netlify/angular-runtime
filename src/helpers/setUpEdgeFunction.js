@@ -5,6 +5,8 @@ const { join, relative, sep, posix } = require('node:path')
 
 const { readJson } = require('fs-extra')
 
+const packageJson = require('../../package.json')
+
 /**
  * Recursively lists all files in a directory.
  */
@@ -75,7 +77,7 @@ const setUpEdgeFunction = async ({ angularJson, projectName, netlifyConfig, cons
   export const config = {
     path: "/*",
     excludedPath: ${JSON.stringify(excludedPaths)},
-    generator: "angular-on-netlify",
+    generator: "${packageJson.name}@${packageJson.version}",
     name: "Angular SSR",
   };
   `
