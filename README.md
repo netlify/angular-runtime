@@ -53,7 +53,7 @@ in our docs.
 During server-side rendering (SSR), you can access the incoming `Request` object and the Netlify-specific `Context` object via providers:
 
 ```ts
-import type { Context } from "@netlify/edge-functions"
+import type { Context } from "@netlify/edge-functions"
 
 export class FooComponent {
 

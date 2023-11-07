@@ -1,7 +1,7 @@
-const { overrides } = require('@netlify/eslint-config-node/react_config')
+const { overrides } = require('@netlify/eslint-config-node')
 
 module.exports = {
-  extends: '@netlify/eslint-config-node/react_config',
+  extends: '@netlify/eslint-config-node',
   rules: {
     'max-depth': 0,
     complexity: 0,

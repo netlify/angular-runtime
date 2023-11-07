@@ -9,7 +9,7 @@ const getAngularJson = function ({ failBuild, siteRoot }) {
   }
   try {
     return readJsonSync(join(siteRoot, 'angular.json'))
-  } catch (error) {
+  } catch {
     return failBuild(`Could not parse contents of angular.json`)
   }
 }
