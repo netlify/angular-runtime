@@ -1,3 +1,4 @@
+const ensureNoCompetingPlugin = require('./helpers/ensureNoCompetingPlugin')
 const getAngularJson = require('./helpers/getAngularJson')
 const getAngularRoot = require('./helpers/getAngularRoot')
 const setUpEdgeFunction = require('./helpers/setUpEdgeFunction')
@@ -6,13 +7,15 @@ const validateAngularVersion = require('./helpers/validateAngularVersion')
 let isValidAngularProject = true
 
 module.exports = {
-  async onPreBuild({ netlifyConfig }) {
+  async onPreBuild({ netlifyConfig, utils }) {
     const siteRoot = getAngularRoot({ netlifyConfig })
     isValidAngularProject = await validateAngularVersion(siteRoot)
     if (!isValidAngularProject) {
       console.warn('Skipping build plugin.')
       return
     }
+
+    ensureNoCompetingPlugin(siteRoot, utils.build.failBuild)
 
     netlifyConfig.build.command ??= 'npm run build'
   },
