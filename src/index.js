@@ -5,16 +5,16 @@ const validateAngularVersion = require('./helpers/validateAngularVersion')
 
 module.exports = {
   async onPreBuild({ utils, netlifyConfig }) {
-    const { failBuild } = utils.build
-    await validateAngularVersion({ failBuild, run: utils.run })
+    const { failPlugin } = utils.build
+    await validateAngularVersion({ failPlugin, run: utils.run })
 
     netlifyConfig.build.command ??= 'npm run build'
   },
   async onBuild({ utils, netlifyConfig, constants }) {
-    const { failBuild } = utils.build
+    const { failPlugin } = utils.build
 
     const siteRoot = getAngularRoot({ netlifyConfig })
-    const angularJson = getAngularJson({ failBuild, siteRoot })
+    const angularJson = getAngularJson({ failPlugin, siteRoot })
 
     const projectName = angularJson.defaultProject ?? Object.keys(angularJson.projects)[0]
 
