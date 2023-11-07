@@ -28,8 +28,7 @@
     "type": "git",
     "url": "git+https://github.com/netlify/angular-runtime.git"
   },
-  "author": "@lindsaylevine",
-  "license": "ISC",
+  "license": "MIT",
   "bugs": {
     "url": "https://github.com/netlify/angular-runtime/issues"
   },
