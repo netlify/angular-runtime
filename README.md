@@ -16,6 +16,7 @@ This build plugin implements Angular Support on Netlify.
 ## Table of Contents
 
 - [Installation and Configuration](#installation-and-configuration)
+- [Accessing `Request` and `Context` during Server-Side Rendering](#accessing-request-and-context-during-server-side-rendering)
 - [CLI Usage](#cli-usage)
 - [Getting Help](#getting-help)
 - [Contributing](#contributing)
@@ -46,6 +47,29 @@ yarn add -D @netlify/plugin-angular-universal
 
 Read more about [file-based plugin installation](https://docs.netlify.com/configure-builds/build-plugins/#file-based-installation)
 in our docs.
+
+## Accessing `Request` and `Context` during Server-Side Rendering
+
+During server-side rendering (SSR), you can access the incoming `Request` object and the Netlify-specific `Context` object via providers:
+
+```ts
+import type { Context } from "@netlify/edge-functions"
+
+export class FooComponent {
+
+  constructor(
+    // ...
+    @Inject('netlify.request') @Optional() request?: Request,
+    @Inject('netlify.context') @Optional() context?: Context,
+  ) {
+    console.log(`Rendering Foo for path ${request?.url} from location ${context?.geo?.city}`)
+    // ...
+  }
+  
+}
+```
+
+Keep in mind that these will not be available on the client-side or during [prerendering](https://angular.dev/guide/prerendering#prerendering-parameterized-routes).
 
 ## CLI Usage
 

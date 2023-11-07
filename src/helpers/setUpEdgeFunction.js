@@ -59,7 +59,7 @@ const setUpEdgeFunction = async ({ angularJson, projectName, netlifyConfig, cons
     const html = await renderApplication(bootstrap, {
       url: request.url,
       document,
-      platformProviders: [{ provide: "geo", useValue: context.geo }],
+      platformProviders: [{ provide: "netlify.request", useValue: request }, { provide: "netlify.context", useValue: context }],
     });
     return new Response(html, { headers: { "content-type": "text/html" } });
   };
