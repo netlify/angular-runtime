@@ -1,6 +1,6 @@
 const { existsSync, readdirSync } = require('node:fs')
 const { writeFile, mkdir, readFile } = require('node:fs/promises')
-const { join, relative } = require('node:path')
+const { join, relative, sep, posix } = require('node:path')
 
 const { readJson } = require('fs-extra')
 
@@ -14,6 +14,8 @@ const getAllFilesIn = (dir) =>
     }
     return [join(dir, dirent.name)]
   })
+
+const toPosix = (path) => path.split(sep).join(posix.sep)
 
 const setUpEdgeFunction = async ({ angularJson, projectName, netlifyConfig, constants, failBuild }) => {
   const project = angularJson.projects[projectName]
@@ -52,8 +54,8 @@ const setUpEdgeFunction = async ({ angularJson, projectName, netlifyConfig, cons
 
   const ssrFunction = `
   import "./polyfill.mjs";
-  import { renderApplication } from "${relative(edgeFunctionDir, serverDistRoot)}/render-utils.server.mjs";
-  import bootstrap from "${relative(edgeFunctionDir, serverDistRoot)}/main.server.mjs";
+  import { renderApplication } from "${toPosix(relative(edgeFunctionDir, serverDistRoot))}/render-utils.server.mjs";
+  import bootstrap from "${toPosix(relative(edgeFunctionDir, serverDistRoot))}/main.server.mjs";
   
   const document = \`${html}\`;
   
