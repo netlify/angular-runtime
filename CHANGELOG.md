@@ -1,5 +1,16 @@
 # Changelog
 
+## [2.0.0](https://www.github.com/netlify/angular-runtime/compare/v1.0.1...v2.0.0) (2023-11-08)
+
+
+### ⚠ BREAKING CHANGES
+
+* add support for Angular v17 (#67)
+
+### Features
+
+* add support for Angular v17 ([#67](https://www.github.com/netlify/angular-runtime/issues/67)) ([ab92862](https://www.github.com/netlify/angular-runtime/commit/ab92862aedc2b3ac8639f8da4968158b65871597))
+
 ### [1.0.1](https://www.github.com/netlify/netlify-plugin-angular-universal/compare/v1.0.0...v1.0.1) (2021-08-24)
 
 
