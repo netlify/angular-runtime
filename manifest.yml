@@ -1,2 +1,2 @@
-name: 'netlify-plugin-angular-universal'
+name: '@netlify/angular-runtime'
 inputs: []

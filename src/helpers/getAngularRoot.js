@@ -1,5 +1,6 @@
 const { existsSync } = require('fs')
 const path = require('path')
+const process = require('process')
 
 /**
  * If we're in a monorepo then the site root may not be the same as the base directory
