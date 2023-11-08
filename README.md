@@ -71,6 +71,12 @@ export class FooComponent {
 
 Keep in mind that these will not be available on the client-side or during [prerendering](https://angular.dev/guide/prerendering#prerendering-parameterized-routes).
 
+To test this in local development, run your Angular project using `netlify serve`:
+
+```sh
+netlify serve --dir dist/demo/browser
+```
+
 ## CLI Usage
 
 ### Requirements
