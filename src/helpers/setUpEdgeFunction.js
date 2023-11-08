@@ -58,6 +58,14 @@ const setUpEdgeFunction = async ({ angularJson, projectName, netlifyConfig, cons
 
   globalThis.process = process
   globalThis.global = globalThis
+  globalThis.DenoEvent = globalThis.Event // storing this for fixup-event.mjs
+  `
+
+  // angular's polyfills override the global `Event` with a custom implementation.
+  // Deno local doesn't like that and will throw in local dev while dispatching `new Event("load")`.
+  // So we reverse angular's override, and go back to Deno's implementation.
+  const fixupEvent = `
+  globalThis.Event = globalThis.DenoEvent
   `
 
   const ssrFunction = `
@@ -65,7 +73,8 @@ const setUpEdgeFunction = async ({ angularJson, projectName, netlifyConfig, cons
   import { Buffer } from "node:buffer";
   import { renderApplication } from "${toPosix(relative(edgeFunctionDir, serverDistRoot))}/render-utils.server.mjs";
   import bootstrap from "${toPosix(relative(edgeFunctionDir, serverDistRoot))}/main.server.mjs";
-  
+  import "./fixup-event.mjs";
+
   const document = Buffer.from(${JSON.stringify(
     Buffer.from(html, 'utf-8').toString('base64'),
   )}, 'base64').toString("utf-8");
@@ -88,6 +97,7 @@ const setUpEdgeFunction = async ({ angularJson, projectName, netlifyConfig, cons
   `
 
   await writeFile(join(edgeFunctionDir, 'polyfill.mjs'), polyfills)
+  await writeFile(join(edgeFunctionDir, 'fixup-event.mjs'), fixupEvent)
   await writeFile(join(edgeFunctionDir, 'angular-ssr.mjs'), ssrFunction)
 }
 
