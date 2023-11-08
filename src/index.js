@@ -34,6 +34,7 @@ module.exports = {
       siteRoot,
       failBuild: utils.build.failBuild,
       PUBLISH_DIR: constants.PUBLISH_DIR,
+      IS_LOCAL: constants.IS_LOCAL,
       netlifyConfig,
     })
   },

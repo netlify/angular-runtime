@@ -1,12 +1,9 @@
 const { join } = require('path')
-const process = require('process')
 
 const getAngularJson = require('./getAngularJson')
 const { getProject } = require('./setUpEdgeFunction')
 
-const fixOutputDir = async function ({ failBuild, siteRoot, PUBLISH_DIR, netlifyConfig }) {
-  const isBuildbot = process.env.CI
-
+const fixOutputDir = async function ({ failBuild, siteRoot, PUBLISH_DIR, IS_LOCAL, netlifyConfig }) {
   const angularJson = getAngularJson({ failBuild, siteRoot })
   const project = getProject(angularJson)
 
@@ -17,11 +14,11 @@ const fixOutputDir = async function ({ failBuild, siteRoot, PUBLISH_DIR, netlify
     return
   }
 
-  if (isBuildbot) {
-    failBuild(`Publish directory is configured incorrectly. Please set it to "${correctPublishDir}".`)
-  } else {
+  if (IS_LOCAL) {
     console.warn(`Publish directory is configured incorrectly. Updating to "${correctPublishDir}".`)
     netlifyConfig.build.publish = correctPublishDir
+  } else {
+    failBuild(`Publish directory is configured incorrectly. Please set it to "${correctPublishDir}".`)
   }
 }
 
