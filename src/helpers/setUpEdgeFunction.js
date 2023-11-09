@@ -52,7 +52,7 @@ const setUpEdgeFunction = async ({ angularJson, constants, failBuild }) => {
   const staticFiles = getAllFilesIn(join(outputDir, 'browser')).map(
     (path) => `/${relative(join(outputDir, 'browser'), path)}`,
   )
-  
+
   const { routes: prerenderedRoutes } = await readJson(join(outputDir, 'prerendered-routes.json'))
   const excludedPaths = [...staticFiles, ...prerenderedRoutes]
 
