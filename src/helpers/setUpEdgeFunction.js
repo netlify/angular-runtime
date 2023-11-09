@@ -54,7 +54,7 @@ const setUpEdgeFunction = async ({ angularJson, constants, failBuild }) => {
   )
 
   const { routes: prerenderedRoutes } = await readJson(join(outputDir, 'prerendered-routes.json'))
-  const excludedPaths = [...staticFiles, ...prerenderedRoutes]
+  const excludedPaths = [...staticFiles, ...prerenderedRoutes].map(toPosix)
 
   // buy putting this into a separate module that's imported first,
   // we ensure this is initialised before any other module
