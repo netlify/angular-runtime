@@ -22,7 +22,7 @@
     "prepublishOnly:pull": "git pull",
     "prepublishOnly:install": "npm ci",
     "prepublishOnly:test": "npm test",
-    "test": ""
+    "test": "cd demo && npm ci && netlify build --cwd . --offline && cd .. && node --test"
   },
   "repository": {
     "type": "git",
@@ -56,6 +56,7 @@
     "@types/node": "^16.3.1",
     "eslint-plugin-unicorn": "^49.0.0",
     "husky": "^4.3.0",
+    "netlify-cli": "^17.2.0",
     "prettier": "^2.1.2"
   },
   "dependencies": {

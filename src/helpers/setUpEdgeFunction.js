@@ -13,7 +13,7 @@ const packageJson = require('../../package.json')
 const getAllFilesIn = (dir) =>
   readdirSync(dir, { withFileTypes: true }).flatMap((dirent) => {
     if (dirent.isDirectory()) {
-      return getAllFilesIn(join(dir, dirent.name)).map((path) => join(dirent.name, path))
+      return getAllFilesIn(join(dir, dirent.name))
     }
     return [join(dir, dirent.name)]
   })
@@ -52,7 +52,7 @@ const setUpEdgeFunction = async ({ angularJson, constants, failBuild }) => {
   const staticFiles = getAllFilesIn(join(outputDir, 'browser')).map(
     (path) => `/${relative(join(outputDir, 'browser'), path)}`,
   )
-
+  
   const { routes: prerenderedRoutes } = await readJson(join(outputDir, 'prerendered-routes.json'))
   const excludedPaths = [...staticFiles, ...prerenderedRoutes]
 
