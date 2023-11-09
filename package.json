@@ -17,11 +17,7 @@
     "format:check-fix:prettier": "run-e format:check:prettier format:fix:prettier",
     "format:check:prettier": "cross-env-shell prettier --check $npm_package_config_prettier",
     "format:fix:prettier": "cross-env-shell prettier --write $npm_package_config_prettier",
-    "prepublishOnly": "run-s prepublishOnly:*",
-    "prepublishOnly:checkout": "git checkout main",
-    "prepublishOnly:pull": "git pull",
-    "prepublishOnly:install": "npm ci",
-    "prepublishOnly:test": "npm test",
+    "prepublishOnly": "npm ci && npm test",
     "test": "cd demo && npm ci && netlify build --cwd . --offline && cd .. && node --test"
   },
   "repository": {
