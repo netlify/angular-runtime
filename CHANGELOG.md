@@ -1,5 +1,15 @@
 # Changelog
 
+## [2.0.2](https://github.com/netlify/angular-runtime/compare/v2.0.1...v2.0.2) (2023-11-09)
+
+
+### Bug Fixes
+
+* `excludedPath` contained relative paths for some prerendered static files ([#74](https://github.com/netlify/angular-runtime/issues/74)) ([5843bc8](https://github.com/netlify/angular-runtime/commit/5843bc8b89f130200899d34b3184f4072c1f5fdb))
+* install run-s and run-p ([#73](https://github.com/netlify/angular-runtime/issues/73)) ([38f3e63](https://github.com/netlify/angular-runtime/commit/38f3e63741332b57cd8926c139ba1ad0ec68dbeb))
+* remove `global` polyfill ([#76](https://github.com/netlify/angular-runtime/issues/76)) ([e6fab5f](https://github.com/netlify/angular-runtime/commit/e6fab5f9d29f93c26ee3d781311aa5ffe6d69fe4))
+* replace `defaultProject` with environment variable ([#75](https://github.com/netlify/angular-runtime/issues/75)) ([ee4f818](https://github.com/netlify/angular-runtime/commit/ee4f81819f1b3b92c863bbcad133c9755bf4c8d0))
+
 ## [2.0.1](https://github.com/netlify/angular-runtime/compare/v2.0.0...v2.0.1) (2023-11-09)
 
 
