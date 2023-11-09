@@ -2,6 +2,7 @@ const { Buffer } = require('node:buffer')
 const { existsSync, readdirSync } = require('node:fs')
 const { writeFile, mkdir, readFile } = require('node:fs/promises')
 const { join, relative, sep, posix } = require('node:path')
+const process = require('node:process')
 
 const { readJson } = require('fs-extra')
 
@@ -20,8 +21,26 @@ const getAllFilesIn = (dir) =>
 
 const toPosix = (path) => path.split(sep).join(posix.sep)
 
-const getProject = (angularJson) => {
-  const projectName = angularJson.defaultProject ?? Object.keys(angularJson.projects)[0]
+const getProject = (angularJson, failBuild) => {
+  const selectedProject = process.env.ANGULAR_PROJECT
+  if (selectedProject) {
+    const project = angularJson.projects[selectedProject]
+    if (!project) {
+      return failBuild(
+        `Could not find project selected project "${selectedProject}" in angular.json. Please update the ANGULAR_PROJECT environment variable.`,
+      )
+    }
+    return project
+  }
+
+  const projectNames = Object.keys(angularJson.projects)
+  const [projectName] = projectNames
+  if (projectNames.length > 1) {
+    console.warn(
+      `Found multiple projects in angular.json, deploying "${projectName}". To deploy a different one, set the ANGULAR_PROJECT environment variable to the project name.`,
+    )
+  }
+
   return angularJson.projects[projectName]
 }
 
@@ -62,7 +81,6 @@ const setUpEdgeFunction = async ({ angularJson, constants, failBuild }) => {
   import process from "node:process"
 
   globalThis.process = process
-  globalThis.global = globalThis
   globalThis.DenoEvent = globalThis.Event // storing this for fixup-event.mjs
   `
 
