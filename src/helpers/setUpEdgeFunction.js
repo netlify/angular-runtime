@@ -20,8 +20,15 @@ const getAllFilesIn = (dir) =>
 
 const toPosix = (path) => path.split(sep).join(posix.sep)
 
-const setUpEdgeFunction = async ({ angularJson, projectName, netlifyConfig, constants, failBuild }) => {
-  const project = angularJson.projects[projectName]
+const getProject = (angularJson) => {
+  const projectName = angularJson.defaultProject ?? Object.keys(angularJson.projects)[0]
+  return angularJson.projects[projectName]
+}
+
+module.exports.getProject = getProject
+
+const setUpEdgeFunction = async ({ angularJson, constants, failBuild }) => {
+  const project = getProject(angularJson)
   const {
     architect: { build },
   } = project
@@ -30,15 +37,13 @@ const setUpEdgeFunction = async ({ angularJson, projectName, netlifyConfig, cons
     return failBuild('Could not find build output directory')
   }
 
-  netlifyConfig.build.publish = join(outputDir, 'browser')
-
   const serverDistRoot = join(outputDir, 'server')
   if (!existsSync(serverDistRoot)) {
     console.log('No server output generated, skipping SSR setup.')
     return
   }
 
-  console.log(`Writing Angular SSR Edge Function for project "${projectName}" ...`)
+  console.log(`Writing Angular SSR Edge Function ...`)
 
   const edgeFunctionDir = join(constants.INTERNAL_EDGE_FUNCTIONS_SRC, 'angular-ssr')
   await mkdir(edgeFunctionDir, { recursive: true })
@@ -101,4 +106,4 @@ const setUpEdgeFunction = async ({ angularJson, projectName, netlifyConfig, cons
   await writeFile(join(edgeFunctionDir, 'angular-ssr.mjs'), ssrFunction)
 }
 
-module.exports = setUpEdgeFunction
+module.exports.setUpEdgeFunction = setUpEdgeFunction

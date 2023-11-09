@@ -2,9 +2,10 @@ const { rm } = require('fs/promises')
 const { join } = require('path')
 
 const ensureNoCompetingPlugin = require('./helpers/ensureNoCompetingPlugin')
+const fixOutputDir = require('./helpers/fixOutputDir')
 const getAngularJson = require('./helpers/getAngularJson')
 const getAngularRoot = require('./helpers/getAngularRoot')
-const setUpEdgeFunction = require('./helpers/setUpEdgeFunction')
+const { setUpEdgeFunction } = require('./helpers/setUpEdgeFunction')
 const validateAngularVersion = require('./helpers/validateAngularVersion')
 
 let isValidAngularProject = true
@@ -17,7 +18,7 @@ module.exports = {
     const edgeFunctionDir = join(constants.INTERNAL_EDGE_FUNCTIONS_SRC, 'angular-ssr')
     await rm(edgeFunctionDir, { recursive: true })
   },
-  async onPreBuild({ netlifyConfig, utils }) {
+  async onPreBuild({ netlifyConfig, utils, constants }) {
     const siteRoot = getAngularRoot({ netlifyConfig })
     isValidAngularProject = await validateAngularVersion(siteRoot)
     if (!isValidAngularProject) {
@@ -28,6 +29,14 @@ module.exports = {
     ensureNoCompetingPlugin(siteRoot, utils.build.failBuild)
 
     netlifyConfig.build.command ??= 'npm run build'
+
+    await fixOutputDir({
+      siteRoot,
+      failBuild: utils.build.failBuild,
+      PUBLISH_DIR: constants.PUBLISH_DIR,
+      IS_LOCAL: constants.IS_LOCAL,
+      netlifyConfig,
+    })
   },
   async onBuild({ utils, netlifyConfig, constants }) {
     if (!isValidAngularProject) {
@@ -39,11 +48,8 @@ module.exports = {
     const siteRoot = getAngularRoot({ netlifyConfig })
     const angularJson = getAngularJson({ failBuild, siteRoot })
 
-    const projectName = angularJson.defaultProject ?? Object.keys(angularJson.projects)[0]
-
     await setUpEdgeFunction({
       angularJson,
-      projectName,
       constants,
       netlifyConfig,
       failBuild,
