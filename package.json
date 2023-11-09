@@ -22,7 +22,7 @@
     "prepublishOnly:pull": "git pull",
     "prepublishOnly:install": "npm ci",
     "prepublishOnly:test": "npm test",
-    "test": ""
+    "test": "cd demo && npm ci && netlify build --cwd . --offline && cd .. && node --test"
   },
   "repository": {
     "type": "git",
@@ -49,13 +49,14 @@
     }
   },
   "engines": {
-    "node": ">=16.0.0"
+    "node": ">=18.13.0"
   },
   "devDependencies": {
     "@netlify/eslint-config-node": "^7.0.1",
     "@types/node": "^16.3.1",
     "eslint-plugin-unicorn": "^49.0.0",
     "husky": "^4.3.0",
+    "netlify-cli": "^17.2.0",
     "npm-run-all": "^4.1.5",
     "prettier": "^2.1.2"
   },

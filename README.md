@@ -74,7 +74,7 @@ Keep in mind that these will not be available on the client-side or during [prer
 To test this in local development, run your Angular project using `netlify serve`:
 
 ```sh
-netlify serve --dir dist/<your-project-name>/browser
+netlify serve
 ```
 
 ## CLI Usage
