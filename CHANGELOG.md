@@ -1,5 +1,13 @@
 # Changelog
 
+## [2.0.1](https://github.com/netlify/angular-runtime/compare/v2.0.0...v2.0.1) (2023-11-09)
+
+
+### Bug Fixes
+
+* add publish step to release-please ([#70](https://github.com/netlify/angular-runtime/issues/70)) ([3b58f20](https://github.com/netlify/angular-runtime/commit/3b58f2099df950aac8fdc8a3fefa89765041a85b))
+* validate publish dir in buildbot ([#71](https://github.com/netlify/angular-runtime/issues/71)) ([df8f8cf](https://github.com/netlify/angular-runtime/commit/df8f8cffd95acb36e905ce01d2701cff23dbdffc))
+
 ## [2.0.0](https://www.github.com/netlify/angular-runtime/compare/v1.0.1...v2.0.0) (2023-11-08)
 
 
