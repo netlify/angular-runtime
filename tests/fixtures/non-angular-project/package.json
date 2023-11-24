@@ -1,0 +1,22 @@
+{
+  "name": "non-angular-project",
+  "version": "0.0.0",
+  "scripts": {
+    "build": "echo hello!"
+  },
+  "private": true,
+  "dependencies": {
+    "@netlify/angular-runtime": "file:../../../",
+    "@angular/animations": "^17.0.0-next.0",
+    "@angular/common": "^17.0.0-next.0",
+    "@angular/compiler": "^17.0.0-next.0",
+    "@angular/core": "^17.0.0-next.0",
+    "@angular/forms": "^17.0.0-next.0",
+    "@angular/platform-browser": "^17.0.0-next.0",
+    "@angular/platform-browser-dynamic": "^17.0.0-next.0",
+    "@angular/platform-server": "^17.0.0-next.0",
+    "@angular/router": "^17.0.0-next.0",
+    "@angular/ssr": "^17.0.0-rc.3"
+  },
+  "devDependencies": {}
+}

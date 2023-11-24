@@ -19,20 +19,22 @@ module.exports = {
     await rm(edgeFunctionDir, { recursive: true })
   },
   async onPreBuild({ netlifyConfig, utils, constants }) {
-    const siteRoot = getAngularRoot({ netlifyConfig })
+    const { failBuild, failPlugin } = utils.build
+    const siteRoot = getAngularRoot({ failBuild, netlifyConfig })
     isValidAngularProject = await validateAngularVersion(siteRoot)
     if (!isValidAngularProject) {
       console.warn('Skipping build plugin.')
       return
     }
 
-    ensureNoCompetingPlugin(siteRoot, utils.build.failBuild)
+    ensureNoCompetingPlugin(siteRoot, failBuild)
 
     netlifyConfig.build.command ??= 'npm run build'
 
     await fixOutputDir({
       siteRoot,
-      failBuild: utils.build.failBuild,
+      failBuild,
+      failPlugin,
       PUBLISH_DIR: constants.PUBLISH_DIR,
       IS_LOCAL: constants.IS_LOCAL,
       netlifyConfig,
@@ -43,10 +45,10 @@ module.exports = {
       return
     }
 
-    const { failBuild } = utils.build
+    const { failBuild, failPlugin } = utils.build
 
-    const siteRoot = getAngularRoot({ netlifyConfig })
-    const angularJson = getAngularJson({ failBuild, siteRoot })
+    const siteRoot = getAngularRoot({ failBuild, netlifyConfig })
+    const angularJson = getAngularJson({ failPlugin, siteRoot })
 
     await setUpEdgeFunction({
       angularJson,
