@@ -9,12 +9,13 @@ const { satisfies } = require('semver')
 const validateAngularVersion = async function (root) {
   let packagePath
   try {
+    // eslint-disable-next-line n/no-missing-require
     packagePath = require.resolve('@angular/core/package.json', { paths: [root] })
     if (!packagePath) {
       console.warn('This site does not seem to be using Angular.')
       return false
     }
-  } catch (err) {
+  } catch {
     // module not found
     console.warn('This site does not seem to be using Angular.')
     return false
