@@ -3,9 +3,18 @@ import assert from 'node:assert'
 import { test } from 'node:test'
 import { fileURLToPath } from 'node:url'
 
-test('non angular project fails the plugin execution but does not error', async () => {
+test('project without angular.json fails the plugin execution but does not error', async () => {
   const { severityCode, success } = await build({
     repositoryRoot: fileURLToPath(new URL('./fixtures/non-angular-project', import.meta.url)),
+  })
+
+  assert.deepEqual(severityCode, 0)
+  assert.deepEqual(success, true)
+})
+
+test('project with missing angular dependencies does not error', async () => {
+  const { severityCode, success } = await build({
+    repositoryRoot: fileURLToPath(new URL('./fixtures/missing-angular-deps', import.meta.url)),
   })
 
   assert.deepEqual(severityCode, 0)

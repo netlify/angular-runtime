@@ -23,7 +23,8 @@
     "prepublishOnly:install": "npm ci",
     "prepublishOnly:test": "npm test",
     "pretest:demo": "cd demo && npm ci && netlify build --cwd . --offline && cd ..",
-    "pretest:fixtures": "cd tests/fixtures/non-angular-project && npm ci",
+    "pretest:fixtures:non-angular-project": "cd tests/fixtures/non-angular-project && npm ci",
+    "pretest:fixtures:missing-angular-deps": "cd tests/fixtures/missing-angular-deps && npm ci",
     "pretest": "run-s pretest:*",
     "test": "node --test"
   },
