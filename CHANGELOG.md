@@ -1,5 +1,13 @@
 # Changelog
 
+## [2.0.4](https://github.com/netlify/angular-runtime/compare/v2.0.3...v2.0.4) (2023-11-28)
+
+
+### Bug Fixes
+
+* handle missing angular dependencis error ([#91](https://github.com/netlify/angular-runtime/issues/91)) ([b5df118](https://github.com/netlify/angular-runtime/commit/b5df11821c91c75f6a4606df5656cca6fe607e7c))
+* install before publishing ([#79](https://github.com/netlify/angular-runtime/issues/79)) ([82521c8](https://github.com/netlify/angular-runtime/commit/82521c837e4aa498caa986f2b991eb2d4965d122))
+
 ## [2.0.3](https://github.com/netlify/angular-runtime/compare/v2.0.2...v2.0.3) (2023-11-27)
 
 
