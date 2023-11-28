@@ -1,5 +1,12 @@
 # Changelog
 
+## [2.0.3](https://github.com/netlify/angular-runtime/compare/v2.0.2...v2.0.3) (2023-11-27)
+
+
+### Bug Fixes
+
+* type errors due to missing failPLugin function ([#87](https://github.com/netlify/angular-runtime/issues/87)) ([db09d04](https://github.com/netlify/angular-runtime/commit/db09d04fe39576a9cd33c782f299ee287e7b2910))
+
 ## [2.0.2](https://github.com/netlify/angular-runtime/compare/v2.0.1...v2.0.2) (2023-11-09)
 
 

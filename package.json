@@ -1,6 +1,6 @@
 {
   "name": "@netlify/angular-runtime",
-  "version": "2.0.2",
+  "version": "2.0.3",
   "description": "Netlify Angular Runtime - Run Angular seamlessly on Netlify.",
   "main": "src/index.js",
   "files": [
@@ -18,7 +18,10 @@
     "format:check:prettier": "cross-env-shell prettier --check $npm_package_config_prettier",
     "format:fix:prettier": "cross-env-shell prettier --write $npm_package_config_prettier",
     "prepublishOnly": "npm ci && npm test",
-    "test": "cd demo && npm ci && netlify build --cwd . --offline && cd .. && node --test"
+    "pretest:demo": "cd demo && npm ci && netlify build --cwd . --offline && cd ..",
+    "pretest:fixtures": "cd tests/fixtures/non-angular-project && npm ci",
+    "pretest": "run-s pretest:*",
+    "test": "node --test"
   },
   "repository": {
     "type": "git",
@@ -53,6 +56,7 @@
     "eslint-plugin-unicorn": "^49.0.0",
     "husky": "^4.3.0",
     "netlify-cli": "^17.2.0",
+    "@netlify/build": "^29.28.2",
     "npm-run-all": "^4.1.5",
     "prettier": "^2.1.2"
   },

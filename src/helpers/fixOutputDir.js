@@ -3,8 +3,8 @@ const { join } = require('path')
 const getAngularJson = require('./getAngularJson')
 const { getProject } = require('./setUpEdgeFunction')
 
-const fixOutputDir = async function ({ failBuild, siteRoot, PUBLISH_DIR, IS_LOCAL, netlifyConfig }) {
-  const angularJson = getAngularJson({ failBuild, siteRoot })
+const fixOutputDir = async function ({ failBuild, failPlugin, siteRoot, PUBLISH_DIR, IS_LOCAL, netlifyConfig }) {
+  const angularJson = getAngularJson({ failPlugin, siteRoot })
   const project = getProject(angularJson)
 
   const { outputPath } = project.architect.build.options
