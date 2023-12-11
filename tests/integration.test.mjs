@@ -20,3 +20,27 @@ test('project with missing angular dependencies does not error', async () => {
   assert.deepEqual(severityCode, 0)
   assert.deepEqual(success, true)
 })
+
+test('application builder uses /browser publish dir', async () => {
+  const { severityCode, success, logs } = await build({
+    repositoryRoot: fileURLToPath(new URL('./fixtures/application-builder', import.meta.url)),
+    buffer: true,
+  })
+
+  assert(logs.stderr.includes(`Publish directory is configured incorrectly. Updating to "dist/test-browser-dir/browser".`))
+
+  assert.deepEqual(severityCode, 0)
+  assert.deepEqual(success, true)
+})
+
+test('browser builder uses different publish dir', async () => {
+  const { severityCode, success, logs } = await build({
+    repositoryRoot: fileURLToPath(new URL('./fixtures/browser-builder', import.meta.url)),
+    buffer: true,
+  })
+
+  assert(logs.stderr.includes(`Publish directory is configured incorrectly. Updating to "dist/test-browser-dir".`))
+
+  assert.deepEqual(severityCode, 0)
+  assert.deepEqual(success, true)
+})
