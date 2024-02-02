@@ -1,5 +1,12 @@
 # Changelog
 
+## [2.0.5](https://github.com/netlify/angular-runtime/compare/v2.0.4...v2.0.5) (2024-02-02)
+
+
+### Bug Fixes
+
+* adapt publish directory based on builder ([#94](https://github.com/netlify/angular-runtime/issues/94)) ([0d2b600](https://github.com/netlify/angular-runtime/commit/0d2b6004dc05c974d0515a10dd47acc3af86ea6b))
+
 ## [2.0.4](https://github.com/netlify/angular-runtime/compare/v2.0.3...v2.0.4) (2023-11-28)
 
 
