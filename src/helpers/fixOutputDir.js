@@ -9,7 +9,8 @@ const fixOutputDir = async function ({ failBuild, failPlugin, siteRoot, PUBLISH_
 
   const { outputPath } = project.architect.build.options
 
-  const correctPublishDir = join(outputPath, 'browser')
+  const isApplicationBuilder = project.architect.build.builder.endsWith(':application')
+  const correctPublishDir = isApplicationBuilder ? join(outputPath, 'browser') : outputPath
   if (correctPublishDir === PUBLISH_DIR) {
     return
   }

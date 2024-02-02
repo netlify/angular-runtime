@@ -22,6 +22,8 @@
     "pretest:fixtures": "run-s pretest:fixtures:*",
     "pretest:fixtures:non-angular-project": "cd tests/fixtures/non-angular-project && npm ci",
     "pretest:fixtures:missing-angular-deps": "cd tests/fixtures/missing-angular-deps && npm ci",
+    "pretest:fixtures:application-builder": "cd tests/fixtures/application-builder && npm ci",
+    "pretest:fixtures:browser-builder": "cd tests/fixtures/browser-builder && npm ci",
     "pretest": "run-s pretest:*",
     "test": "node --test"
   },
