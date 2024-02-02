@@ -1,5 +1,5 @@
 import assert from 'node:assert'
-import { join } from 'node:path'
+import { join as posixJoin } from 'node:path/posix'
 import { test } from 'node:test'
 import { fileURLToPath } from 'node:url'
 
@@ -31,7 +31,7 @@ test('application builder uses /browser publish dir', async () => {
 
   assert(
     logs.stderr.includes(
-      `Publish directory is configured incorrectly. Updating to "${join('dist', 'test-browser-dir', 'browser')}".`,
+      `Publish directory is configured incorrectly. Updating to "${posixJoin('dist', 'test-browser-dir', 'browser')}".`,
     ),
   )
 
@@ -47,7 +47,7 @@ test('browser builder uses different publish dir', async () => {
 
   assert(
     logs.stderr.includes(
-      `Publish directory is configured incorrectly. Updating to "${join('dist', 'test-browser-dir')}".`,
+      `Publish directory is configured incorrectly. Updating to "${posixJoin('dist', 'test-browser-dir')}".`,
     ),
   )
 
