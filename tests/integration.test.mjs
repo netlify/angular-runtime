@@ -55,3 +55,11 @@ test('browser builder uses different publish dir', async () => {
   assert.deepEqual(severityCode, 0)
   assert.deepEqual(success, true)
 })
+
+test('doesnt fail if prerender-routes.json file is missing', async () => {
+  const { success } = await build({
+    repositoryRoot: fileURLToPath(new URL('./fixtures/prerender-false', import.meta.url)),
+    buffer: true,
+  })
+  assert.deepEqual(success, true)
+})
