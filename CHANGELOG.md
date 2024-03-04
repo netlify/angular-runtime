@@ -1,5 +1,12 @@
 # Changelog
 
+## [2.0.6](https://github.com/netlify/angular-runtime/compare/v2.0.5...v2.0.6) (2024-03-04)
+
+
+### Bug Fixes
+
+* don't crash if `prerender: false` ([#101](https://github.com/netlify/angular-runtime/issues/101)) ([a72519b](https://github.com/netlify/angular-runtime/commit/a72519b8e931198f014e82c75f50cf2840444485))
+
 ## [2.0.5](https://github.com/netlify/angular-runtime/compare/v2.0.4...v2.0.5) (2024-02-02)
 
 
