@@ -1,5 +1,5 @@
 const { Buffer } = require('node:buffer')
-const { existsSync, readdirSync } = require('node:fs')
+const { readdirSync, existsSync } = require('node:fs')
 const { writeFile, mkdir, readFile } = require('node:fs/promises')
 const { join, relative, sep, posix } = require('node:path')
 const process = require('node:process')
@@ -46,6 +46,17 @@ const getProject = (angularJson, failBuild) => {
 
 module.exports.getProject = getProject
 
+/**
+ * @param {string} outputDir
+ * @returns {Promise<string[]>}
+ */
+const getPrerenderedRoutes = async (outputDir) => {
+  const file = join(outputDir, 'prerendered-routes.json')
+  if (!existsSync(file)) return []
+  const { routes: prerenderedRoutes } = await readJson(file)
+  return prerenderedRoutes
+}
+
 const setUpEdgeFunction = async ({ angularJson, constants, failBuild }) => {
   const project = getProject(angularJson)
   const {
@@ -72,8 +83,7 @@ const setUpEdgeFunction = async ({ angularJson, constants, failBuild }) => {
     (path) => `/${relative(join(outputDir, 'browser'), path)}`,
   )
 
-  const { routes: prerenderedRoutes } = await readJson(join(outputDir, 'prerendered-routes.json'))
-  const excludedPaths = [...staticFiles, ...prerenderedRoutes].map(toPosix)
+  const excludedPaths = [...staticFiles, ...(await getPrerenderedRoutes(outputDir))].map(toPosix)
 
   // buy putting this into a separate module that's imported first,
   // we ensure this is initialised before any other module
