@@ -1,5 +1,12 @@
 # Changelog
 
+## [2.0.7](https://github.com/netlify/angular-runtime/compare/v2.0.6...v2.0.7) (2024-04-19)
+
+
+### Bug Fixes
+
+* remove onPreDev ([#108](https://github.com/netlify/angular-runtime/issues/108)) ([1daee4e](https://github.com/netlify/angular-runtime/commit/1daee4e282bcec32b37f451e0d96f8589a7c2c77))
+
 ## [2.0.6](https://github.com/netlify/angular-runtime/compare/v2.0.5...v2.0.6) (2024-03-04)
 
 
