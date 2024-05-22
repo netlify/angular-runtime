@@ -8,6 +8,7 @@ test('edge function config', async () => {
     '/dashboard/index.html',
     '/favicon.ico',
     '/heroes/index.html',
+    '/index.csr.html',
     '/index.html',
     '/main-ZQY2S5NK.js',
     '/polyfills-RX4V3J3S.js',
