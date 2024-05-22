@@ -6,9 +6,11 @@ import { fileURLToPath } from 'node:url'
 
 import build from '@netlify/build'
 
+import validateAngularVersion from '../src/helpers/validateAngularVersion.js'
+
 test('project without angular config file fails the plugin execution but does not error', async () => {
   const { severityCode, success } = await build({
-    repositoryRoot: fileURLToPath(new URL('./fixtures/non-angular-project', import.meta.url)),
+    repositoryRoot: fileURLToPath(new URL('fixtures/non-angular-project', import.meta.url)),
   })
 
   assert.deepEqual(severityCode, 0)
@@ -17,7 +19,7 @@ test('project without angular config file fails the plugin execution but does no
 
 test('project with missing angular dependencies does not error', async () => {
   const { severityCode, success } = await build({
-    repositoryRoot: fileURLToPath(new URL('./fixtures/missing-angular-deps', import.meta.url)),
+    repositoryRoot: fileURLToPath(new URL('fixtures/missing-angular-deps', import.meta.url)),
   })
 
   assert.deepEqual(severityCode, 0)
@@ -26,7 +28,7 @@ test('project with missing angular dependencies does not error', async () => {
 
 test('application builder uses /browser publish dir', async () => {
   const { severityCode, success, logs } = await build({
-    repositoryRoot: fileURLToPath(new URL('./fixtures/application-builder', import.meta.url)),
+    repositoryRoot: fileURLToPath(new URL('fixtures/application-builder', import.meta.url)),
     buffer: true,
   })
 
@@ -42,7 +44,7 @@ test('application builder uses /browser publish dir', async () => {
 
 test('browser builder uses different publish dir', async () => {
   const { severityCode, success, logs } = await build({
-    repositoryRoot: fileURLToPath(new URL('./fixtures/browser-builder', import.meta.url)),
+    repositoryRoot: fileURLToPath(new URL('fixtures/browser-builder', import.meta.url)),
     buffer: true,
   })
 
@@ -58,8 +60,18 @@ test('browser builder uses different publish dir', async () => {
 
 test('doesnt fail if prerender-routes.json file is missing', async () => {
   const { success } = await build({
-    repositoryRoot: fileURLToPath(new URL('./fixtures/prerender-false', import.meta.url)),
+    repositoryRoot: fileURLToPath(new URL('fixtures/prerender-false', import.meta.url)),
     buffer: true,
   })
   assert.deepEqual(success, true)
+})
+
+test('checks version for angular 17', async () => {
+  const result = await validateAngularVersion('tests/fixtures/application-builder')
+  assert.strictEqual(result, true)
+})
+
+test('checks version for angular 18', async () => {
+  const result = await validateAngularVersion('tests/fixtures/angular-18')
+  assert.strictEqual(result, true)
 })

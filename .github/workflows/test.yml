@@ -12,12 +12,12 @@ jobs:
     strategy:
       matrix:
         os: [ubuntu-latest, macOS-latest, windows-latest]
-        node-version: [18.18.2, '*']
+        node-version: [18.19.0, 20.13.1]
         exclude:
           - os: macOS-latest
-            node-version: 18.18.2
+            node-version: 18.19.0
           - os: windows-latest
-            node-version: 18.18.2
+            node-version: 18.19.0
       fail-fast: false
 
     steps:
@@ -31,6 +31,6 @@ jobs:
         name: NPM Install
       - name: Linting
         run: npm run format:ci
-        if: "${{ matrix.node-version == '*' }}"
+        if: "${{ matrix.node-version == '20.13.1' }}"
       - name: Run tests
         run: npm run test

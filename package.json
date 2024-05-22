@@ -25,6 +25,7 @@
     "pretest:fixtures:application-builder": "cd tests/fixtures/application-builder && npm ci",
     "pretest:fixtures:browser-builder": "cd tests/fixtures/browser-builder && npm ci",
     "pretest:fixtures:prerender-false": "cd tests/fixtures/prerender-false && npm ci",
+    "pretest:fixtures:angular-18": "cd tests/fixtures/angular-18 && npm ci",
     "pretest": "run-s pretest:*",
     "test": "node --test"
   },
