@@ -34,15 +34,15 @@ Create a `netlify.toml` in the root of your project. Your file should include th
 
 ```toml
 [[plugins]]
-  package = "@netlify/plugin-angular-universal"
+  package = "@netlify/angular-runtime"
 ```
 
 Install it via your package manager:
 
 ```bash
-npm install -D @netlify/plugin-angular-universal
+npm install -D @netlify/angular-runtime
 # or
-yarn add -D @netlify/plugin-angular-universal
+yarn add -D @netlify/angular-runtime
 ```
 
 Read more about [file-based plugin installation](https://docs.netlify.com/configure-builds/build-plugins/#file-based-installation)
@@ -81,7 +81,7 @@ netlify serve
 
 ### Requirements
 
-To use the Angular Universal plugin while building and deploying with the CLI, you need to have `netlify-cli v17.0.0` installed (or a later version).
+To use the Angular Runtime while building and deploying with the CLI, you need to have `netlify-cli v17.0.0` installed (or a later version).
 
 Please also make sure to use `ntl deploy --build` (rather than `ntl build && ntl deploy`).
 
