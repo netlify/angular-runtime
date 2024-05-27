@@ -1,5 +1,12 @@
 # Changelog
 
+## [2.1.1](https://github.com/netlify/angular-runtime/compare/v2.1.0...v2.1.1) (2024-05-27)
+
+
+### Bug Fixes
+
+* don't shadow netlify functions ([#115](https://github.com/netlify/angular-runtime/issues/115)) ([9fb04f9](https://github.com/netlify/angular-runtime/commit/9fb04f95dae41e4ea8ca264f4a53334128758626))
+
 ## [2.1.0](https://github.com/netlify/angular-runtime/compare/v2.0.7...v2.1.0) (2024-05-22)
 
 
