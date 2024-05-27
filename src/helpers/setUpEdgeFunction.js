@@ -83,7 +83,7 @@ const setUpEdgeFunction = async ({ angularJson, constants, failBuild }) => {
     (path) => `/${relative(join(outputDir, 'browser'), path)}`,
   )
 
-  const excludedPaths = [...staticFiles, ...(await getPrerenderedRoutes(outputDir))].map(toPosix)
+  const excludedPaths = ['/.netlify/*', ...staticFiles, ...(await getPrerenderedRoutes(outputDir))].map(toPosix)
 
   // buy putting this into a separate module that's imported first,
   // we ensure this is initialised before any other module
