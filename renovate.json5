@@ -1,18 +1,35 @@
 {
+  $schema: 'https://docs.renovatebot.com/renovate-schema.json',
   extends: ['github>netlify/renovate-config:default'],
   ignorePresets: [':prHourlyLimit2'],
   semanticCommits: true,
-  dependencyDashboard: true,
-  automerge: true,
+  // The config we're extending ignores test dirs, but we want to bump some fixture deps
+  ignorePaths: ['**/node_modules/**'],
   packageRules: [
+    // Since we've enabled Renovate (see above) for fixture sites, adjust the config for these.
     {
-      packageNames: [
-        // Those cannot be upgraded to requiring ES modules
-        'strip-ansi',
-      ],
-      major: {
-        enabled: false,
-      },
+      matchFileNames: ['tests/**/fixtures/**/package.json'],
+      // If a fixture requires a specific framework version, never bump it.
+      updatePinnedDependencies: false,
+      // Always use `chore:` (since these are test fixtures), to avoid no-op releases.
+      extends: [':semanticCommitTypeAll(chore)'],
+    },
+    {
+      description: 'Stable & unstable Angular bumps in test fixtures',
+      matchFileNames: ['tests/**/fixtures/**/package.json'],
+      // See https://docs.renovatebot.com/presets-monorepo/#monorepoangular.
+      matchSourceUrls: ['https://github.com/angular/angular'],
+      // Override the schedule to get immediate PRs.
+      schedule: null,
+      // Apply a unique label so we can trigger additional workflows for these PRs.
+      addLabels: ['bump-framework-in-fixtures'],
+      // Bump even if the release isn't tagged as `latest`.
+      respectLatest: false,
+      // Bump even if it's a pre-release (e.g. 1.2.3-beta.8).
+      ignoreUnstable: false,
+      // Ideally we'd like to disable automerge only for unstable bumps, but this is
+      // difficult (or impossible) to implement so we just disable it entirely.
+      automerge: false,
     },
   ],
 }
