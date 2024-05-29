@@ -7,6 +7,5 @@
   "private": true,
   "dependencies": {
     "@netlify/angular-runtime": "file:../../../"
-  },
-  "devDependencies": {}
+  }
 }
