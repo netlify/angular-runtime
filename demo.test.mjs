@@ -10,7 +10,7 @@ test('edge function config', async () => {
     '/favicon.ico',
     '/heroes/index.html',
     '/index.csr.html',
-    '/main-3US5B27T.js',
+    '/main-QDJU6U55.js',
     '/polyfills-RX4V3J3S.js',
     '/styles-5INURTSO.css',
     '/dashboard',
