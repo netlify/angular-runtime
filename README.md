@@ -77,6 +77,10 @@ To test this in local development, run your Angular project using `netlify serve
 netlify serve
 ```
 
+## Limitations
+
+- The [`server.ts` file](https://angular.dev/guide/ssr#configure-server-side-rendering) that's part of the Angular scaffolding is meant for deploying to a VM, and is not compatible with this Netlify build plugin. If you applied changes to that file, you'll need to replicate them in an Edge Function. See (#135)[https://github.com/netlify/angular-runtime/issues/135] for an example.
+
 ## CLI Usage
 
 ### Requirements
