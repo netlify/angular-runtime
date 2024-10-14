@@ -1,5 +1,13 @@
 # Changelog
 
+## [2.1.2](https://github.com/netlify/angular-runtime/compare/v2.1.1...v2.1.2) (2024-10-14)
+
+
+### Bug Fixes
+
+* **deps:** update dependency @netlify/edge-functions to ^2.8.1 ([#119](https://github.com/netlify/angular-runtime/issues/119)) ([42904c1](https://github.com/netlify/angular-runtime/commit/42904c139c706094205dc21a84b290c3204aad13))
+* **deps:** update dependency fs-extra to v11.2.0 ([#99](https://github.com/netlify/angular-runtime/issues/99)) ([186dc1e](https://github.com/netlify/angular-runtime/commit/186dc1ea3d2f2e5b379fbec2f76f7cdd77219155))
+
 ## [2.1.1](https://github.com/netlify/angular-runtime/compare/v2.1.0...v2.1.1) (2024-05-27)
 
 
