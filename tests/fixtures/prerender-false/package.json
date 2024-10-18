@@ -32,7 +32,7 @@
     "@angular/compiler-cli": "^18.1.0-rc",
     "@types/express": "^4.17.17",
     "@types/jasmine": "~5.1.0",
-    "@types/node": "^18.18.0",
+    "@types/node": "^20.0.0",
     "@netlify/angular-runtime": "file:../../..",
     "jasmine-core": "~5.3.0",
     "karma": "~6.4.0",
