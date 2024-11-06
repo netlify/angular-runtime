@@ -66,6 +66,11 @@ test('doesnt fail if prerender-routes.json file is missing', async () => {
   assert.deepEqual(success, true)
 })
 
+test('checks version for angular 19', async () => {
+  const result = await validateAngularVersion('tests/fixtures/angular-19-common-engine')
+  assert.strictEqual(result, true)
+})
+
 test('checks version for angular 18', async () => {
   const result = await validateAngularVersion('tests/fixtures/application-builder')
   assert.strictEqual(result, true)
