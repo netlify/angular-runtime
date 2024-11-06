@@ -6,6 +6,7 @@ import { fileURLToPath } from 'node:url'
 
 import build from '@netlify/build'
 
+import getAngularVersion from '../src/helpers/getAngularVersion.js'
 import validateAngularVersion from '../src/helpers/validateAngularVersion.js'
 
 test('project without angular config file fails the plugin execution but does not error', async () => {
@@ -95,21 +96,21 @@ test('Angular 19 using App Engine (Developer Preview)', async () => {
 })
 
 test('checks version for angular 19', async () => {
-  const result = await validateAngularVersion('tests/fixtures/angular-19-common-engine')
+  const result = validateAngularVersion(await getAngularVersion('tests/fixtures/angular-19-common-engine'))
   assert.strictEqual(result, true)
 })
 
 test('checks version for angular 18', async () => {
-  const result = await validateAngularVersion('tests/fixtures/application-builder')
+  const result = validateAngularVersion(await getAngularVersion('tests/fixtures/application-builder'))
   assert.strictEqual(result, true)
 })
 
 test('checks version for angular 17', async () => {
-  const result = await validateAngularVersion('tests/fixtures/angular-17')
+  const result = validateAngularVersion(await getAngularVersion('tests/fixtures/angular-17'))
   assert.strictEqual(result, true)
 })
 
 test('fails angular version validation when angular dependencies are missing', async () => {
-  const result = await validateAngularVersion('missing-angular-deps')
+  const result = validateAngularVersion(await getAngularVersion('missing-angular-deps'))
   assert.strictEqual(result, false)
 })
