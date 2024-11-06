@@ -141,7 +141,5 @@ Temporary Items
 
 # End of https://www.toptal.com/developers/gitignore/api/osx,node
 
-.netlify/functions
-.netlify/functions-serve
-.netlify/functions-internal
+.netlify
 .angular
