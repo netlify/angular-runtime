@@ -66,6 +66,34 @@ test('doesnt fail if prerender-routes.json file is missing', async () => {
   assert.deepEqual(success, true)
 })
 
+test('doesnt fail if prerender-routes.json file is missing (Angular 19)', async () => {
+  const { success } = await build({
+    repositoryRoot: fileURLToPath(new URL('fixtures/angular-19-prerender-false', import.meta.url)),
+    buffer: true,
+  })
+  assert.deepEqual(success, true)
+})
+
+// TODO: Make this work
+test('Angular 19 using CommonEngine', async () => {
+  const { severityCode, success } = await build({
+    repositoryRoot: fileURLToPath(new URL('fixtures/angular-19-common-engine', import.meta.url)),
+  })
+
+  assert.deepEqual(severityCode, 0)
+  assert.deepEqual(success, true)
+})
+
+// TODO: Make this work
+test('Angular 19 using App Engine (Developer Preview)', async () => {
+  const { severityCode, success } = await build({
+    repositoryRoot: fileURLToPath(new URL('fixtures/angular-19-common-engine', import.meta.url)),
+  })
+
+  assert.deepEqual(severityCode, 0)
+  assert.deepEqual(success, true)
+})
+
 test('checks version for angular 19', async () => {
   const result = await validateAngularVersion('tests/fixtures/angular-19-common-engine')
   assert.strictEqual(result, true)
