@@ -54,6 +54,13 @@ const getPrerenderedRoutes = async (outputDir) => {
   const file = join(outputDir, 'prerendered-routes.json')
   if (!existsSync(file)) return []
   const { routes: prerenderedRoutes } = await readJson(file)
+
+  if (!Array.isArray(prerenderedRoutes)) {
+    // Angular@19 changes shape of prerendered-routes from array of strings to object with routes as keys
+    return Object.keys(prerenderedRoutes)
+  }
+
+  // Before Angular@19 prerendered-routes is an array of strings
   return prerenderedRoutes
 }
 
