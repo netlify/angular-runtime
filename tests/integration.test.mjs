@@ -80,3 +80,8 @@ test('checks version for angular 17', async () => {
   const result = await validateAngularVersion('tests/fixtures/angular-17')
   assert.strictEqual(result, true)
 })
+
+test('fails angular version validation when angular dependencies are missing', async () => {
+  const result = await validateAngularVersion('missing-angular-deps')
+  assert.strictEqual(result, false)
+})
