@@ -88,7 +88,7 @@ test('Angular 19 using CommonEngine', async () => {
 // TODO: Make this work
 test('Angular 19 using App Engine (Developer Preview)', async () => {
   const { severityCode, success } = await build({
-    repositoryRoot: fileURLToPath(new URL('fixtures/angular-19-common-engine', import.meta.url)),
+    repositoryRoot: fileURLToPath(new URL('fixtures/angular-19-app-engine', import.meta.url)),
   })
 
   assert.deepEqual(severityCode, 0)
