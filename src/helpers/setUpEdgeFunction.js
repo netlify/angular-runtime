@@ -202,7 +202,7 @@ const setUpEdgeFunction = async ({ angularJson, constants, failBuild, usedEngine
   }
 
   if (!ssrFunctionContent) {
-    return failBuild('no ssr function body')
+    return failBuild(`"${usedEngine}" is currently not a supported.`)
   }
 
   // eslint-disable-next-line no-inline-comments
