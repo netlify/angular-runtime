@@ -163,18 +163,28 @@ const setUpEdgeFunction = async ({ angularJson, constants, failBuild, usedEngine
     const browserDistFolder = resolve(serverDistFolder, 'browser');
 
     if (typeof Deno !== 'undefined') {
-      // fs.readFile is not supported in Edge Functions, so this is a workaround for CSS inlining
-      // that will intercept readFile attempt and if it's a CSS file, return the content from the manifest
-      const originalReadFile = globalThis.Deno.readFile
-      globalThis.Deno.readFile = (...args) => {
-        if (args.length > 0 && typeof args[0] === 'string') {
-          const relPath = relative(browserDistFolder, args[0])
-          if (relPath in cssAssetsManifest) {
-            return Promise.resolve(Buffer.from(cssAssetsManifest[relPath], 'base64'))
+      try {
+        // fs.readFile is not supported in Edge Functions, so this is a workaround for CSS inlining
+        // that will intercept readFile attempt and if it's a CSS file, return the content from the manifest
+        const originalReadFile = globalThis.Deno.readFile
+        globalThis.Deno.readFile = (...args) => {
+          try {
+            if (args.length > 0 && typeof args[0] === 'string') {
+              const relPath = relative(browserDistFolder, args[0])
+              if (relPath in cssAssetsManifest) {
+                return Promise.resolve(Buffer.from(cssAssetsManifest[relPath], 'base64'))
+              }
+            }
+          } catch {
+            // reading file is needed for inlining CSS, but failing to do so is
+            // not causing fatal error so we just ignore it here
           }
+          
+          return originalReadFile.apply(globalThis.Deno, args)
         }
-        
-        return originalReadFile.apply(globalThis.Deno, args)
+      } catch {
+        // reading file is needed for inlining CSS, but failing to do so is
+        // not causing fatal error so we just ignore it here
       }
     }
 
