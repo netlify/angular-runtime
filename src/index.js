@@ -3,7 +3,7 @@ const fixOutputDir = require('./helpers/fixOutputDir')
 const getAngularJson = require('./helpers/getAngularJson')
 const getAngularRoot = require('./helpers/getAngularRoot')
 const getAngularVersion = require('./helpers/getAngularVersion')
-const { fixServerTs } = require('./helpers/serverModuleHelpers')
+const { fixServerTs, revertServerTsFix } = require('./helpers/serverModuleHelpers')
 const { setUpEdgeFunction } = require('./helpers/setUpEdgeFunction')
 const validateAngularVersion = require('./helpers/validateAngularVersion')
 
@@ -38,6 +38,7 @@ module.exports = {
     usedEngine = await fixServerTs({ angularVersion, siteRoot, failPlugin })
   },
   async onBuild({ utils, netlifyConfig, constants }) {
+    await revertServerTsFix()
     if (!isValidAngularProject) {
       return
     }

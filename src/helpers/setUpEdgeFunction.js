@@ -1,7 +1,7 @@
 /* eslint-disable max-lines */
 const { Buffer } = require('node:buffer')
 const { readdirSync, existsSync } = require('node:fs')
-const { writeFile, mkdir, readFile, copyFile } = require('node:fs/promises')
+const { writeFile, mkdir, readFile } = require('node:fs/promises')
 const { join, relative, sep, posix } = require('node:path')
 const process = require('node:process')
 
@@ -213,6 +213,14 @@ const setUpEdgeFunction = async ({ angularJson, constants, failBuild, usedEngine
         return await Handler(request, context);
       })
     }
+    `
+  } else if (usedEngine === 'AppEngine') {
+    // eslint-disable-next-line no-inline-comments
+    ssrFunctionContent = /* javascript */ `
+    import { reqHandler } from "${toPosix(relative(edgeFunctionDir, serverDistRoot))}/server.mjs";
+    import "./fixup-event.mjs";
+    
+    export default reqHandler;
     `
   }
 

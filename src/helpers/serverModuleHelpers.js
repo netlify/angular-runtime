@@ -20,6 +20,19 @@ export default async function HttpHandler(request: Request, context: any): Promi
 }
 `
 
+// eslint-disable-next-line no-inline-comments
+const NetlifyServerTsAppEngine = /* typescript */ `import { AngularAppEngine, createRequestHandler } from '@angular/ssr'
+const angularAppEngine = new AngularAppEngine()
+
+// @ts-expect-error - createRequestHandler expects a function with single Request argument and doesn't allow context argument
+export const reqHandler = createRequestHandler(async (request: Request, context: any) => {
+  const result = await angularAppEngine.handle(request, context)
+  return result || new Response('Not found', { status: 404 })
+})
+`
+
+let needSwapping = false
+
 /**
  * Inspect content of server module and determine which engine is used
  * @param {string} serverModuleContents
@@ -69,16 +82,31 @@ const fixServerTs = async function ({ angularVersion, siteRoot, failPlugin }) {
   // that users get when they scaffold new project and only swap if it's known content and fail with
   // actionable message so users know how to adjust their server.ts file to work on Netlify
   // with engine they opted to use
-  const needSwapping = serverModuleContents.includes('express')
+  needSwapping = serverModuleContents.includes('express')
 
   if (needSwapping) {
     console.log(`Swapping server.ts to use ${usedEngine}`)
-    await writeFile(serverModuleLocation, NetlifyServerTsCommonEngine)
+
+    if (usedEngine === 'CommonEngine') {
+      await writeFile(serverModuleLocation, NetlifyServerTsCommonEngine)
+    } else if (usedEngine === 'AppEngine') {
+      await writeFile(serverModuleLocation, NetlifyServerTsAppEngine)
+    }
   }
 
   return usedEngine
 }
 
-const revertServerTsFix = async function () {}
-
 module.exports.fixServerTs = fixServerTs
+
+const revertServerTsFix = async function () {
+  if (needSwapping) {
+    // TODO: revert swap
+
+    // set it to false to not attempt to swap back more times than one
+    // as we call this in couple hooks to try to ensure it's reverted in case of success and failures, etc
+    needSwapping = false
+  }
+}
+
+module.exports.revertServerTsFix = revertServerTsFix
