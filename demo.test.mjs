@@ -6,14 +6,12 @@ test('edge function config', async () => {
 
   assert.deepEqual(config.excludedPath, [
     '/.netlify/*',
-    '/dashboard/index.html',
     '/favicon.ico',
     '/heroes/index.html',
     '/index.csr.html',
     '/main-5WUJK7P4.js',
     '/polyfills-FFHMD2TL.js',
     '/styles-5INURTSO.css',
-    '/dashboard',
     '/heroes',
   ])
 })
