@@ -1,10 +1,24 @@
 const { existsSync } = require('node:fs')
-const { readFile } = require('node:fs/promises')
+const { readFile, writeFile } = require('node:fs/promises')
 
 const { satisfies } = require('semver')
 
 const getAngularJson = require('./getAngularJson')
 const { getProject } = require('./setUpEdgeFunction')
+
+// eslint-disable-next-line no-inline-comments
+const NetlifyServerTsCommonEngine = /* typescript */ `import { CommonEngine } from '@angular/ssr/node'
+import { render } from '@netlify/angular-runtime/common-engine'
+
+const commonEngine = new CommonEngine()
+
+// eslint-disable-next-line @typescript-eslint/no-unused-vars
+export default async function HttpHandler(request: Request, context: any): Promise<Response> {
+  // customize if you want to have custom request handling
+
+  return await render(commonEngine)
+}
+`
 
 /**
  * Inspect content of server module and determine which engine is used
@@ -47,6 +61,8 @@ const fixServerTs = async function ({ angularVersion, siteRoot, failPlugin }) {
 
   // check wether project is using stable CommonEngine or Developer Preview AppEngine
   const serverModuleContents = await readFile(serverModuleLocation, 'utf8')
+  /** @type {'AppEngine' | 'CommonEngine'} */
+  const usedEngine = getUsedEngine(serverModuleContents) ?? 'CommonEngine'
 
   // if server module uses express - it means we can't use it and instead we need to provide our own
   // alternatively we could just compare content (or hash of it) to "known" content of server.ts file
@@ -55,10 +71,10 @@ const fixServerTs = async function ({ angularVersion, siteRoot, failPlugin }) {
   // with engine they opted to use
   const needSwapping = serverModuleContents.includes('express')
 
-  /** @type {'AppEngine' | 'CommonEngine'} */
-  const usedEngine = getUsedEngine(serverModuleContents) ?? 'CommonEngine'
-
-  // TODO: actual swapping of server.ts content (or location in angular.json)
+  if (needSwapping) {
+    console.log(`Swapping server.ts to use ${usedEngine}`)
+    await writeFile(serverModuleLocation, NetlifyServerTsCommonEngine)
+  }
 
   return usedEngine
 }
