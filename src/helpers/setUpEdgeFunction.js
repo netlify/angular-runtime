@@ -5,9 +5,9 @@ const { writeFile, mkdir, readFile } = require('node:fs/promises')
 const { join, relative, sep, posix } = require('node:path')
 const process = require('node:process')
 
-const { readJson } = require('fs-extra')
-
 const packageJson = require('../../package.json')
+
+const getPrerenderedRoutes = require('./getPrerenderedRoutes')
 
 /**
  * Recursively lists all files in a directory.
@@ -47,35 +47,8 @@ const getProject = (angularJson, failBuild) => {
 
 module.exports.getProject = getProject
 
-/**
- * @param {string} outputDir
- * @returns {Promise<string[]>}
- */
-const getPrerenderedRoutes = async (outputDir) => {
-  const file = join(outputDir, 'prerendered-routes.json')
-  if (!existsSync(file)) return []
-  const { routes: prerenderedRoutes } = await readJson(file)
-
-  if (!Array.isArray(prerenderedRoutes)) {
-    // Angular@19 changes shape of prerendered-routes from array of strings to object with routes as keys
-    return Object.keys(prerenderedRoutes)
-  }
-
-  // Before Angular@19 prerendered-routes is an array of strings
-  return prerenderedRoutes
-}
-
 // eslint-disable-next-line max-lines-per-function
-const setUpEdgeFunction = async ({ angularJson, constants, failBuild, usedEngine }) => {
-  const project = getProject(angularJson)
-  const {
-    architect: { build },
-  } = project
-  const outputDir = build?.options?.outputPath
-  if (!outputDir || !existsSync(outputDir)) {
-    return failBuild('Could not find build output directory')
-  }
-
+const setUpEdgeFunction = async ({ outputDir, constants, failBuild, usedEngine }) => {
   const serverDistRoot = join(outputDir, 'server')
   if (!existsSync(serverDistRoot)) {
     console.log('No server output generated, skipping SSR setup.')
@@ -92,7 +65,9 @@ const setUpEdgeFunction = async ({ angularJson, constants, failBuild, usedEngine
     (path) => `/${relative(join(outputDir, 'browser'), path)}`,
   )
 
-  const excludedPaths = ['/.netlify/*', ...staticFiles, ...(await getPrerenderedRoutes(outputDir))].map(toPosix)
+  const excludedPaths = ['/.netlify/*', ...staticFiles, ...Object.keys(await getPrerenderedRoutes(outputDir))].map(
+    toPosix,
+  )
 
   // buy putting this into a separate module that's imported first,
   // we ensure this is initialised before any other module

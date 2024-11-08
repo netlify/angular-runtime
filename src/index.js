@@ -1,10 +1,13 @@
+const { existsSync } = require('node:fs')
+
 const ensureNoCompetingPlugin = require('./helpers/ensureNoCompetingPlugin')
 const fixOutputDir = require('./helpers/fixOutputDir')
 const getAngularJson = require('./helpers/getAngularJson')
 const getAngularRoot = require('./helpers/getAngularRoot')
 const getAngularVersion = require('./helpers/getAngularVersion')
 const { fixServerTs, revertServerTsFix } = require('./helpers/serverModuleHelpers')
-const { setUpEdgeFunction } = require('./helpers/setUpEdgeFunction')
+const { getProject, setUpEdgeFunction } = require('./helpers/setUpEdgeFunction')
+const setUpHeaders = require('./helpers/setUpHeaders')
 const validateAngularVersion = require('./helpers/validateAngularVersion')
 
 let isValidAngularProject = true
@@ -48,8 +51,19 @@ module.exports = {
     const siteRoot = getAngularRoot({ failBuild, netlifyConfig })
     const angularJson = getAngularJson({ failPlugin, siteRoot })
 
+    const project = getProject(angularJson)
+    const {
+      architect: { build },
+    } = project
+    const outputDir = build?.options?.outputPath
+    if (!outputDir || !existsSync(outputDir)) {
+      return failBuild('Could not find build output directory')
+    }
+
+    await setUpHeaders({ outputDir, netlifyConfig })
+
     await setUpEdgeFunction({
-      angularJson,
+      outputDir,
       constants,
       failBuild,
       usedEngine,
