@@ -1,15 +1,11 @@
 import { CommonEngine } from '@angular/ssr/node'
+import { render } from '@netlify/angular-runtime/common-engine'
 
 const commonEngine = new CommonEngine()
 
-export default async function HttpHandler(
-  request: Request,
-  context: any,
-  commonEngineRenderArgs: any,
-): Promise<Response> {
-  // customize if you want to
+// eslint-disable-next-line @typescript-eslint/no-unused-vars
+export default async function HttpHandler(request: Request, context: any): Promise<Response> {
+  // customize if you want to have custom request handling
 
-  return new Response(await commonEngine.render(commonEngineRenderArgs), {
-    headers: { 'content-type': 'text/html' },
-  })
+  return await render(commonEngine)
 }

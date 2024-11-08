@@ -145,6 +145,7 @@ const setUpEdgeFunction = async ({ angularJson, constants, failBuild, usedEngine
 
     // eslint-disable-next-line no-inline-comments
     ssrFunctionContent = /* javascript */ `
+    import { AsyncLocalStorage } from "node:async_hooks";
     import { Buffer } from "node:buffer";
     import { dirname, relative, resolve } from 'node:path';
     import { fileURLToPath } from 'node:url';
@@ -188,15 +189,29 @@ const setUpEdgeFunction = async ({ angularJson, constants, failBuild, usedEngine
       }
     }
 
+    const commonEngineArgsAsyncLocalStorage = new AsyncLocalStorage();
+
+    // Not ideal to set global, but server.ts in userland is being compiled and bundled by Angular
+    // and this file will be bundle by Netlify edge bundler so we have to avoid relying on "same"
+    // imports in both so setting this ~factory on global is used as workaround
+    globalThis.CommonEngineArgsFactory = {
+      get() {
+        return commonEngineArgsAsyncLocalStorage.getStore();
+      }
+    }
+
     export default async (request, context) => {
       const commonEngineRenderArgs = {
         bootstrap: bootstrap,
         document,
         url: request.url,
         publicPath: browserDistFolder,
-        platformProviders: [{ provide: "netlify.request", useValue: request }, { provide: "netlify.context", useValue: context }],
+        providers: [{ provide: "netlify.request", useValue: request }, { provide: "netlify.context", useValue: context }],
       }
-      return await Handler(request, context, commonEngineRenderArgs);
+
+      return commonEngineArgsAsyncLocalStorage.run(commonEngineRenderArgs, async () => {
+        return await Handler(request, context);
+      })
     }
     `
   }
