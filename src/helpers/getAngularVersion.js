@@ -8,7 +8,7 @@ const { readJSON } = require('fs-extra')
 const getAngularVersion = async function (root) {
   let packagePath
   try {
-    // eslint-disable-next-line n/no-missing-require
+    // eslint-disable-next-line n/no-extraneous-require
     packagePath = require.resolve('@angular/core/package.json', { paths: [root] })
   } catch {
     // module not found
