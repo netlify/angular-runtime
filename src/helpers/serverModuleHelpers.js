@@ -13,10 +13,7 @@ import { render } from '@netlify/angular-runtime/common-engine'
 
 const commonEngine = new CommonEngine()
 
-// eslint-disable-next-line @typescript-eslint/no-unused-vars
 export default async function HttpHandler(request: Request, context: any): Promise<Response> {
-  // customize if you want to have custom request handling
-
   return await render(commonEngine)
 }
 `
@@ -25,7 +22,6 @@ export default async function HttpHandler(request: Request, context: any): Promi
 const NetlifyServerTsAppEngine = /* typescript */ `import { AngularAppEngine, createRequestHandler } from '@angular/ssr'
 const angularAppEngine = new AngularAppEngine()
 
-// @ts-expect-error - createRequestHandler expects a function with single Request argument and doesn't allow context argument
 export const reqHandler = createRequestHandler(async (request: Request, context: any) => {
   const result = await angularAppEngine.handle(request, context)
   return result || new Response('Not found', { status: 404 })
