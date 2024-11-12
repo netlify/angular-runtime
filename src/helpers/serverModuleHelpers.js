@@ -1,5 +1,6 @@
 const { existsSync } = require('node:fs')
-const { readFile, writeFile } = require('node:fs/promises')
+const { readFile, writeFile, rename, rm } = require('node:fs/promises')
+const { parse, join } = require('node:path')
 
 const { satisfies } = require('semver')
 
@@ -32,6 +33,8 @@ export const reqHandler = createRequestHandler(async (request: Request, context:
 `
 
 let needSwapping = false
+let serverModuleLocation
+let serverModuleBackupLocation
 
 /**
  * Inspect content of server module and determine which engine is used
@@ -66,7 +69,7 @@ const fixServerTs = async function ({ angularVersion, siteRoot, failPlugin }) {
     architect: { build },
   } = project
 
-  const serverModuleLocation = build?.options?.ssr?.entry
+  serverModuleLocation = build?.options?.ssr?.entry
   if (!serverModuleLocation || !existsSync(serverModuleLocation)) {
     console.log('No SSR setup.')
     return
@@ -87,6 +90,12 @@ const fixServerTs = async function ({ angularVersion, siteRoot, failPlugin }) {
   if (needSwapping) {
     console.log(`Swapping server.ts to use ${usedEngine}`)
 
+    const parsed = parse(serverModuleLocation)
+
+    serverModuleBackupLocation = join(parsed.dir, `${parsed.name}.original${parsed.ext}`)
+
+    await rename(serverModuleLocation, serverModuleBackupLocation)
+
     if (usedEngine === 'CommonEngine') {
       await writeFile(serverModuleLocation, NetlifyServerTsCommonEngine)
     } else if (usedEngine === 'AppEngine') {
@@ -100,9 +109,10 @@ const fixServerTs = async function ({ angularVersion, siteRoot, failPlugin }) {
 module.exports.fixServerTs = fixServerTs
 
 const revertServerTsFix = async function () {
-  if (needSwapping) {
-    // TODO: revert swap
-
+  if (needSwapping && serverModuleLocation && serverModuleBackupLocation) {
+    
+    await rm(serverModuleLocation)
+    await rename(serverModuleBackupLocation, serverModuleLocation)
     // set it to false to not attempt to swap back more times than one
     // as we call this in couple hooks to try to ensure it's reverted in case of success and failures, etc
     needSwapping = false

@@ -69,4 +69,7 @@ module.exports = {
       usedEngine,
     })
   },
+  async onEnd() {
+    await revertServerTsFix()
+  }
 }
