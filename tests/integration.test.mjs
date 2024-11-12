@@ -1,9 +1,7 @@
-/* eslint-disable no-underscore-dangle */
 import assert from 'node:assert'
-import { Module } from 'node:module'
 import { join } from 'node:path'
 import { join as posixJoin } from 'node:path/posix'
-import { test, describe, before, after } from 'node:test'
+import { test, describe } from 'node:test'
 import { fileURLToPath } from 'node:url'
 
 import build from '@netlify/build'
@@ -98,21 +96,6 @@ test('Angular 19 using App Engine (Developer Preview)', async () => {
 })
 
 describe('Angular version validation', () => {
-  let originalNodeModulePaths
-  before(() => {
-    // Node.js automatically add all parent dirs to lookups, so this test will find @angular/core from main project dev dependencies
-    // even if test fixture itself doesn't contain it.
-
-    // to workaround this we just allow lookup in test fixture dir inspired by https://stackoverflow.com/questions/32455431/prevent-require-from-looking-up-modules-in-the-parent-directory
-
-    originalNodeModulePaths = Module._nodeModulePaths
-    Module._nodeModulePaths = (...args) => originalNodeModulePaths.apply(Module, args).slice(0, 1)
-  })
-
-  after(() => {
-    Module._nodeModulePaths = originalNodeModulePaths
-  })
-
   test('checks version for angular 19', async () => {
     const result = validateAngularVersion(
       await getAngularVersion(fileURLToPath(new URL('fixtures/angular-19-common-engine', import.meta.url))),
@@ -141,4 +124,3 @@ describe('Angular version validation', () => {
     assert.strictEqual(result, false)
   })
 })
-/* eslint-enable no-underscore-dangle */
