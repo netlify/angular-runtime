@@ -49,8 +49,16 @@ const getUsedEngine = function (serverModuleContents) {
 }
 
 /**
- * TODO: document what's happening here and update types
- * @param {string} angularJson
+ * For Angular@19+ we inspect user's server.ts and if it uses express, we swap it out with our own.
+ * We also check wether CommonEngine or AppEngine is used to provide correct replacement preserving
+ * engine of user's choice (CommonEngine is stable, but lacks support for some features, AppEngine is
+ * Developer Preview, but has more features and is easier to integrate with - ultimately choice is up to user
+ * as AppEngine might have breaking changes outside of major version bumps)
+ * @param {Object} obj
+ * @param {string} obj.angularVersion Angular version
+ * @param {string} obj.siteRoot Root directory of an app
+ * @param {(msg: string) => never} obj.failPlugin Function to fail the plugin
+ *
  * @returns {'AppEngine' | 'CommonEngine' | undefined}
  */
 const fixServerTs = async function ({ angularVersion, siteRoot, failPlugin }) {
@@ -78,10 +86,6 @@ const fixServerTs = async function ({ angularVersion, siteRoot, failPlugin }) {
   const usedEngine = getUsedEngine(serverModuleContents) ?? 'CommonEngine'
 
   // if server module uses express - it means we can't use it and instead we need to provide our own
-  // alternatively we could just compare content (or hash of it) to "known" content of server.ts file
-  // that users get when they scaffold new project and only swap if it's known content and fail with
-  // actionable message so users know how to adjust their server.ts file to work on Netlify
-  // with engine they opted to use
   needSwapping = serverModuleContents.includes('express')
 
   if (needSwapping) {
