@@ -17,6 +17,8 @@ This build plugin implements Angular Support on Netlify.
 
 - [Installation and Configuration](#installation-and-configuration)
 - [Accessing `Request` and `Context` during Server-Side Rendering](#accessing-request-and-context-during-server-side-rendering)
+- [Customizing request handling](#customizing-request-handling)
+  - [Limitations](#limitations)
 - [CLI Usage](#cli-usage)
 - [Getting Help](#getting-help)
 - [Contributing](#contributing)
@@ -102,7 +104,7 @@ export class FooComponent {
 
 ## Customizing request handling
 
-Starting with Angular@19. The build plugin makes use of `server.ts` file to handle requests. The default Angular scaffolding does generate incompatible code for Netlify so build plugin will generate a compatible `server.ts` file for you automatically. If you need to customize the request handling, you can do so by starting with copying one of code snippets below to your `server.ts` file.
+Starting with Angular@19. The build plugin makes use of `server.ts` file to handle requests. The default Angular scaffolding does generate incompatible code for Netlify so build plugin will swap it for compatible `server.ts` file for you automatically if it detects default one being used. If you need to customize the request handling, you can do so by copying one of code snippets below to your `server.ts` file.
 
 If you did not opt into the App Engine Developer Preview:
 
