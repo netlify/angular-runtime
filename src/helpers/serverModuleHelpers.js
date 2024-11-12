@@ -110,7 +110,6 @@ module.exports.fixServerTs = fixServerTs
 
 const revertServerTsFix = async function () {
   if (needSwapping && serverModuleLocation && serverModuleBackupLocation) {
-    
     await rm(serverModuleLocation)
     await rename(serverModuleBackupLocation, serverModuleLocation)
     // set it to false to not attempt to swap back more times than one

@@ -71,5 +71,5 @@ module.exports = {
   },
   async onEnd() {
     await revertServerTsFix()
-  }
+  },
 }
