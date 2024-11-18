@@ -7,7 +7,12 @@ const knownSignatures = require('./knownServerTsSignatures.json')
  * @param {string} content Text of module to generate signature for
  * @returns {string} Signature
  */
-const generateServerTsSignature = (content) => createHash('sha256').update(content).digest('hex')
+const generateServerTsSignature = (content) => {
+  // windows or unix line endings should not affect the signature
+  const normalizedContent = content.replaceAll('\r', '')
+
+  return createHash('sha256').update(normalizedContent).digest('hex')
+}
 
 module.exports.generateServerTsSignature = generateServerTsSignature
 
