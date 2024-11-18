@@ -109,10 +109,6 @@ const fixServerTs = async function ({ angularVersion, siteRoot, failPlugin, fail
   if (usedEngineBasedOnKnownSignatures) {
     needSwapping = true
 
-    console.log(
-      `Default server.ts using ${usedEngineBasedOnKnownSignatures} found. Automatically swapping to Netlify compatible server.ts.`,
-    )
-
     const parsed = parse(serverModuleLocation)
 
     serverModuleBackupLocation = join(parsed.dir, `${parsed.name}.original${parsed.ext}`)
