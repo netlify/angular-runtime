@@ -111,14 +111,10 @@ If you did not opt into the App Engine Developer Preview:
 ```ts
 import { CommonEngine } from '@angular/ssr/node'
 import { render } from '@netlify/angular-runtime/common-engine'
-import type { Context } from "@netlify/edge-functions"
 
 const commonEngine = new CommonEngine()
 
-export default async function HttpHandler(request: Request, context: Context): Promise<Response> {
-  // customize if you want to have custom request handling by checking request.url
-  // and returning instance of Response
-
+export async function netlifyCommonEngineHandler(request: Request, context: any): Promise<Response> {
   return await render(commonEngine)
 }
 ```
@@ -127,17 +123,21 @@ If you opted into the App Engine Developer Preview:
 
 ```ts
 import { AngularAppEngine, createRequestHandler } from '@angular/ssr'
-import type { Context } from "@netlify/edge-functions"
+import { getContext } from '@netlify/angular-runtime/context'
 
 const angularAppEngine = new AngularAppEngine()
 
-export const reqHandler = createRequestHandler(async (request: Request, context: Context) => {
-  // customize if you want to have custom request handling by checking request.url
-  // and returning instance of Response
+export async function netlifyAppEngineHandler(request: Request): Promise<Response> {
+  const context = getContext()
 
   const result = await angularAppEngine.handle(request, context)
   return result || new Response('Not found', { status: 404 })
-})
+}
+
+/**
+ * The request handler used by the Angular CLI (dev-server and during build).
+ */
+export const reqHandler = createRequestHandler(netlifyAppEngineHandler)
 ```
 
 ### Limitations

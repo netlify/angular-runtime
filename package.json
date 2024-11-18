@@ -19,6 +19,10 @@
     "./common-engine": {
       "types": "./src/common-engine.d.ts",
       "default": "./src/common-engine.mjs"
+    },
+    "./context": {
+      "types": "./src/context.d.ts",
+      "default": "./src/context.mjs"
     }
   },
   "scripts": {

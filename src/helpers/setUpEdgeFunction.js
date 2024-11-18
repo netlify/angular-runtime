@@ -125,7 +125,7 @@ const setUpEdgeFunction = async ({ outputDir, constants, failBuild, usedEngine }
     import { dirname, relative, resolve } from 'node:path';
     import { fileURLToPath } from 'node:url';
 
-    import Handler from "${toPosix(relative(edgeFunctionDir, serverDistRoot))}/server.mjs";
+    import { netlifyCommonEngineHandler } from "${toPosix(relative(edgeFunctionDir, serverDistRoot))}/server.mjs";
     import bootstrap from "${toPosix(relative(edgeFunctionDir, serverDistRoot))}/main.server.mjs";
     import "./fixup-event.mjs";
 
@@ -185,17 +185,17 @@ const setUpEdgeFunction = async ({ outputDir, constants, failBuild, usedEngine }
       }
 
       return commonEngineArgsAsyncLocalStorage.run(commonEngineRenderArgs, async () => {
-        return await Handler(request, context);
+        return await netlifyCommonEngineHandler(request, context);
       })
     }
     `
   } else if (usedEngine === 'AppEngine') {
     // eslint-disable-next-line no-inline-comments
     ssrFunctionContent = /* javascript */ `
-    import { reqHandler } from "${toPosix(relative(edgeFunctionDir, serverDistRoot))}/server.mjs";
+    import { netlifyAppEngineHandler } from "${toPosix(relative(edgeFunctionDir, serverDistRoot))}/server.mjs";
     import "./fixup-event.mjs";
     
-    export default reqHandler;
+    export default netlifyAppEngineHandler;
     `
   }
 

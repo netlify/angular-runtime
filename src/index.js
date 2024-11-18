@@ -38,7 +38,7 @@ module.exports = {
       netlifyConfig,
     })
 
-    usedEngine = await fixServerTs({ angularVersion, siteRoot, failPlugin })
+    usedEngine = await fixServerTs({ angularVersion, siteRoot, failPlugin, failBuild })
   },
   async onBuild({ utils, netlifyConfig, constants }) {
     await revertServerTsFix()
