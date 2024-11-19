@@ -5,9 +5,26 @@
   "main": "src/index.js",
   "files": [
     "src/**/*.js",
+    "src/**/*.mjs",
     "src/**/*.json",
     "manifest.yml"
   ],
+  "exports": {
+    "./package.json": {
+      "default": "./package.json"
+    },
+    ".": {
+      "default": "./src/index.js"
+    },
+    "./common-engine": {
+      "types": "./src/common-engine.d.ts",
+      "default": "./src/common-engine.mjs"
+    },
+    "./context": {
+      "types": "./src/context.d.ts",
+      "default": "./src/context.mjs"
+    }
+  },
   "scripts": {
     "format": "run-s format:check-fix:*",
     "format:ci": "run-s format:check:*",
@@ -26,6 +43,9 @@
     "pretest:fixtures:browser-builder": "cd tests/fixtures/browser-builder && npm ci",
     "pretest:fixtures:prerender-false": "cd tests/fixtures/prerender-false && npm ci",
     "pretest:fixtures:angular-17": "cd tests/fixtures/angular-17 && npm ci",
+    "pretest:fixtures:angular-19-common-engine": "cd tests/fixtures/angular-19-common-engine && npm ci",
+    "pretest:fixtures:angular-19-app-engine": "cd tests/fixtures/angular-19-app-engine && npm ci",
+    "pretest:fixtures:angular-19-prerender-false": "cd tests/fixtures/angular-19-prerender-false && npm ci",
     "pretest": "run-s pretest:*",
     "test": "node --test"
   },
@@ -57,12 +77,13 @@
     "node": ">=18.13.0"
   },
   "devDependencies": {
+    "@opentelemetry/api": "~1.8.0",
     "@netlify/eslint-config-node": "^7.0.1",
-    "@types/node": "^16.3.1",
+    "@types/node": "^18.19.0",
     "eslint-plugin-unicorn": "^49.0.0",
     "husky": "^4.3.0",
     "netlify-cli": "^17.37.2",
-    "@netlify/build": "^29.28.2",
+    "@netlify/build": "^29.56.0",
     "npm-run-all2": "^6.0.0",
     "prettier": "^2.1.2"
   },

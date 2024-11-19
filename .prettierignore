@@ -18,3 +18,4 @@ node_modules
 # Tests
 test
 tests/fixtures
+tools/known-server-ts-signatures

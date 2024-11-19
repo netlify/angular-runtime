@@ -17,6 +17,8 @@ This build plugin implements Angular Support on Netlify.
 
 - [Installation and Configuration](#installation-and-configuration)
 - [Accessing `Request` and `Context` during Server-Side Rendering](#accessing-request-and-context-during-server-side-rendering)
+- [Customizing request handling](#customizing-request-handling)
+  - [Limitations](#limitations)
 - [CLI Usage](#cli-usage)
 - [Getting Help](#getting-help)
 - [Contributing](#contributing)
@@ -76,10 +78,71 @@ To test this in local development, run your Angular project using `netlify serve
 ```sh
 netlify serve
 ```
+### App Engine Developer Preview usage with Angular@19
 
-## Limitations
+If you opt into the App Engine Developer Preview accessing `Request` and `Context` objects is streamlined. Instead of custom Netlify prefixed providers, you should use the standardized injection tokens for those provided by `@angular/ssr` instead:
 
-- The [`server.ts` file](https://angular.dev/guide/ssr#configure-server-side-rendering) that's part of the Angular scaffolding is meant for deploying to a VM, and is not compatible with this Netlify build plugin. If you applied changes to that file, you'll need to replicate them in an Edge Function. See (#135)[https://github.com/netlify/angular-runtime/issues/135] for an example.
+```diff
++import { REQUEST, REQUEST_CONTEXT } from '@angular/ssr/tokens'
+import type { Context } from "@netlify/edge-functions"
+
+export class FooComponent {
+
+  constructor(
+    // ...
+-    @Inject('netlify.request') @Optional() request?: Request,
+-    @Inject('netlify.context') @Optional() context?: Context,
++    @Inject(REQUEST) @Optional() request?: Request,
++    @Inject(REQUEST_CONTEXT) @Optional() context?: Context,
+  ) {
+    console.log(`Rendering Foo for path ${request?.url} from location ${context?.geo?.city}`)
+    // ...
+  }
+  
+}
+```
+
+## Customizing request handling
+
+Starting with Angular@19. The build plugin makes use of `server.ts` file to handle requests. The default Angular scaffolding does generate incompatible code for Netlify so build plugin will swap it for compatible `server.ts` file for you automatically if it detects default one being used. If you need to customize the request handling, you can do so by copying one of code snippets below to your `server.ts` file.
+
+If you did not opt into the App Engine Developer Preview:
+
+```ts
+import { CommonEngine } from '@angular/ssr/node'
+import { render } from '@netlify/angular-runtime/common-engine'
+
+const commonEngine = new CommonEngine()
+
+export async function netlifyCommonEngineHandler(request: Request, context: any): Promise<Response> {
+  return await render(commonEngine)
+}
+```
+
+If you opted into the App Engine Developer Preview:
+
+```ts
+import { AngularAppEngine, createRequestHandler } from '@angular/ssr'
+import { getContext } from '@netlify/angular-runtime/context'
+
+const angularAppEngine = new AngularAppEngine()
+
+export async function netlifyAppEngineHandler(request: Request): Promise<Response> {
+  const context = getContext()
+
+  const result = await angularAppEngine.handle(request, context)
+  return result || new Response('Not found', { status: 404 })
+}
+
+/**
+ * The request handler used by the Angular CLI (dev-server and during build).
+ */
+export const reqHandler = createRequestHandler(netlifyAppEngineHandler)
+```
+
+### Limitations
+
+The [`server.ts` file](https://angular.dev/guide/ssr#configure-server-side-rendering) that's part of the Angular scaffolding is meant for deploying to a VM, and is not compatible with this Netlify build plugin for Angular@17 and Angular@18. If you applied changes to that file, you'll need to replicate them in an Edge Function. See (#135)[https://github.com/netlify/angular-runtime/issues/135] for an example.
 
 ## CLI Usage
 

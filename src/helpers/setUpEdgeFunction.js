@@ -1,12 +1,13 @@
+/* eslint-disable max-lines */
 const { Buffer } = require('node:buffer')
 const { readdirSync, existsSync } = require('node:fs')
 const { writeFile, mkdir, readFile } = require('node:fs/promises')
 const { join, relative, sep, posix } = require('node:path')
 const process = require('node:process')
 
-const { readJson } = require('fs-extra')
-
 const packageJson = require('../../package.json')
+
+const getPrerenderedRoutes = require('./getPrerenderedRoutes')
 
 /**
  * Recursively lists all files in a directory.
@@ -46,27 +47,8 @@ const getProject = (angularJson, failBuild) => {
 
 module.exports.getProject = getProject
 
-/**
- * @param {string} outputDir
- * @returns {Promise<string[]>}
- */
-const getPrerenderedRoutes = async (outputDir) => {
-  const file = join(outputDir, 'prerendered-routes.json')
-  if (!existsSync(file)) return []
-  const { routes: prerenderedRoutes } = await readJson(file)
-  return prerenderedRoutes
-}
-
-const setUpEdgeFunction = async ({ angularJson, constants, failBuild }) => {
-  const project = getProject(angularJson)
-  const {
-    architect: { build },
-  } = project
-  const outputDir = build?.options?.outputPath
-  if (!outputDir || !existsSync(outputDir)) {
-    return failBuild('Could not find build output directory')
-  }
-
+// eslint-disable-next-line max-lines-per-function
+const setUpEdgeFunction = async ({ outputDir, constants, failBuild, usedEngine }) => {
   const serverDistRoot = join(outputDir, 'server')
   if (!existsSync(serverDistRoot)) {
     console.log('No server output generated, skipping SSR setup.')
@@ -83,7 +65,9 @@ const setUpEdgeFunction = async ({ angularJson, constants, failBuild }) => {
     (path) => `/${relative(join(outputDir, 'browser'), path)}`,
   )
 
-  const excludedPaths = ['/.netlify/*', ...staticFiles, ...(await getPrerenderedRoutes(outputDir))].map(toPosix)
+  const excludedPaths = ['/.netlify/*', ...staticFiles, ...Object.keys(await getPrerenderedRoutes(outputDir))].map(
+    toPosix,
+  )
 
   // buy putting this into a separate module that's imported first,
   // we ensure this is initialised before any other module
@@ -101,26 +85,128 @@ const setUpEdgeFunction = async ({ angularJson, constants, failBuild }) => {
   globalThis.Event = globalThis.DenoEvent
   `
 
-  const ssrFunction = `
-  import "./polyfill.mjs";
-  import { Buffer } from "node:buffer";
-  import { renderApplication } from "${toPosix(relative(edgeFunctionDir, serverDistRoot))}/render-utils.server.mjs";
-  import bootstrap from "${toPosix(relative(edgeFunctionDir, serverDistRoot))}/main.server.mjs";
-  import "./fixup-event.mjs";
+  let ssrFunctionContent = ''
 
-  const document = Buffer.from(${JSON.stringify(
-    Buffer.from(html, 'utf-8').toString('base64'),
-  )}, 'base64').toString("utf-8");
-  
-  export default async (request, context) => {
-    const html = await renderApplication(bootstrap, {
-      url: request.url,
-      document,
-      platformProviders: [{ provide: "netlify.request", useValue: request }, { provide: "netlify.context", useValue: context }],
-    });
-    return new Response(html, { headers: { "content-type": "text/html" } });
-  };
-  
+  if (!usedEngine) {
+    // eslint-disable-next-line no-inline-comments
+    ssrFunctionContent = /* javascript */ `
+    import { Buffer } from "node:buffer";
+    import { renderApplication } from "${toPosix(relative(edgeFunctionDir, serverDistRoot))}/render-utils.server.mjs";
+    import bootstrap from "${toPosix(relative(edgeFunctionDir, serverDistRoot))}/main.server.mjs";
+    import "./fixup-event.mjs";
+
+    const document = Buffer.from(${JSON.stringify(
+      Buffer.from(html, 'utf-8').toString('base64'),
+    )}, 'base64').toString("utf-8");
+    
+    export default async (request, context) => {
+      const html = await renderApplication(bootstrap, {
+        url: request.url,
+        document,
+        platformProviders: [{ provide: "netlify.request", useValue: request }, { provide: "netlify.context", useValue: context }],
+      });
+      return new Response(html, { headers: { "content-type": "text/html" } });
+    };
+    `
+  } else if (usedEngine === 'CommonEngine') {
+    const cssAssetsManifest = {}
+    const outputBrowserDir = join(outputDir, 'browser')
+    const cssFiles = getAllFilesIn(outputBrowserDir).filter((file) => file.endsWith('.css'))
+
+    for (const cssFile of cssFiles) {
+      const content = await readFile(cssFile)
+      cssAssetsManifest[`${relative(outputBrowserDir, cssFile)}`] = content.toString('base64')
+    }
+
+    // eslint-disable-next-line no-inline-comments
+    ssrFunctionContent = /* javascript */ `
+    import { AsyncLocalStorage } from "node:async_hooks";
+    import { Buffer } from "node:buffer";
+    import { dirname, relative, resolve } from 'node:path';
+    import { fileURLToPath } from 'node:url';
+
+    import { netlifyCommonEngineHandler } from "${toPosix(relative(edgeFunctionDir, serverDistRoot))}/server.mjs";
+    import bootstrap from "${toPosix(relative(edgeFunctionDir, serverDistRoot))}/main.server.mjs";
+    import "./fixup-event.mjs";
+
+    const document = Buffer.from(${JSON.stringify(
+      Buffer.from(html, 'utf-8').toString('base64'),
+    )}, 'base64').toString("utf-8");
+
+    const cssAssetsManifest = ${JSON.stringify(cssAssetsManifest)};
+
+    const serverDistFolder = dirname(fileURLToPath(import.meta.url));
+    const browserDistFolder = resolve(serverDistFolder, 'browser');
+
+    if (typeof Deno !== 'undefined') {
+      try {
+        // fs.readFile is not supported in Edge Functions, so this is a workaround for CSS inlining
+        // that will intercept readFile attempt and if it's a CSS file, return the content from the manifest
+        const originalReadFile = globalThis.Deno.readFile
+        globalThis.Deno.readFile = (...args) => {
+          try {
+            if (args.length > 0 && typeof args[0] === 'string') {
+              const relPath = relative(browserDistFolder, args[0])
+              if (relPath in cssAssetsManifest) {
+                return Promise.resolve(Buffer.from(cssAssetsManifest[relPath], 'base64'))
+              }
+            }
+          } catch {
+            // reading file is needed for inlining CSS, but failing to do so is
+            // not causing fatal error so we just ignore it here
+          }
+          
+          return originalReadFile.apply(globalThis.Deno, args)
+        }
+      } catch {
+        // reading file is needed for inlining CSS, but failing to do so is
+        // not causing fatal error so we just ignore it here
+      }
+    }
+
+    const commonEngineArgsAsyncLocalStorage = new AsyncLocalStorage();
+
+    // Not ideal to set global, but server.ts in userland is being compiled and bundled by Angular
+    // and this file will be bundle by Netlify edge bundler so we have to avoid relying on "same"
+    // imports in both so setting this ~factory on global is used as workaround
+    globalThis.CommonEngineArgsFactory = {
+      get() {
+        return commonEngineArgsAsyncLocalStorage.getStore();
+      }
+    }
+
+    export default async (request, context) => {
+      const commonEngineRenderArgs = {
+        bootstrap: bootstrap,
+        document,
+        url: request.url,
+        publicPath: browserDistFolder,
+        providers: [{ provide: "netlify.request", useValue: request }, { provide: "netlify.context", useValue: context }],
+      }
+
+      return commonEngineArgsAsyncLocalStorage.run(commonEngineRenderArgs, async () => {
+        return await netlifyCommonEngineHandler(request, context);
+      })
+    }
+    `
+  } else if (usedEngine === 'AppEngine') {
+    // eslint-disable-next-line no-inline-comments
+    ssrFunctionContent = /* javascript */ `
+    import { netlifyAppEngineHandler } from "${toPosix(relative(edgeFunctionDir, serverDistRoot))}/server.mjs";
+    import "./fixup-event.mjs";
+    
+    export default netlifyAppEngineHandler;
+    `
+  }
+
+  if (!ssrFunctionContent) {
+    return failBuild(`"${usedEngine}" is currently not a supported.`)
+  }
+
+  // eslint-disable-next-line no-inline-comments
+  const ssrFunction = /* javascript */ `
+  import "./polyfill.mjs";
+  ${ssrFunctionContent}
   export const config = {
     path: "/*",
     excludedPath: ${JSON.stringify(excludedPaths)},
@@ -135,3 +221,4 @@ const setUpEdgeFunction = async ({ angularJson, constants, failBuild }) => {
 }
 
 module.exports.setUpEdgeFunction = setUpEdgeFunction
+/* eslint-enable max-lines */
