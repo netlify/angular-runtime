@@ -17,7 +17,8 @@ This build plugin implements Angular Support on Netlify.
 
 - [Installation and Configuration](#installation-and-configuration)
 - [Accessing `Request` and `Context` during Server-Side Rendering](#accessing-request-and-context-during-server-side-rendering)
-- [Customizing request handling](#customizing-request-handling)
+- [Request handling](#request-handling)
+  - [Customizing request handling](#customizing-request-handling)
   - [Limitations](#limitations)
 - [CLI Usage](#cli-usage)
 - [Getting Help](#getting-help)
@@ -26,18 +27,19 @@ This build plugin implements Angular Support on Netlify.
 
 ## Installation and Configuration
 
-Netlify automatically detects Angular projects and sets up the latest version of this plugin. There's no further configuration needed from Netlify users.
+Netlify automatically detects Angular projects and sets up the latest version of this plugin.
+
+### For Angular 17 and Angular 18
+
+There's no further configuration needed from Netlify users.
+
+### For Angular 19
+
+If you are using Server-Side Rendering you will need to install Angular Runtime in your Angular project to be able to import required utilities to successfully deploy request handler to Netlify. See [Manual Installation](#manual-installation) for installations details. See [Request handling](#request-handling) for more information about request handler.
 
 ### Manual Installation
 
-If you need to pin down this plugin to a fixed version, install it manually.
-
-Create a `netlify.toml` in the root of your project. Your file should include the plugins section below:
-
-```toml
-[[plugins]]
-  package = "@netlify/angular-runtime"
-```
+If you need to pin down this plugin to a fixed version or you are using Server-Side Rendering with Angular 19, install it manually.
 
 Install it via your package manager:
 
@@ -46,9 +48,6 @@ npm install -D @netlify/angular-runtime
 # or
 yarn add -D @netlify/angular-runtime
 ```
-
-Read more about [file-based plugin installation](https://docs.netlify.com/configure-builds/build-plugins/#file-based-installation)
-in our docs.
 
 ## Accessing `Request` and `Context` during Server-Side Rendering
 
@@ -102,9 +101,15 @@ export class FooComponent {
 }
 ```
 
-## Customizing request handling
+## Request handling
 
-Starting with Angular@19. The build plugin makes use of `server.ts` file to handle requests. The default Angular scaffolding does generate incompatible code for Netlify so build plugin will swap it for compatible `server.ts` file for you automatically if it detects default one being used. If you need to customize the request handling, you can do so by copying one of code snippets below to your `server.ts` file.
+Starting with Angular@19. The build plugin makes use of `server.ts` file to handle requests. The default Angular scaffolding does generate incompatible code for Netlify so build plugin will swap it for compatible `server.ts` file for you automatically if it detects default one being used. 
+
+Make sure you do have `@netlify/angular-runtime` version 2.2.0 or later installed in your project. Netlify compatible `server.ts` file imports utilities from this package, so Angular Compiler need to be able to resolve it and it can only do that if it's installed in your project and not when it's auto-installed by Netlify.
+
+### Customizing request handling
+
+If you need to customize the request handling, you can do so by copying one of code snippets below to your `server.ts` file.
 
 If you did not opt into the App Engine Developer Preview:
 
@@ -115,6 +120,13 @@ import { render } from '@netlify/angular-runtime/common-engine'
 const commonEngine = new CommonEngine()
 
 export async function netlifyCommonEngineHandler(request: Request, context: any): Promise<Response> {
+  // Example API endpoints can be defined here.
+  // Uncomment and define endpoints as necessary.
+  // const pathname = new URL(request.url).pathname;
+  // if (pathname = '/api/hello') {
+  //   return Response.json({ message: 'Hello from the API' });
+  // }
+
   return await render(commonEngine)
 }
 ```
@@ -129,6 +141,13 @@ const angularAppEngine = new AngularAppEngine()
 
 export async function netlifyAppEngineHandler(request: Request): Promise<Response> {
   const context = getContext()
+
+  // Example API endpoints can be defined here.
+  // Uncomment and define endpoints as necessary.
+  // const pathname = new URL(request.url).pathname;
+  // if (pathname = '/api/hello') {
+  //   return Response.json({ message: 'Hello from the API' });
+  // }
 
   const result = await angularAppEngine.handle(request, context)
   return result || new Response('Not found', { status: 404 })
