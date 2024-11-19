@@ -1,5 +1,19 @@
 # Changelog
 
+## [2.2.0](https://github.com/netlify/angular-runtime/compare/v2.1.1...v2.2.0) (2024-11-19)
+
+
+### Features
+
+* support [@19](https://github.com/19) ([#216](https://github.com/netlify/angular-runtime/issues/216)) ([f6776f5](https://github.com/netlify/angular-runtime/commit/f6776f5e532e8f61cc7a7cabd149f292d6db092f))
+
+
+### Bug Fixes
+
+* **deps:** update dependency @netlify/edge-functions to ^2.8.1 ([#119](https://github.com/netlify/angular-runtime/issues/119)) ([42904c1](https://github.com/netlify/angular-runtime/commit/42904c139c706094205dc21a84b290c3204aad13))
+* **deps:** update dependency fs-extra to v11.2.0 ([#99](https://github.com/netlify/angular-runtime/issues/99)) ([186dc1e](https://github.com/netlify/angular-runtime/commit/186dc1ea3d2f2e5b379fbec2f76f7cdd77219155))
+* getContext() should be sync ([#222](https://github.com/netlify/angular-runtime/issues/222)) ([1cb569c](https://github.com/netlify/angular-runtime/commit/1cb569c638a3638dfba199fb7328bda7670a8766))
+
 ## [2.1.1](https://github.com/netlify/angular-runtime/compare/v2.1.0...v2.1.1) (2024-05-27)
 
 
