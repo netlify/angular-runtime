@@ -1,4 +1,4 @@
-import { Component, Inject, OnInit, Optional } from '@angular/core'
+import { Component, Inject, OnInit, Optional, REQUEST, REQUEST_CONTEXT } from '@angular/core'
 import { Hero } from '../hero'
 import { HeroService } from '../hero.service'
 import { RouterModule } from '@angular/router'
@@ -16,8 +16,8 @@ export class DashboardComponent implements OnInit {
 
   constructor(
     private heroService: HeroService,
-    @Inject('netlify.request') @Optional() request?: Request,
-    @Inject('netlify.context') @Optional() context?: Context,
+    @Inject(REQUEST) @Optional() request?: Request,
+    @Inject(REQUEST_CONTEXT) @Optional() context?: Context,
   ) {
     if (request) {
       console.log(

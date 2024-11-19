@@ -7,6 +7,7 @@
     "src/**/*.js",
     "src/**/*.mjs",
     "src/**/*.json",
+    "src/**/*.d.ts",
     "manifest.yml"
   ],
   "exports": {
