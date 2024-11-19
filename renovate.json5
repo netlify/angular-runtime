@@ -17,8 +17,9 @@
     {
       description: 'Stable & unstable Angular bumps in test fixtures',
       matchFileNames: ['tests/**/fixtures/**/package.json'],
-      // See https://docs.renovatebot.com/presets-monorepo/#monorepoangular.
-      matchSourceUrls: ['https://github.com/angular/angular'],
+      // See https://docs.renovatebot.com/presets-monorepo/#monorepoangular and https://docs.renovatebot.com/presets-monorepo/#monorepoangular-cli.
+      // packages from both monorepos should be bumped together
+      matchSourceUrls: ['https://github.com/angular/angular', 'https://github.com/angular/angular-cli'],
       // Override the schedule to get immediate PRs.
       schedule: null,
       // Apply a unique label so we can trigger additional workflows for these PRs.
