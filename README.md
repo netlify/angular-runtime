@@ -80,10 +80,10 @@ netlify serve
 ```
 ### App Engine Developer Preview usage with Angular@19
 
-If you opt into the App Engine Developer Preview accessing `Request` and `Context` objects is streamlined. Instead of custom Netlify prefixed providers, you should use the standardized injection tokens for those provided by `@angular/ssr` instead:
+If you opt into the App Engine Developer Preview accessing `Request` and `Context` objects is streamlined. Instead of custom Netlify prefixed providers, you should use the standardized injection tokens for those provided by `@angular/core` instead:
 
 ```diff
-+import { REQUEST, REQUEST_CONTEXT } from '@angular/ssr/tokens'
++import { REQUEST, REQUEST_CONTEXT } from '@angular/core'
 import type { Context } from "@netlify/edge-functions"
 
 export class FooComponent {
