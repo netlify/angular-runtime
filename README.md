@@ -39,7 +39,7 @@ If you are using Server-Side Rendering you will need to install Angular Runtime 
 
 ### Manual Installation
 
-If you need to pin down this plugin to a fixed version or you are using Server-Side Rendering with Angular 19, install it manually.
+If you need to pin this plugin to a specific version or if you are using Server-Side Rendering with Angular 19, you will need to install the plugin manually.
 
 Install it via your package manager:
 
@@ -103,9 +103,9 @@ export class FooComponent {
 
 ## Request handling
 
-Starting with Angular@19. The build plugin makes use of `server.ts` file to handle requests. The default Angular scaffolding does generate incompatible code for Netlify so build plugin will swap it for compatible `server.ts` file for you automatically if it detects default one being used. 
+Starting with Angular@19. The build plugin makes use of the `server.ts` file to handle requests. The default Angular scaffolding generates incompatible code for Netlify so the build plugin will swap it for compatible `server.ts` file automatically if it detects default version being used. 
 
-Make sure you do have `@netlify/angular-runtime` version 2.2.0 or later installed in your project. Netlify compatible `server.ts` file imports utilities from this package, so Angular Compiler need to be able to resolve it and it can only do that if it's installed in your project and not when it's auto-installed by Netlify.
+Make sure you have `@netlify/angular-runtime` version 2.2.0 or later installed in your project. Netlify compatible `server.ts` file imports utilities from this package and Angular Compiler need to be able to resolve it and it can only do that if it's installed in your project and not when it's auto-installed by Netlify.
 
 ### Customizing request handling
 
