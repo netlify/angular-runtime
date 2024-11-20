@@ -1,5 +1,14 @@
 # Changelog
 
+## [2.2.1](https://github.com/netlify/angular-runtime/compare/v2.2.0...v2.2.1) (2024-11-20)
+
+
+### Bug Fixes
+
+* add check for existence of runtime package in user project ([#226](https://github.com/netlify/angular-runtime/issues/226)) ([ce7ce06](https://github.com/netlify/angular-runtime/commit/ce7ce0604c9b302c51ce34ae690cf16e28eb9c27))
+* add more variants of known/default server.ts ([#229](https://github.com/netlify/angular-runtime/issues/229)) ([8547d35](https://github.com/netlify/angular-runtime/commit/8547d359b3344b530f1ac27547520665ef63429b))
+* update readme with installation notes for Angular 19 ([#223](https://github.com/netlify/angular-runtime/issues/223)) ([967bb66](https://github.com/netlify/angular-runtime/commit/967bb66a8190808c97c08c2dbaa702110bc962b5))
+
 ## [2.2.0](https://github.com/netlify/angular-runtime/compare/v2.1.1...v2.2.0) (2024-11-19)
 
 
