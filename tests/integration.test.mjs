@@ -6,7 +6,7 @@ import { fileURLToPath } from 'node:url'
 
 import build from '@netlify/build'
 
-import getAngularVersion from '../src/helpers/getAngularVersion.js'
+import { getAngularVersion } from '../src/helpers/getPackageVersion.js'
 import validateAngularVersion from '../src/helpers/validateAngularVersion.js'
 
 test('project without angular config file fails the plugin execution but does not error', async () => {

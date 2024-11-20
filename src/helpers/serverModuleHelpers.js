@@ -5,6 +5,7 @@ const { parse, join } = require('node:path')
 const { satisfies } = require('semver')
 
 const getAngularJson = require('./getAngularJson')
+const { getAngularRuntimeVersion } = require('./getPackageVersion')
 const { getEngineBasedOnKnownSignatures } = require('./serverTsSignature')
 const { getProject } = require('./setUpEdgeFunction')
 
@@ -100,6 +101,20 @@ const fixServerTs = async function ({ angularVersion, siteRoot, failPlugin, fail
   serverModuleLocation = build?.options?.ssr?.entry
   if (!serverModuleLocation || !existsSync(serverModuleLocation)) {
     return
+  }
+
+  // check if user has installed runtime package and if the version is 2.2.0 or newer
+  // userspace `server.ts` file does import utils from runtime, so it has to be resolvable
+  // from site root and auto-installed plugin in `.netlify/plugins` wouldn't suffice for that.
+  const angularRuntimeVersionInstalledByUser = await getAngularRuntimeVersion(siteRoot)
+  if (!angularRuntimeVersionInstalledByUser) {
+    failBuild(
+      "Angular@19 SSR on Netlify requires '@netlify/angular-runtime' version 2.2.0 or later to be installed. Please install it and try again.",
+    )
+  } else if (!satisfies(angularRuntimeVersionInstalledByUser, '>=2.2.0', { includePrerelease: true })) {
+    failBuild(
+      `Angular@19 SSR on Netlify requires '@netlify/angular-runtime' version 2.2.0 or later to be installed. Found version "${angularRuntimeVersionInstalledByUser}. Please update it to version 2.2.0 or later and try again.`,
+    )
   }
 
   // check wether project is using stable CommonEngine or Developer Preview AppEngine
