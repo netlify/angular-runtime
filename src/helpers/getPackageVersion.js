@@ -1,4 +1,5 @@
 const { createRequire } = require('node:module')
+const { join } = require('node:path/posix')
 
 const { readJSON } = require('fs-extra')
 
@@ -31,7 +32,7 @@ module.exports.getAngularVersion = getAngularVersion
 const getAngularRuntimeVersion = async function (root) {
   let packagePath
   try {
-    const siteRequire = createRequire(root)
+    const siteRequire = createRequire(join(root, ':internal:'))
     packagePath = siteRequire.resolve('@netlify/angular-runtime/package.json')
   } catch {
     // module not found
