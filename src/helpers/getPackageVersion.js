@@ -1,3 +1,5 @@
+const { createRequire } = require('node:module')
+
 const { readJSON } = require('fs-extra')
 
 /**
@@ -29,8 +31,8 @@ module.exports.getAngularVersion = getAngularVersion
 const getAngularRuntimeVersion = async function (root) {
   let packagePath
   try {
-    // eslint-disable-next-line n/no-missing-require
-    packagePath = require.resolve('@netlify/angular-runtime/package.json', { paths: [root] })
+    const siteRequire = createRequire(root)
+    packagePath = siteRequire.resolve('@netlify/angular-runtime/package.json')
   } catch {
     // module not found
     return
