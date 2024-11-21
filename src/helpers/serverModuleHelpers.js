@@ -127,7 +127,7 @@ const fixServerTs = async function ({ angularVersion, siteRoot, failPlugin, fail
     )
   } else if (!satisfies(angularRuntimeVersionInstalledByUser, '>=2.2.0', { includePrerelease: true })) {
     failBuild(
-      `Angular@19 SSR on Netlify requires '@netlify/angular-runtime' version 2.2.0 or later to be installed. Found version "${angularRuntimeVersionInstalledByUser}. Please update it to version 2.2.0 or later and try again.`,
+      `Angular@19 SSR on Netlify requires '@netlify/angular-runtime' version 2.2.0 or later to be installed. Found version "${angularRuntimeVersionInstalledByUser}". Please update it to version 2.2.0 or later and try again.`,
     )
   }
 
