@@ -15,7 +15,7 @@
     "@angular/platform-browser-dynamic": "^18.1.0-rc",
     "@angular/platform-server": "^18.1.0-rc",
     "@angular/router": "^18.0.1",
-    "@angular/ssr": "^18.0.2",
+    "@angular/ssr": "^19.0.0",
     "@netlify/angular-runtime": "file:../../../"
   }
 }
