@@ -73,7 +73,14 @@ const setUpEdgeFunction = async ({ outputDir, constants, failBuild, usedEngine }
   // we ensure this is initialised before any other module
   const polyfills = `
   import process from "node:process"
+  import crypto from "node:crypto"
 
+  Object.defineProperty(globalThis, 'crypto', {
+    configurable: true,
+    enumerable: true,
+    value: crypto,
+    writable: true
+  })
   globalThis.process = process
   globalThis.DenoEvent = globalThis.Event // storing this for fixup-event.mjs
   `
