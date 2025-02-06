@@ -107,7 +107,7 @@ const fixServerTs = async function ({ angularVersion, siteRoot, failPlugin, fail
 
   const angularJson = getAngularJson({ failPlugin, siteRoot })
 
-  const project = getProject(angularJson)
+  const project = getProject(angularJson, failBuild)
   const {
     architect: { build },
   } = project

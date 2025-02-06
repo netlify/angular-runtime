@@ -51,7 +51,7 @@ module.exports = {
     const siteRoot = getAngularRoot({ failBuild, netlifyConfig })
     const angularJson = getAngularJson({ failPlugin, siteRoot })
 
-    const project = getProject(angularJson)
+    const project = getProject(angularJson, failBuild)
     const {
       architect: { build },
     } = project
