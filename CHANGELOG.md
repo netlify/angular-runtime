@@ -1,5 +1,13 @@
 # Changelog
 
+## [2.2.2](https://github.com/netlify/angular-runtime/compare/v2.2.1...v2.2.2) (2025-02-06)
+
+
+### Bug Fixes
+
+* correct checking for runtime version installed in the project and provide example API endpoint in code snippets ([#230](https://github.com/netlify/angular-runtime/issues/230)) ([3c7171f](https://github.com/netlify/angular-runtime/commit/3c7171f537db346e8f95f49a69cc7552e6d24d20))
+* provide failBuild to getProject calls ([#247](https://github.com/netlify/angular-runtime/issues/247)) ([9a3b1bd](https://github.com/netlify/angular-runtime/commit/9a3b1bdb7b07001d13a8781b0a3fd85c8651f867))
+
 ## [2.2.1](https://github.com/netlify/angular-runtime/compare/v2.2.0...v2.2.1) (2024-11-20)
 
 
