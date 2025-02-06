@@ -5,7 +5,7 @@ const { getProject } = require('./setUpEdgeFunction')
 
 const fixOutputDir = async function ({ failBuild, failPlugin, siteRoot, PUBLISH_DIR, IS_LOCAL, netlifyConfig }) {
   const angularJson = getAngularJson({ failPlugin, siteRoot })
-  const project = getProject(angularJson)
+  const project = getProject(angularJson, failBuild)
 
   const { outputPath } = project.architect.build.options
 
