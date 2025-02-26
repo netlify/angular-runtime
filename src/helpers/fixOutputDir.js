@@ -3,13 +3,24 @@ const { join } = require('path')
 const getAngularJson = require('./getAngularJson')
 const { getProject } = require('./setUpEdgeFunction')
 
-const fixOutputDir = async function ({ failBuild, failPlugin, siteRoot, PUBLISH_DIR, IS_LOCAL, netlifyConfig }) {
-  const angularJson = getAngularJson({ failPlugin, siteRoot })
-  const project = getProject(angularJson, failBuild)
+const fixOutputDir = async function ({
+  failBuild,
+  failPlugin,
+  siteRoot,
+  PUBLISH_DIR,
+  IS_LOCAL,
+  netlifyConfig,
+  workspaceType,
+}) {
+  const angularJson = getAngularJson({ failPlugin, siteRoot, workspaceType })
+  const project = getProject(angularJson, failBuild, workspaceType === 'nx')
 
-  const { outputPath } = project.architect.build.options
+  const { outputPath } = workspaceType === 'nx' ? project.targets.build.options : project.architect.build.options
 
-  const isApplicationBuilder = project.architect.build.builder.endsWith(':application')
+  const isApplicationBuilder =
+    workspaceType === 'nx'
+      ? project.targets.build.executor.endsWith(':application')
+      : project.architect.build.builder.endsWith(':application')
   const correctPublishDir = isApplicationBuilder ? join(outputPath, 'browser') : outputPath
   if (correctPublishDir === PUBLISH_DIR) {
     return

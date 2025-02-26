@@ -93,6 +93,26 @@ test('Angular 19 using App Engine (Developer Preview)', async () => {
   assert.deepEqual(success, true)
 })
 
+test('Angular 19 in an NX workspace using CommonEngine', async () => {
+  const { severityCode, success } = await build({
+    repositoryRoot: fileURLToPath(new URL('fixtures/nx-angular-19-common-engine', import.meta.url)),
+    packagePath: 'apps/nx-angular-19-common-engine',
+  })
+
+  assert.deepEqual(severityCode, 0)
+  assert.deepEqual(success, true)
+})
+
+test('Angular 19 in an NX workspace using App Engine (Developer Preview)', async () => {
+  const { severityCode, success } = await build({
+    repositoryRoot: fileURLToPath(new URL('fixtures/nx-angular-19-app-engine', import.meta.url)),
+    packagePath: 'apps/nx-angular-19-app-engine',
+  })
+
+  assert.deepEqual(severityCode, 0)
+  assert.deepEqual(success, true)
+})
+
 describe('Angular version validation', () => {
   test('checks version for angular 19', async () => {
     const result = validateAngularVersion(

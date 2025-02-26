@@ -22,8 +22,17 @@ const getAllFilesIn = (dir) =>
 
 const toPosix = (path) => path.split(sep).join(posix.sep)
 
-const getProject = (angularJson, failBuild) => {
+const getProject = (angularJson, failBuild, isNxWorkspace = false) => {
   const selectedProject = process.env.ANGULAR_PROJECT
+
+  if (isNxWorkspace) {
+    if (!selectedProject) {
+      return failBuild(``)
+    }
+
+    return angularJson
+  }
+
   if (selectedProject) {
     const project = angularJson.projects[selectedProject]
     if (!project) {
@@ -98,7 +107,7 @@ const setUpEdgeFunction = async ({ outputDir, constants, failBuild, usedEngine }
     const document = Buffer.from(${JSON.stringify(
       Buffer.from(html, 'utf-8').toString('base64'),
     )}, 'base64').toString("utf-8");
-    
+
     export default async (request, context) => {
       const html = await renderApplication(bootstrap, {
         url: request.url,
@@ -155,7 +164,7 @@ const setUpEdgeFunction = async ({ outputDir, constants, failBuild, usedEngine }
             // reading file is needed for inlining CSS, but failing to do so is
             // not causing fatal error so we just ignore it here
           }
-          
+
           return originalReadFile.apply(globalThis.Deno, args)
         }
       } catch {
@@ -194,7 +203,7 @@ const setUpEdgeFunction = async ({ outputDir, constants, failBuild, usedEngine }
     ssrFunctionContent = /* javascript */ `
     import { netlifyAppEngineHandler } from "${toPosix(relative(edgeFunctionDir, serverDistRoot))}/server.mjs";
     import "./fixup-event.mjs";
-    
+
     export default netlifyAppEngineHandler;
     `
   }
