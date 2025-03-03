@@ -78,7 +78,7 @@
     "node": ">=18.13.0"
   },
   "devDependencies": {
-    "@opentelemetry/api": "~1.8.0",
+    "@opentelemetry/api": "~1.9.0",
     "@netlify/eslint-config-node": "^7.0.1",
     "@types/node": "^18.19.0",
     "eslint-plugin-unicorn": "^49.0.0",
