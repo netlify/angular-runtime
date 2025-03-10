@@ -11,8 +11,9 @@ const fixOutputDir = async function ({
   IS_LOCAL,
   netlifyConfig,
   workspaceType,
+  packagePath,
 }) {
-  const angularJson = getAngularJson({ failPlugin, siteRoot, workspaceType })
+  const angularJson = getAngularJson({ failPlugin, siteRoot, workspaceType, packagePath })
   const project = getProject(angularJson, failBuild, workspaceType === 'nx')
 
   const { outputPath } = workspaceType === 'nx' ? project.targets.build.options : project.architect.build.options

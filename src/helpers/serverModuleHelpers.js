@@ -96,17 +96,18 @@ const guessUsedEngine = function (serverModuleContents) {
  * @param {string} obj.siteRoot Root directory of an app
  * @param {(msg: string) => never} obj.failPlugin Function to fail the plugin
  * @param {'nx' | 'default'} obj.workspaceType The workspace type being parsed
+ * @param {string} obj.packagePath The path to the package directory
  * * @param {(msg: string) => never} obj.failBuild Function to fail the build
  *
  * @returns {'AppEngine' | 'CommonEngine' | undefined}
  */
-const fixServerTs = async function ({ angularVersion, siteRoot, failPlugin, failBuild, workspaceType }) {
+const fixServerTs = async function ({ angularVersion, siteRoot, failPlugin, failBuild, workspaceType, packagePath }) {
   if (!satisfies(angularVersion, '>=19.0.0-rc', { includePrerelease: true })) {
     // for pre-19 versions, we don't need to do anything
     return
   }
 
-  const angularJson = getAngularJson({ failPlugin, siteRoot, workspaceType })
+  const angularJson = getAngularJson({ failPlugin, siteRoot, workspaceType, packagePath })
 
   const project = getProject(angularJson, failBuild, workspaceType === 'nx')
   const build = workspaceType === 'nx' ? project.targets.build : project.architect.build

@@ -37,9 +37,17 @@ module.exports = {
       IS_LOCAL: constants.IS_LOCAL,
       netlifyConfig,
       workspaceType,
+      packagePath: constants.PACKAGE_PATH,
     })
 
-    usedEngine = await fixServerTs({ angularVersion, siteRoot, failPlugin, failBuild, workspaceType })
+    usedEngine = await fixServerTs({
+      angularVersion,
+      siteRoot,
+      failPlugin,
+      failBuild,
+      workspaceType,
+      packagePath: constants.PACKAGE_PATH,
+    })
   },
   async onBuild({ utils, netlifyConfig, constants }) {
     await revertServerTsFix()
@@ -50,7 +58,7 @@ module.exports = {
     const { failBuild, failPlugin } = utils.build
 
     const { siteRoot, workspaceType } = getAngularRoot({ failBuild, netlifyConfig, onBuild: true })
-    const angularJson = getAngularJson({ failPlugin, siteRoot, workspaceType })
+    const angularJson = getAngularJson({ failPlugin, siteRoot, workspaceType, packagePath: constants.PACKAGE_PATH })
 
     const project = getProject(angularJson, failBuild, workspaceType === 'nx')
     const build = workspaceType === 'nx' ? project.targets.build : project.architect.build

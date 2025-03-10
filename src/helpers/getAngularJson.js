@@ -9,25 +9,24 @@ const { existsSync, readJsonSync } = require('fs-extra')
  * @param {string} obj.siteRoot Root directory of an app
  * @param {(msg: string) => never} obj.failPlugin Function to fail the plugin
  * @param {'nx' | 'default'} obj.workspaceType Type of monorepo, dictates what json file to open
+ * @param {string} obj.packagePath The path to the package directory
  *
  * @returns {any}
  */
-const getAngularJson = function ({ failPlugin, siteRoot, workspaceType }) {
+const getAngularJson = function ({ failPlugin, siteRoot, workspaceType, packagePath }) {
   if (workspaceType === 'nx') {
-    const selectedProject = process.env.ANGULAR_PROJECT
-
-    if (!selectedProject) {
+    if ((packagePath ?? '').length === 0) {
       return failPlugin(
-        `The ANGULAR_PROJECT environment variable is not set. This is needed to determine the project.json to load in an NX workspace`,
+        `packagePath must be set to the location of the package.json being built when deploying an NX monorepo, e.g. "apps/{project-name}"`,
       )
     }
 
-    if (!existsSync(join(siteRoot, 'apps', selectedProject, 'project.json'))) {
-      return failPlugin(`No project.json found in apps/${selectedProject}`)
+    if (!existsSync(join(siteRoot, packagePath, 'project.json'))) {
+      return failPlugin(`No project.json found in ${packagePath}`)
     }
 
     try {
-      return readJsonSync(join(siteRoot, 'apps', selectedProject, 'project.json'))
+      return readJsonSync(join(siteRoot, packagePath, 'project.json'))
     } catch {
       return failPlugin(`Could not parse the contents of project.json`)
     }
