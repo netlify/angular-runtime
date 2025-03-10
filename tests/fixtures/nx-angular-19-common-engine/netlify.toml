@@ -2,8 +2,5 @@
   command="npm run build"
   ignore="exit 1" ## always build, there might be changes in the plugin
 
-[build.environment]
-  ANGULAR_PROJECT="nx-angular-19-common-engine"
-
 [[plugins]]
   package="@netlify/angular-runtime"

@@ -26,10 +26,6 @@ const getProject = (angularJson, failBuild, isNxWorkspace = false) => {
   const selectedProject = process.env.ANGULAR_PROJECT
 
   if (isNxWorkspace) {
-    if (!selectedProject) {
-      return failBuild(``)
-    }
-
     return angularJson
   }
 
