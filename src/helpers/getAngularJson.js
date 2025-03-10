@@ -17,7 +17,7 @@ const getAngularJson = function ({ failPlugin, siteRoot, workspaceType, packageP
   if (workspaceType === 'nx') {
     if ((packagePath ?? '').length === 0) {
       return failPlugin(
-        `packagePath must be set to the location of the package.json being built when deploying an NX monorepo, e.g. "apps/{project-name}"`,
+        `packagePath must be set to the location of the project.json being built when deploying an NX monorepo, e.g. "apps/{project-name}"`,
       )
     }
 
