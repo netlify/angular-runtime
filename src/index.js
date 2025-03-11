@@ -16,7 +16,7 @@ let usedEngine
 module.exports = {
   async onPreBuild({ netlifyConfig, utils, constants }) {
     const { failBuild, failPlugin } = utils.build
-    const siteRoot = getAngularRoot({ failBuild, netlifyConfig })
+    const { siteRoot, workspaceType } = getAngularRoot({ failBuild, netlifyConfig })
     const angularVersion = await getAngularVersion(siteRoot)
     isValidAngularProject = validateAngularVersion(angularVersion)
 
@@ -36,9 +36,18 @@ module.exports = {
       PUBLISH_DIR: constants.PUBLISH_DIR,
       IS_LOCAL: constants.IS_LOCAL,
       netlifyConfig,
+      workspaceType,
+      packagePath: constants.PACKAGE_PATH,
     })
 
-    usedEngine = await fixServerTs({ angularVersion, siteRoot, failPlugin, failBuild })
+    usedEngine = await fixServerTs({
+      angularVersion,
+      siteRoot,
+      failPlugin,
+      failBuild,
+      workspaceType,
+      packagePath: constants.PACKAGE_PATH,
+    })
   },
   async onBuild({ utils, netlifyConfig, constants }) {
     await revertServerTsFix()
@@ -48,13 +57,11 @@ module.exports = {
 
     const { failBuild, failPlugin } = utils.build
 
-    const siteRoot = getAngularRoot({ failBuild, netlifyConfig })
-    const angularJson = getAngularJson({ failPlugin, siteRoot })
+    const { siteRoot, workspaceType } = getAngularRoot({ failBuild, netlifyConfig, onBuild: true })
+    const angularJson = getAngularJson({ failPlugin, siteRoot, workspaceType, packagePath: constants.PACKAGE_PATH })
 
-    const project = getProject(angularJson, failBuild)
-    const {
-      architect: { build },
-    } = project
+    const project = getProject(angularJson, failBuild, workspaceType === 'nx')
+    const build = workspaceType === 'nx' ? project.targets.build : project.architect.build
     const outputDir = build?.options?.outputPath
     if (!outputDir || !existsSync(outputDir)) {
       return failBuild('Could not find build output directory')
