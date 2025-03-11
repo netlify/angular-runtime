@@ -1,5 +1,12 @@
 # Changelog
 
+## [2.3.0](https://github.com/netlify/angular-runtime/compare/v2.2.2...v2.3.0) (2025-03-11)
+
+
+### Features
+
+* adds support for detecting NX monorepos ([#263](https://github.com/netlify/angular-runtime/issues/263)) ([52b8c59](https://github.com/netlify/angular-runtime/commit/52b8c599339e88a01d23818371c88e22ac263d52))
+
 ## [2.2.2](https://github.com/netlify/angular-runtime/compare/v2.2.1...v2.2.2) (2025-02-06)
 
 
