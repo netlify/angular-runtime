@@ -103,6 +103,15 @@ test('Angular 19 in an NX workspace using CommonEngine', async () => {
   assert.deepEqual(success, true)
 })
 
+test('Angular 19 using App Engine (Developer Preview) using non-bundler module resolution (tsconfig)', async () => {
+  const { severityCode, success } = await build({
+    repositoryRoot: fileURLToPath(new URL('fixtures/angular-19-app-engine-node-module-resolution', import.meta.url)),
+  })
+
+  assert.deepEqual(severityCode, 0)
+  assert.deepEqual(success, true)
+})
+
 test('Angular 19 in an NX workspace using App Engine (Developer Preview)', async () => {
   const { severityCode, success } = await build({
     repositoryRoot: fileURLToPath(new URL('fixtures/nx-angular-19-app-engine', import.meta.url)),
