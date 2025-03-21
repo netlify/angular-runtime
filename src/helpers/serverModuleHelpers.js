@@ -11,7 +11,7 @@ const { getProject } = require('./setUpEdgeFunction')
 
 // eslint-disable-next-line no-inline-comments
 const NetlifyServerTsCommonEngine = /* typescript */ `import { CommonEngine } from '@angular/ssr/node'
-import { render } from '@netlify/angular-runtime/common-engine'
+import { render } from '@netlify/angular-runtime/common-engine.mjs'
 
 const commonEngine = new CommonEngine()
 
@@ -29,7 +29,7 @@ export async function netlifyCommonEngineHandler(request: Request, context: any)
 
 // eslint-disable-next-line no-inline-comments
 const NetlifyServerTsAppEngine = /* typescript */ `import { AngularAppEngine, createRequestHandler } from '@angular/ssr'
-import { getContext } from '@netlify/angular-runtime/context'
+import { getContext } from '@netlify/angular-runtime/context.mjs'
 
 const angularAppEngine = new AngularAppEngine()
 

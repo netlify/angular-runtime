@@ -115,7 +115,7 @@ If you did not opt into the App Engine Developer Preview:
 
 ```ts
 import { CommonEngine } from '@angular/ssr/node'
-import { render } from '@netlify/angular-runtime/common-engine'
+import { render } from '@netlify/angular-runtime/common-engine.mjs'
 
 const commonEngine = new CommonEngine()
 
@@ -135,7 +135,7 @@ If you opted into the App Engine Developer Preview:
 
 ```ts
 import { AngularAppEngine, createRequestHandler } from '@angular/ssr'
-import { getContext } from '@netlify/angular-runtime/context'
+import { getContext } from '@netlify/angular-runtime/context.mjs'
 
 const angularAppEngine = new AngularAppEngine()
 
