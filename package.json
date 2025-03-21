@@ -7,11 +7,11 @@
     "src/**/*.js",
     "src/**/*.mjs",
     "src/**/*.json",
-    "src/**/*.d.ts",
+    "src/**/*.d.mts",
     "context.mjs",
-    "context.d.mjs",
+    "context.d.mts",
     "common-engine.mjs",
-    "common-engine.d.mjs",
+    "common-engine.d.mts",
     "manifest.yml"
   ],
   "exports": {
