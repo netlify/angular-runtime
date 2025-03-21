@@ -8,6 +8,10 @@
     "src/**/*.mjs",
     "src/**/*.json",
     "src/**/*.d.ts",
+    "context.mjs",
+    "context.d.mjs",
+    "common-engine.mjs",
+    "common-engine.d.mjs",
     "manifest.yml"
   ],
   "exports": {
@@ -18,11 +22,19 @@
       "default": "./src/index.js"
     },
     "./common-engine": {
-      "types": "./src/common-engine.d.ts",
+      "types": "./src/common-engine.d.mts",
+      "default": "./src/common-engine.mjs"
+    },
+    "./common-engine.mjs": {
+      "types": "./src/common-engine.d.mts",
       "default": "./src/common-engine.mjs"
     },
     "./context": {
-      "types": "./src/context.d.ts",
+      "types": "./src/context.d.mts",
+      "default": "./src/context.mjs"
+    },
+    "./context.mjs": {
+      "types": "./src/context.d.mts",
       "default": "./src/context.mjs"
     }
   },
