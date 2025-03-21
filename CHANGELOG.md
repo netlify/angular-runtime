@@ -1,5 +1,12 @@
 # Changelog
 
+## [2.3.1](https://github.com/netlify/angular-runtime/compare/v2.3.0...v2.3.1) (2025-03-21)
+
+
+### Bug Fixes
+
+* add support for non-bundler module resolution (tsconfig) ([#279](https://github.com/netlify/angular-runtime/issues/279)) ([ae24696](https://github.com/netlify/angular-runtime/commit/ae2469643e2a742f66a2f9a7d72d0473b5091293))
+
 ## [2.3.0](https://github.com/netlify/angular-runtime/compare/v2.2.2...v2.3.0) (2025-03-11)
 
 
