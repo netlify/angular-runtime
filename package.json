@@ -98,7 +98,7 @@
     "@types/node": "^18.19.0",
     "eslint-plugin-unicorn": "^49.0.0",
     "husky": "^4.3.0",
-    "netlify-cli": "^18.1.0",
+    "netlify-cli": "^19.1.7",
     "@netlify/build": "^29.59.2",
     "npm-run-all2": "^6.0.0",
     "prettier": "^2.1.2"
