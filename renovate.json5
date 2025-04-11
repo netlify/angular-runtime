@@ -6,19 +6,19 @@
   // The config we're extending ignores test dirs, but we want to bump some fixture deps
   ignorePaths: ['**/node_modules/**'],
   packageRules: [
-    // Since we've enabled Renovate (see above) for fixture sites, adjust the config for these.
+    // Since we've enabled Renovate (see above) for demo and fixture sites, adjust the config for these.
     {
-      matchFileNames: ['tests/**/fixtures/**/package.json'],
+      matchFileNames: ['tests/**/fixtures/**/package.json', 'demo/package.json'],
       // If a fixture requires a specific framework version, never bump it.
       updatePinnedDependencies: false,
       // Always use `chore:` (since these are test fixtures), to avoid no-op releases.
       extends: [':semanticCommitTypeAll(chore)'],
     },
     {
-      description: 'Stable & unstable Angular bumps in test fixtures',
-      matchFileNames: ['tests/**/fixtures/**/package.json'],
-      // See https://docs.renovatebot.com/presets-monorepo/#monorepoangular.
-      matchSourceUrls: ['https://github.com/angular/angular'],
+      description: 'Stable & unstable Angular bumps in demo and test fixtures',
+      groupName: 'Angular packages',
+      matchFileNames: ['tests/**/fixtures/**/package.json', 'demo/package.json'],
+      matchPackageNames: ['@angular/**', 'zone.js', '@angular-devkit/**'],
       // Override the schedule to get immediate PRs.
       schedule: null,
       // Apply a unique label so we can trigger additional workflows for these PRs.
@@ -30,6 +30,28 @@
       // Ideally we'd like to disable automerge only for unstable bumps, but this is
       // difficult (or impossible) to implement so we just disable it entirely.
       automerge: false,
+    },
+    // Angular major version updates attempt to upgrade fixtures for Angular 17, 18 etc
+    // we never want to upgrade those, so we disable them in fixtures.
+    // Angular major versions are being released on 6 months schedule and we will need to handle them
+    // manually anyway (even if it's just creating test fixtures for them, without adjusting the runtime
+    // itself)
+    // Additionally peerDeps bumps (like typescript) make it seemingly impossible to automate this process
+    // for demo app, so major bumps are just fully disabled.
+    {
+      description: 'Disable angular major version upgrades',
+      matchFileNames: ['tests/**/fixtures/**/package.json', 'demo/package.json'],
+      matchPackageNames: ['@angular/**', '@angular-devkit/**'],
+      matchUpdateTypes: ['major'],
+      enabled: false,
+    },
+    // zone.js is in 0.x.y version range, so we also disable minor updates for those
+    {
+      description: 'Disable zone.js minor version upgrades in fixtures',
+      matchFileNames: ['tests/**/fixtures/**/package.json', 'demo/package.json'],
+      matchPackageNames: ['zone.js'],
+      matchUpdateTypes: ['minor', 'major'],
+      enabled: false,
     },
   ],
 }
