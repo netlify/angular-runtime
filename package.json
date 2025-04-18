@@ -95,11 +95,11 @@
   "devDependencies": {
     "@opentelemetry/api": "~1.8.0",
     "@netlify/eslint-config-node": "^7.0.1",
-    "@types/node": "^18.19.0",
+    "@types/node": "^22.0.0",
     "eslint-plugin-unicorn": "^49.0.0",
     "husky": "^4.3.0",
-    "netlify-cli": "^18.1.0",
-    "@netlify/build": "^29.59.2",
+    "netlify-cli": "^20.0.2",
+    "@netlify/build": "^32.0.0",
     "npm-run-all2": "^6.0.0",
     "prettier": "^2.1.2"
   },
