@@ -22,12 +22,8 @@ const getAllFilesIn = (dir) =>
 
 const toPosix = (path) => path.split(sep).join(posix.sep)
 
-const getProject = (angularJson, failBuild, isNxWorkspace = false) => {
+const getProjectName = (angularJson, failBuild) => {
   const selectedProject = process.env.ANGULAR_PROJECT
-
-  if (isNxWorkspace) {
-    return angularJson
-  }
 
   if (selectedProject) {
     const project = angularJson.projects[selectedProject]
@@ -36,7 +32,7 @@ const getProject = (angularJson, failBuild, isNxWorkspace = false) => {
         `Could not find project selected project "${selectedProject}" in angular.json. Please update the ANGULAR_PROJECT environment variable.`,
       )
     }
-    return project
+    return selectedProject
   }
 
   const projectNames = Object.keys(angularJson.projects)
@@ -47,14 +43,47 @@ const getProject = (angularJson, failBuild, isNxWorkspace = false) => {
     )
   }
 
+  return projectName
+}
+
+const getProject = (angularJson, failBuild, isNxWorkspace = false, projectName = null) => {
+  if (isNxWorkspace) {
+    return angularJson
+  }
+  if (!projectName) {
+    projectName = getProjectName(angularJson, failBuild)
+  }
+
   return angularJson.projects[projectName]
 }
 
 module.exports.getProject = getProject
 
+const getBuildInformation = (angularJson, failBuild, workspaceType) => {
+  const projectName = getProjectName(angularJson, failBuild)
+  const project = getProject(angularJson, failBuild, workspaceType === 'nx', projectName)
+
+  let { outputPath } = workspaceType === 'nx' ? project.targets.build.options : project.architect.build.options
+
+  if (!outputPath && workspaceType === 'default') {
+    // outputPath might not be explicitly defined in angular.json
+    // so we will try default which is dist/<project-name>
+    outputPath = join('dist', projectName)
+  }
+
+  const isApplicationBuilder =
+    workspaceType === 'nx'
+      ? project.targets.build.executor.endsWith(':application')
+      : project.architect.build.builder.endsWith(':application')
+
+  return { outputPath, isApplicationBuilder }
+}
+
+module.exports.getBuildInformation = getBuildInformation
+
 // eslint-disable-next-line max-lines-per-function
-const setUpEdgeFunction = async ({ outputDir, constants, failBuild, usedEngine }) => {
-  const serverDistRoot = join(outputDir, 'server')
+const setUpEdgeFunction = async ({ outputPath, constants, failBuild, usedEngine }) => {
+  const serverDistRoot = join(outputPath, 'server')
   if (!existsSync(serverDistRoot)) {
     console.log('No server output generated, skipping SSR setup.')
     return
@@ -66,11 +95,11 @@ const setUpEdgeFunction = async ({ outputDir, constants, failBuild, usedEngine }
   await mkdir(edgeFunctionDir, { recursive: true })
 
   const html = await readFile(join(serverDistRoot, 'index.server.html'), 'utf-8')
-  const staticFiles = getAllFilesIn(join(outputDir, 'browser')).map(
-    (path) => `/${relative(join(outputDir, 'browser'), path)}`,
+  const staticFiles = getAllFilesIn(join(outputPath, 'browser')).map(
+    (path) => `/${relative(join(outputPath, 'browser'), path)}`,
   )
 
-  const excludedPaths = ['/.netlify/*', ...staticFiles, ...Object.keys(await getPrerenderedRoutes(outputDir))].map(
+  const excludedPaths = ['/.netlify/*', ...staticFiles, ...Object.keys(await getPrerenderedRoutes(outputPath))].map(
     toPosix,
   )
 
@@ -115,7 +144,7 @@ const setUpEdgeFunction = async ({ outputDir, constants, failBuild, usedEngine }
     `
   } else if (usedEngine === 'CommonEngine') {
     const cssAssetsManifest = {}
-    const outputBrowserDir = join(outputDir, 'browser')
+    const outputBrowserDir = join(outputPath, 'browser')
     const cssFiles = getAllFilesIn(outputBrowserDir).filter((file) => file.endsWith('.css'))
 
     for (const cssFile of cssFiles) {
