@@ -12,12 +12,16 @@ jobs:
     strategy:
       matrix:
         os: [ubuntu-latest, macOS-latest, windows-latest]
-        node-version: [18.19.1, 20.13.1]
+        node-version: [18.19.1, 20.13.1, 22]
         exclude:
           - os: macOS-latest
             node-version: 18.19.1
           - os: windows-latest
             node-version: 18.19.1
+          - os: macOS-latest
+            node-version: 20.13.1
+          - os: windows-latest
+            node-version: 20.13.1
       fail-fast: false
 
     steps:
