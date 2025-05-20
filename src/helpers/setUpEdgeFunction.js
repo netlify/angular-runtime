@@ -60,7 +60,7 @@ const getProject = (angularJson, failBuild, isNxWorkspace = false, projectName =
 module.exports.getProject = getProject
 
 const getBuildInformation = (angularJson, failBuild, workspaceType) => {
-  const projectName = getProjectName(angularJson, failBuild)
+  const projectName = workspaceType === 'nx' ? '' : getProjectName(angularJson, failBuild)
   const project = getProject(angularJson, failBuild, workspaceType === 'nx', projectName)
 
   let { outputPath } = workspaceType === 'nx' ? project.targets.build.options : project.architect.build.options
