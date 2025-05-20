@@ -122,7 +122,32 @@ test('Angular 19 in an NX workspace using App Engine (Developer Preview)', async
   assert.deepEqual(success, true)
 })
 
+test('Angular 20', async () => {
+  const { severityCode, success } = await build({
+    repositoryRoot: fileURLToPath(new URL('fixtures/angular-20', import.meta.url)),
+  })
+
+  assert.deepEqual(severityCode, 0)
+  assert.deepEqual(success, true)
+})
+
+test('Angular 20 Zoneless (Developer Preview)', async () => {
+  const { severityCode, success } = await build({
+    repositoryRoot: fileURLToPath(new URL('fixtures/angular-20-zoneless', import.meta.url)),
+  })
+
+  assert.deepEqual(severityCode, 0)
+  assert.deepEqual(success, true)
+})
+
 describe('Angular version validation', () => {
+  test('checks version for angular 20', async () => {
+    const result = validateAngularVersion(
+      await getAngularVersion(fileURLToPath(new URL('fixtures/angular-20', import.meta.url))),
+    )
+    assert.strictEqual(result, true)
+  })
+
   test('checks version for angular 19', async () => {
     const result = validateAngularVersion(
       await getAngularVersion(fileURLToPath(new URL('fixtures/angular-19-common-engine', import.meta.url))),
