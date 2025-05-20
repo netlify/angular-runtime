@@ -60,6 +60,8 @@
     "pretest:fixtures:angular-19-app-engine": "cd tests/fixtures/angular-19-app-engine && npm ci",
     "pretest:fixtures:angular-19-app-engine-node-module-resolution": "cd tests/fixtures/angular-19-app-engine-node-module-resolution && npm ci",
     "pretest:fixtures:angular-19-prerender-false": "cd tests/fixtures/angular-19-prerender-false && npm ci",
+    "pretest:fixtures:angular-20": "cd tests/fixtures/angular-20 && npm ci",
+    "pretest:fixtures:angular-20-zoneless": "cd tests/fixtures/angular-20-zoneless && npm ci",
     "pretest:fixtures:nx-angular-19-common-engine": "cd tests/fixtures/nx-angular-19-common-engine && npm ci",
     "pretest:fixtures:nx-angular-19-app-engine": "cd tests/fixtures/nx-angular-19-app-engine && npm ci",
     "pretest": "run-s pretest:*",
