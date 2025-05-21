@@ -127,7 +127,7 @@ test('Angular 19 in an NX workspace using App Engine (Developer Preview)', async
 test(
   'Angular 20',
   {
-    skip: !satisfies(versions.node, '>=20.11'),
+    skip: !satisfies(versions.node, '>=20.19'),
   },
   async () => {
     const { severityCode, success } = await build({
@@ -142,7 +142,7 @@ test(
 test(
   'Angular 20 Zoneless (Developer Preview)',
   {
-    skip: !satisfies(versions.node, '>=20.11'),
+    skip: !satisfies(versions.node, '>=20.19'),
   },
   async () => {
     const { severityCode, success } = await build({
@@ -158,7 +158,7 @@ describe('Angular version validation', () => {
   test(
     'checks version for angular 20',
     {
-      skip: !satisfies(versions.node, '>=20.11'),
+      skip: !satisfies(versions.node, '>=20.19'),
     },
     async () => {
       const result = validateAngularVersion(
