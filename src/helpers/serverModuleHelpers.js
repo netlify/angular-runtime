@@ -152,6 +152,8 @@ const fixServerTs = async function ({ angularVersion, siteRoot, failPlugin, fail
     return usedEngineBasedOnKnownSignatures
   }
 
+  const moreDetailsInRepoReadme = `\n\nCheck https://github.com/netlify/angular-runtime README for more details.`
+
   // if we can't determine engine based on known signatures, let's first try to check if module is already
   // Netlify compatible to determine if it can be used as is or if user intervention is required
   // we will look for "netlify<Engine>Handler" which is named export that we will rely on and it's existence will
@@ -163,7 +165,7 @@ const fixServerTs = async function ({ angularVersion, siteRoot, failPlugin, fail
   if (isNetlifyAppEngine && isNetlifyCommonEngine) {
     // both exports found - we can't determine which engine is used
     failBuild(
-      "server.ts seems to contain both 'netlifyAppEngineHandler' and 'netlifyCommonEngineHandler' - it should contain just one of those.",
+      `server.ts seems to contain both 'netlifyAppEngineHandler' and 'netlifyCommonEngineHandler' - it should contain just one of those.${moreDetailsInRepoReadme}`,
     )
   }
 
@@ -195,11 +197,13 @@ const fixServerTs = async function ({ angularVersion, siteRoot, failPlugin, fail
       errorMessage += `\n\nIf you want to use "AppEngine" - your server.ts file should contain following:\n\n\`\`\`\n${NetlifyServerTsAppEngine}\`\`\``
     }
 
+    errorMessage += moreDetailsInRepoReadme
+
     failBuild(errorMessage)
   } else {
     // Angular 20+ made App Engine stable, so we should not recommend Common Engine anymore
     failBuild(
-      `server.ts doesn't seem to be Netlify compatible and is not known default. Please replace it with Netlify compatible server.ts:\n\n\`\`\`\n${NetlifyServerTsAppEngine}\`\`\``,
+      `server.ts doesn't seem to be Netlify compatible and is not known default. Please replace it with Netlify compatible server.ts:\n\n\`\`\`\n${NetlifyServerTsAppEngine}\`\`\`${moreDetailsInRepoReadme}`,
     )
   }
 }
