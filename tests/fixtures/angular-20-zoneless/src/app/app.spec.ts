@@ -16,12 +16,6 @@ describe('App', () => {
     expect(app).toBeTruthy();
   });
 
-  it(`should have the 'angular-20-zoneless' title`, () => {
-    const fixture = TestBed.createComponent(App);
-    const app = fixture.componentInstance;
-    expect(app.title).toEqual('angular-20-zoneless');
-  });
-
   it('should render title', () => {
     const fixture = TestBed.createComponent(App);
     fixture.detectChanges();
