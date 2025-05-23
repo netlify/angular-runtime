@@ -1,7 +1,7 @@
 const { join } = require('path')
 
 const getAngularJson = require('./getAngularJson')
-const { getProject } = require('./setUpEdgeFunction')
+const { getBuildInformation } = require('./setUpEdgeFunction')
 
 const fixOutputDir = async function ({
   failBuild,
@@ -14,14 +14,9 @@ const fixOutputDir = async function ({
   packagePath,
 }) {
   const angularJson = getAngularJson({ failPlugin, siteRoot, workspaceType, packagePath })
-  const project = getProject(angularJson, failBuild, workspaceType === 'nx')
 
-  const { outputPath } = workspaceType === 'nx' ? project.targets.build.options : project.architect.build.options
+  const { outputPath, isApplicationBuilder } = getBuildInformation(angularJson, failBuild, workspaceType)
 
-  const isApplicationBuilder =
-    workspaceType === 'nx'
-      ? project.targets.build.executor.endsWith(':application')
-      : project.architect.build.builder.endsWith(':application')
   const correctPublishDir = isApplicationBuilder ? join(outputPath, 'browser') : outputPath
   if (correctPublishDir === PUBLISH_DIR) {
     return

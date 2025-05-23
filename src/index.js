@@ -6,7 +6,7 @@ const getAngularJson = require('./helpers/getAngularJson')
 const getAngularRoot = require('./helpers/getAngularRoot')
 const { getAngularVersion } = require('./helpers/getPackageVersion')
 const { fixServerTs, revertServerTsFix } = require('./helpers/serverModuleHelpers')
-const { getProject, setUpEdgeFunction } = require('./helpers/setUpEdgeFunction')
+const { getBuildInformation, setUpEdgeFunction } = require('./helpers/setUpEdgeFunction')
 const setUpHeaders = require('./helpers/setUpHeaders')
 const validateAngularVersion = require('./helpers/validateAngularVersion')
 
@@ -60,17 +60,15 @@ module.exports = {
     const { siteRoot, workspaceType } = getAngularRoot({ failBuild, netlifyConfig, onBuild: true })
     const angularJson = getAngularJson({ failPlugin, siteRoot, workspaceType, packagePath: constants.PACKAGE_PATH })
 
-    const project = getProject(angularJson, failBuild, workspaceType === 'nx')
-    const build = workspaceType === 'nx' ? project.targets.build : project.architect.build
-    const outputDir = build?.options?.outputPath
-    if (!outputDir || !existsSync(outputDir)) {
+    const { outputPath } = getBuildInformation(angularJson, failBuild, workspaceType)
+    if (!outputPath || !existsSync(outputPath)) {
       return failBuild('Could not find build output directory')
     }
 
-    await setUpHeaders({ outputDir, netlifyConfig })
+    await setUpHeaders({ outputPath, netlifyConfig })
 
     await setUpEdgeFunction({
-      outputDir,
+      outputPath,
       constants,
       failBuild,
       usedEngine,
