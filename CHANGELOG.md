@@ -1,5 +1,12 @@
 # Changelog
 
+## [2.4.0](https://github.com/netlify/angular-runtime/compare/v2.3.1...v2.4.0) (2025-05-27)
+
+
+### Features
+
+* support angular@20 ([#292](https://github.com/netlify/angular-runtime/issues/292)) ([c204c08](https://github.com/netlify/angular-runtime/commit/c204c089799a8de1e0acd2b144545603f1037264))
+
 ## [2.3.1](https://github.com/netlify/angular-runtime/compare/v2.3.0...v2.3.1) (2025-03-21)
 
 
