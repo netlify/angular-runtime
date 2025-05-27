@@ -1,7 +1,7 @@
 const getPrerenderedRoutes = require('./getPrerenderedRoutes')
 
-const setUpHeaders = async ({ outputDir, netlifyConfig }) => {
-  const prerenderRoutes = await getPrerenderedRoutes(outputDir)
+const setUpHeaders = async ({ outputPath, netlifyConfig }) => {
+  const prerenderRoutes = await getPrerenderedRoutes(outputPath)
 
   for (const [route, routeConfig] of Object.entries(prerenderRoutes)) {
     if (routeConfig.headers) {

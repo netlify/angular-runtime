@@ -1,10 +1,12 @@
 import assert from 'node:assert'
 import { join } from 'node:path'
 import { join as posixJoin } from 'node:path/posix'
+import { versions } from 'node:process'
 import { test, describe } from 'node:test'
 import { fileURLToPath } from 'node:url'
 
 import build from '@netlify/build'
+import { satisfies } from 'semver'
 
 import { getAngularVersion } from '../src/helpers/getPackageVersion.js'
 import validateAngularVersion from '../src/helpers/validateAngularVersion.js'
@@ -122,7 +124,50 @@ test('Angular 19 in an NX workspace using App Engine (Developer Preview)', async
   assert.deepEqual(success, true)
 })
 
+test(
+  'Angular 20',
+  {
+    skip: !satisfies(versions.node, '>=20.19'),
+  },
+  async () => {
+    const { severityCode, success } = await build({
+      repositoryRoot: fileURLToPath(new URL('fixtures/angular-20', import.meta.url)),
+    })
+
+    assert.deepEqual(severityCode, 0)
+    assert.deepEqual(success, true)
+  },
+)
+
+test(
+  'Angular 20 Zoneless (Developer Preview)',
+  {
+    skip: !satisfies(versions.node, '>=20.19'),
+  },
+  async () => {
+    const { severityCode, success } = await build({
+      repositoryRoot: fileURLToPath(new URL('fixtures/angular-20-zoneless', import.meta.url)),
+    })
+
+    assert.deepEqual(severityCode, 0)
+    assert.deepEqual(success, true)
+  },
+)
+
 describe('Angular version validation', () => {
+  test(
+    'checks version for angular 20',
+    {
+      skip: !satisfies(versions.node, '>=20.19'),
+    },
+    async () => {
+      const result = validateAngularVersion(
+        await getAngularVersion(fileURLToPath(new URL('fixtures/angular-20', import.meta.url))),
+      )
+      assert.strictEqual(result, true)
+    },
+  )
+
   test('checks version for angular 19', async () => {
     const result = validateAngularVersion(
       await getAngularVersion(fileURLToPath(new URL('fixtures/angular-19-common-engine', import.meta.url))),
