@@ -101,7 +101,7 @@
     "eslint-plugin-unicorn": "^49.0.0",
     "husky": "^4.3.0",
     "netlify-cli": "^21.6.0",
-    "@netlify/build": "^33.4.7",
+    "@netlify/build": "^33.5.0",
     "npm-run-all2": "^6.0.0",
     "prettier": "^2.1.2"
   },
