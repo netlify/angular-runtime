@@ -246,6 +246,7 @@ const setUpEdgeFunction = async ({ outputPath, constants, failBuild, usedEngine 
     excludedPath: ${JSON.stringify(excludedPaths)},
     generator: "${packageJson.name}@${packageJson.version}",
     name: "Angular SSR",
+    cache: "manual",
   };
   `
 
