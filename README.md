@@ -162,6 +162,17 @@ export async function netlifyCommonEngineHandler(request: Request, context: any)
 }
 ```
 
+### Caching responses from SSR
+
+The Angular Runtime's edge functions are automatically configured with `cache: "manual"`.
+This means Netlify will honor Cache Control headers from your SSR responses.
+
+You can use [Angular's server routes](https://angular.dev/guide/ssr#setting-headers-and-status-codes) to control headers in your responses or [customize request handling manually](#customizing-request-handling).
+
+To learn more read Netlify's docs on:
+- [Caching] (https://docs.netlify.com/platform/caching/),
+- [When to use caching](https://docs.netlify.com/edge-functions/optional-configuration/#when-to-use-caching).
+
 ### Limitations
 
 The [`server.ts` file](https://angular.dev/guide/ssr#configure-server-side-rendering) that's part of the Angular scaffolding is meant for deploying to a VM, and is not compatible with this Netlify build plugin for Angular@17 and Angular@18. If you applied changes to that file, you'll need to replicate them in an Edge Function. See (#135)[https://github.com/netlify/angular-runtime/issues/135] for an example.
