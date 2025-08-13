@@ -52,5 +52,9 @@
     "nx": "20.0.6",
     "prettier": "^2.6.2",
     "typescript": "~5.6.2"
+  },
+  "//": "See https://github.com/nrwl/nx/issues/32034 for details on the stylus override. We don't use stylus, and we are doing this to unblock installation for now.",
+  "overrides": {
+    "stylus": "0.0.1-security"
   }
 }
