@@ -1,6 +1,6 @@
 {
   "name": "@netlify/angular-runtime",
-  "version": "2.4.0",
+  "version": "3.0.0",
   "description": "Netlify Angular Runtime - Run Angular seamlessly on Netlify.",
   "main": "src/index.js",
   "files": [

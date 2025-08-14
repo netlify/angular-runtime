@@ -1,5 +1,20 @@
 # Changelog
 
+## [3.0.0](https://github.com/netlify/angular-runtime/compare/v2.4.0...v3.0.0) (2025-08-14)
+
+
+### ⚠ POTENTIALLY BREAKING CHANGES
+
+* enable manual caching from edge ([#361](https://github.com/netlify/angular-runtime/issues/361)) ([efee061](https://github.com/netlify/angular-runtime/commit/efee061db0dd74d4e1c6afb506d7d7ec0cb61916))
+
+You can now set cache headers on responses when using SSR. See https://docs.netlify.com/build/caching/caching-overview/ for the full set of features.
+
+This is marked as potentially breaking because previously, per [Netlify Edge Function caching behavior](https://docs.netlify.com/build/edge-functions/optional-configuration/#response-caching), cache response headers were ignored, and after this change they will be respected. It's unlikely this will affect you.
+
+### Features
+
+* enable manual caching from edge ([#361](https://github.com/netlify/angular-runtime/issues/361)) ([efee061](https://github.com/netlify/angular-runtime/commit/efee061db0dd74d4e1c6afb506d7d7ec0cb61916))
+
 ## [2.4.0](https://github.com/netlify/angular-runtime/compare/v2.3.1...v2.4.0) (2025-05-27)
 
 
