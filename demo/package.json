@@ -20,7 +20,7 @@
     "@angular/platform-browser-dynamic": "^20.2.0-next",
     "@angular/platform-server": "^20.2.0-next",
     "@angular/router": "^20.2.0-next",
-    "@angular/ssr": "^20.2.0-next",
+    "@angular/ssr": "^20.3.6",
     "@netlify/angular-runtime": "file:..",
     "@netlify/edge-functions": "^2.19.0",
     "express": "^4.21.0",
