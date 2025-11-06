@@ -62,6 +62,7 @@
     "pretest:fixtures:angular-19-prerender-false": "cd tests/fixtures/angular-19-prerender-false && npm ci",
     "pretest:fixtures:angular-20": "semver -r \"<20.19\" \"$(node -v)\" && echo \"Skipping on not supported node version (needed: >=20.19, got: $(node -v))\" || (cd tests/fixtures/angular-20 && npm ci)",
     "pretest:fixtures:angular-20-zoneless": "semver -r \"<20.19\" \"$(node -v)\" && echo \"Skipping on not supported node version (needed: >=20.19, got: $(node -v))\" || (cd tests/fixtures/angular-20-zoneless && npm ci)",
+    "pretest:fixtures:angular-21": "semver -r \"<20.19\" \"$(node -v)\" && echo \"Skipping on not supported node version (needed: >=20.19, got: $(node -v))\" || (cd tests/fixtures/angular-21 && npm ci)",
     "pretest:fixtures:nx-angular-19-common-engine": "cd tests/fixtures/nx-angular-19-common-engine && npm ci",
     "pretest:fixtures:nx-angular-19-app-engine": "cd tests/fixtures/nx-angular-19-app-engine && npm ci",
     "pretest": "run-s pretest:*",
