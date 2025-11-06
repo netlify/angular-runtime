@@ -95,13 +95,12 @@
     "node": ">=18.13.0"
   },
   "devDependencies": {
-    "@opentelemetry/api": "~1.8.0",
+    "@netlify/build": "^35.3.3",
     "@netlify/eslint-config-node": "^7.0.1",
     "@types/node": "^22.0.0",
     "eslint-plugin-unicorn": "^49.0.0",
     "husky": "^4.3.0",
-    "netlify-cli": "^21.6.0",
-    "@netlify/build": "^33.5.1",
+    "netlify-cli": "^23.10.0",
     "npm-run-all2": "^6.0.0",
     "prettier": "^2.1.2"
   },
