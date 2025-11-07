@@ -1,5 +1,12 @@
 # Changelog
 
+## [3.0.1](https://github.com/netlify/angular-runtime/compare/v3.0.0...v3.0.1) (2025-11-07)
+
+
+### Bug Fixes
+
+* support angular@21 RC1 ([8a130c8](https://github.com/netlify/angular-runtime/commit/8a130c874882615dd27d8b0ef28d3dfff10fb1ff))
+
 ## [3.0.0](https://github.com/netlify/angular-runtime/compare/v2.4.0...v3.0.0) (2025-08-14)
 
 
