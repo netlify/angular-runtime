@@ -21,7 +21,7 @@ jobs:
         id: wait
         uses: smartcontractkit/chainlink-github-actions/utils/wait-for-workflows@5a7543e418aa2dc57b75e85581eae30820a8c9ae
         with:
-          max-timeout: '900'
+          max-timeout: '1200'
           polling-interval: '30'
           github-token: ${{ secrets.GITHUB_TOKEN }}
   notify-on-failure:
