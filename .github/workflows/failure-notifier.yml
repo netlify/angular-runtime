@@ -13,7 +13,7 @@ jobs:
     if: always()
     steps:
       - name: Checkout repository
-        uses: actions/checkout@v4
+        uses: actions/checkout@v5
         with:
           ref: ${{ github.event.pull_request.head.sha }}
 
@@ -24,6 +24,7 @@ jobs:
           max-timeout: '1200'
           polling-interval: '30'
           github-token: ${{ secrets.GITHUB_TOKEN }}
+
   notify-on-failure:
     name: Notify on failure
     needs: [waitForWorkflows]
@@ -34,10 +35,10 @@ jobs:
       issues: write
     steps:
       - name: Check out the repository
-        uses: actions/checkout@v4
+        uses: actions/checkout@v5
       - name: Check conditions for failure notification
         id: check_label
-        uses: actions/github-script@v7
+        uses: actions/github-script@v8
         with:
           script: |
             const { owner, repo } = context.repo;
@@ -77,7 +78,7 @@ jobs:
             core.setOutput("should_send_notif", shouldSendNotification ? "true" : "false");
       - name: Create issue on failure
         if: ${{ steps.check_label.outputs.should_send_notif == 'true' }}
-        uses: actions/github-script@v7
+        uses: actions/github-script@v8
         with:
           script: |
             const ISSUE_LABEL = "framework-bump-failure";
