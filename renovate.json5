@@ -2,7 +2,7 @@
   $schema: 'https://docs.renovatebot.com/renovate-schema.json',
   extends: ['github>netlify/renovate-config:default'],
   ignorePresets: [':prHourlyLimit2'],
-  semanticCommits: true,
+  semanticCommits: 'enabled',
   // The config we're extending ignores test dirs, but we want to bump some fixture deps
   ignorePaths: ['**/node_modules/**'],
   packageRules: [
