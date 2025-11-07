@@ -154,7 +154,34 @@ test(
   },
 )
 
+test(
+  'Angular 21',
+  {
+    skip: !satisfies(versions.node, '>=20.19'),
+  },
+  async () => {
+    const { severityCode, success } = await build({
+      repositoryRoot: fileURLToPath(new URL('fixtures/angular-21', import.meta.url)),
+    })
+
+    assert.deepEqual(severityCode, 0)
+    assert.deepEqual(success, true)
+  },
+)
+
 describe('Angular version validation', () => {
+  test(
+    'checks version for angular 21',
+    {
+      skip: !satisfies(versions.node, '>=20.19'),
+    },
+    async () => {
+      const result = validateAngularVersion(
+        await getAngularVersion(fileURLToPath(new URL('fixtures/angular-21', import.meta.url))),
+      )
+      assert.strictEqual(result, true)
+    },
+  )
   test(
     'checks version for angular 20',
     {
