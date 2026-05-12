@@ -1,17 +1,17 @@
-const { existsSync } = require('node:fs')
-const { readFile, writeFile, rename, rm } = require('node:fs/promises')
-const { parse, join } = require('node:path')
+import { existsSync } from 'node:fs'
+import { readFile, writeFile, rename, rm } from 'node:fs/promises'
+import { parse, join } from 'node:path'
 
-const { satisfies } = require('semver')
+import { satisfies } from 'semver'
 
-const getAngularJson = require('./getAngularJson')
-const { getAngularRuntimeVersion } = require('./getPackageVersion')
-const { getEngineBasedOnKnownSignatures } = require('./serverTsSignature')
-const { getProject } = require('./setUpEdgeFunction')
+import getAngularJson from './getAngularJson.js'
+import { getAngularRuntimeVersion } from './getPackageVersion.js'
+import { getEngineBasedOnKnownSignatures } from './serverTsSignature.js'
+import { getProject } from './setUpEdgeFunction.js'
 
 // eslint-disable-next-line no-inline-comments
 const NetlifyServerTsCommonEngine = /* typescript */ `import { CommonEngine } from '@angular/ssr/node'
-import { render } from '@netlify/angular-runtime/common-engine.mjs'
+import { render } from '@netlify/angular-runtime/common-engine.js'
 
 const commonEngine = new CommonEngine()
 
@@ -29,7 +29,7 @@ export async function netlifyCommonEngineHandler(request: Request, context: any)
 
 // eslint-disable-next-line no-inline-comments
 const NetlifyServerTsAppEngine = /* typescript */ `import { AngularAppEngine, createRequestHandler } from '@angular/ssr'
-import { getContext } from '@netlify/angular-runtime/context.mjs'
+import { getContext } from '@netlify/angular-runtime/context.js'
 
 const angularAppEngine = new AngularAppEngine()
 
@@ -62,7 +62,7 @@ let serverModuleBackupLocation
  * @param {string} serverModuleContents
  * @returns {'AppEngine' | 'CommonEngine' | undefined}
  */
-const guessUsedEngine = function (serverModuleContents) {
+function guessUsedEngine(serverModuleContents) {
   const containsAppEngineKeywords =
     serverModuleContents.includes('AngularAppEngine') || serverModuleContents.includes('AngularNodeAppEngine')
   const containsCommonEngineKeywords = serverModuleContents.includes('CommonEngine')
@@ -101,7 +101,7 @@ const guessUsedEngine = function (serverModuleContents) {
  *
  * @returns {'AppEngine' | 'CommonEngine' | undefined}
  */
-const fixServerTs = async function ({ angularVersion, siteRoot, failPlugin, failBuild, workspaceType, packagePath }) {
+export async function fixServerTs({ angularVersion, siteRoot, failPlugin, failBuild, workspaceType, packagePath }) {
   if (!satisfies(angularVersion, '>=19.0.0-rc', { includePrerelease: true })) {
     // for pre-19 versions, we don't need to do anything
     return
@@ -208,9 +208,7 @@ const fixServerTs = async function ({ angularVersion, siteRoot, failPlugin, fail
   }
 }
 
-module.exports.fixServerTs = fixServerTs
-
-const revertServerTsFix = async function () {
+export async function revertServerTsFix() {
   if (needSwapping && serverModuleLocation && serverModuleBackupLocation) {
     await rm(serverModuleLocation)
     await rename(serverModuleBackupLocation, serverModuleLocation)
@@ -219,5 +217,3 @@ const revertServerTsFix = async function () {
     needSwapping = false
   }
 }
-
-module.exports.revertServerTsFix = revertServerTsFix

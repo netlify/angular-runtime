@@ -1,5 +1,5 @@
 import { AngularAppEngine, createRequestHandler } from '@angular/ssr'
-import { getContext } from '@netlify/angular-runtime/context.mjs'
+import { getContext } from '@netlify/angular-runtime/context.js'
 
 const angularAppEngine = new AngularAppEngine()
 

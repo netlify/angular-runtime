@@ -4,7 +4,7 @@
  * @param {function} failBuild
  * @returns {void}
  */
-const ensureNoCompetingPlugin = function (root, failBuild) {
+export default function ensureNoCompetingPlugin(root, failBuild) {
   let packagePath
   try {
     // eslint-disable-next-line n/no-missing-require
@@ -17,5 +17,3 @@ const ensureNoCompetingPlugin = function (root, failBuild) {
     )
   }
 }
-
-module.exports = ensureNoCompetingPlugin

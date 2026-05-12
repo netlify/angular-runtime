@@ -9,7 +9,7 @@ import build from '@netlify/build'
 import { satisfies } from 'semver'
 
 import { getAngularVersion } from '../src/helpers/getPackageVersion.js'
-import validateAngularVersion from '../src/helpers/validateAngularVersion.js'
+import { validateAngularVersion } from '../src/helpers/validateAngularVersion.js'
 
 test('project without angular config file fails the plugin execution but does not error', async () => {
   const { severityCode, success } = await build({

@@ -1,15 +1,15 @@
-const { overrides } = require('@netlify/eslint-config-node')
+import { overrides } from '@netlify/eslint-config-node'
 
-module.exports = {
+export default {
   extends: '@netlify/eslint-config-node',
   rules: {
-    'max-depth': 0,
     complexity: 0,
     'fp/no-let': 0,
     'fp/no-loops': 0,
     'fp/no-mutation': 0,
     'fp/no-mutating-methods': 0,
     'id-length': 0,
+    'max-depth': 0,
     'max-statements': 0,
     'no-await-in-loop': 0,
     'node/exports-style': 0,

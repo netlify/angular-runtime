@@ -1,9 +1,9 @@
-const { join } = require('path')
+import { join } from 'node:path'
 
-const getAngularJson = require('./getAngularJson')
-const { getBuildInformation } = require('./setUpEdgeFunction')
+import getAngularJson from './getAngularJson.js'
+import { getBuildInformation } from './setUpEdgeFunction.js'
 
-const fixOutputDir = async function ({
+export default async function fixOutputDir({
   failBuild,
   failPlugin,
   siteRoot,
@@ -29,5 +29,3 @@ const fixOutputDir = async function ({
     failBuild(`Publish directory is configured incorrectly. Please set it to "${correctPublishDir}".`)
   }
 }
-
-module.exports = fixOutputDir
