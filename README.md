@@ -66,7 +66,7 @@ export class FooComponent {
     console.log(`Rendering Foo for path ${request?.url} from location ${context?.geo?.city}`)
     // ...
   }
-  
+
 }
 ```
 
@@ -98,7 +98,7 @@ export class FooComponent {
     console.log(`Rendering Foo for path ${request?.url} from location ${context?.geo?.city}`)
     // ...
   }
-  
+
 }
 ```
 
@@ -106,7 +106,7 @@ Note that App Engine in Angular 19 is in Developer Preview and requires explicit
 
 ## Request handling
 
-Starting with Angular@19. The build plugin makes use of the `server.ts` file to handle requests. The default Angular scaffolding generates incompatible code for Netlify so the build plugin will swap it for compatible `server.ts` file automatically if it detects default version being used. 
+Starting with Angular@19. The build plugin makes use of the `server.ts` file to handle requests. The default Angular scaffolding generates incompatible code for Netlify so the build plugin will swap it for compatible `server.ts` file automatically if it detects default version being used.
 
 Make sure you have `@netlify/angular-runtime` version 2.2.0 or later installed in your project. Netlify compatible `server.ts` file imports utilities from this package and Angular Compiler need to be able to resolve it and it can only do that if it's installed in your project and not when it's auto-installed by Netlify.
 
@@ -118,7 +118,7 @@ If you are using Angular 20 or Angular 19 with App Engine Developer Preview:
 
 ```ts
 import { AngularAppEngine, createRequestHandler } from '@angular/ssr'
-import { getContext } from '@netlify/angular-runtime/context.mjs'
+import { getContext } from '@netlify/angular-runtime/context.js'
 
 const angularAppEngine = new AngularAppEngine()
 
@@ -146,7 +146,7 @@ If you are using Angular 19 and did not opt into the App Engine Developer Previe
 
 ```ts
 import { CommonEngine } from '@angular/ssr/node'
-import { render } from '@netlify/angular-runtime/common-engine.mjs'
+import { render } from '@netlify/angular-runtime/common-engine.js'
 
 const commonEngine = new CommonEngine()
 
