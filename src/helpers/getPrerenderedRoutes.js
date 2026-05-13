@@ -1,6 +1,6 @@
 import { existsSync } from 'node:fs'
-import { join } from 'node:path'
 import { readFile } from 'node:fs/promises'
+import { join } from 'node:path'
 
 /**
  * @param {string} outputDir

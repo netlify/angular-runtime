@@ -1,5 +1,5 @@
-import { join } from 'node:path'
 import { existsSync, readFileSync } from 'node:fs'
+import { join } from 'node:path'
 
 /**
  * Get contents of project's angular.json file

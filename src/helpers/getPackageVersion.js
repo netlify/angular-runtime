@@ -1,6 +1,6 @@
+import { readFile } from 'node:fs/promises'
 import { createRequire } from 'node:module'
 import { join } from 'node:path'
-import { readFile } from 'node:fs/promises'
 
 /**
  * Get Angular version from package.json.
@@ -11,7 +11,7 @@ export async function getAngularVersion(root) {
   let packagePath
   try {
     const require = createRequire(import.meta.url)
-    // eslint-disable-next-line n/no-missing-require
+
     packagePath = require.resolve('@angular/core/package.json', { paths: [root] })
   } catch {
     // module not found

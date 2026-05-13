@@ -41,8 +41,8 @@
     "format": "run-s format:check-fix:*",
     "format:ci": "run-s format:check:*",
     "format:check-fix:lint": "run-e format:check:lint format:fix:lint",
-    "format:check:lint": "cross-env-shell eslint $npm_package_config_eslint",
-    "format:fix:lint": "cross-env-shell eslint --fix $npm_package_config_eslint",
+    "format:check:lint": "eslint \"{src,scripts,tests,.github}/**/*.{js,md,html}\"",
+    "format:fix:lint": "eslint --fix \"{src,scripts,tests,.github}/**/*.{js,md,html}\"",
     "format:check-fix:prettier": "run-e format:check:prettier format:fix:prettier",
     "format:check:prettier": "cross-env-shell prettier --check $npm_package_config_prettier",
     "format:fix:prettier": "cross-env-shell prettier --write $npm_package_config_prettier",
@@ -82,7 +82,6 @@
     "angular"
   ],
   "config": {
-    "eslint": "--cache --format=codeframe --max-warnings=0 \"{src,scripts,tests,.github}/**/*.{js,md,html}\" \"*.{js,md,html}\" \".*.{js,md,html}\"",
     "prettier": "--loglevel=warn \"{src,scripts,tests,.github}/**/*.{js,md,yml,json,html}\" \"*.{js,yml,json,html}\" \".*.{js,yml,json,html}\" \"!package-lock.json\""
   },
   "engines": {
