@@ -1,6 +1,6 @@
-const eslintConfig = require('@netlify/eslint-config-node/.prettierrc.json')
+const prettierConfig = require('@netlify/eslint-config-node/.prettierrc.json')
 
 module.exports = {
-  ...eslintConfig,
+  ...prettierConfig,
   endOfLine: 'auto',
 }

@@ -19,3 +19,5 @@ node_modules
 test
 tests/fixtures
 tools/known-server-ts-signatures
+
+package-lock.json
