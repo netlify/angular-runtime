@@ -1,16 +1,16 @@
-const { existsSync } = require('node:fs')
-const { join } = require('node:path')
-
-const { readJson } = require('fs-extra')
+import { existsSync } from 'node:fs'
+import { readFile } from 'node:fs/promises'
+import { join } from 'node:path'
 
 /**
  * @param {string} outputDir
  * @returns {Promise<Record<string, { headers?: Record<string, string> }>>}
  */
-const getPrerenderedRoutes = async (outputDir) => {
+export default async function getPrerenderedRoutes(outputDir) {
   const file = join(outputDir, 'prerendered-routes.json')
   if (!existsSync(file)) return {}
-  const { routes: prerenderedRoutes } = await readJson(file)
+  const contents = await readFile(file)
+  const { routes: prerenderedRoutes } = JSON.parse(contents)
 
   if (Array.isArray(prerenderedRoutes)) {
     // Before Angular@19 prerendered-routes is an array of strings
@@ -22,5 +22,3 @@ const getPrerenderedRoutes = async (outputDir) => {
 
   return prerenderedRoutes
 }
-
-module.exports = getPrerenderedRoutes

@@ -1,29 +1,32 @@
 /* eslint-disable max-lines */
-const { Buffer } = require('node:buffer')
-const { readdirSync, existsSync } = require('node:fs')
-const { writeFile, mkdir, readFile } = require('node:fs/promises')
-const { join, relative, sep, posix } = require('node:path')
-const process = require('node:process')
+import { Buffer } from 'node:buffer'
+import { readdirSync, existsSync } from 'node:fs'
+import { writeFile, mkdir, readFile } from 'node:fs/promises'
+import { join, relative, sep, posix } from 'node:path'
+import { env } from 'node:process'
 
-const packageJson = require('../../package.json')
+import packageJson from '../../package.json' with { type: 'json' }
 
-const getPrerenderedRoutes = require('./getPrerenderedRoutes')
+import getPrerenderedRoutes from './getPrerenderedRoutes.js'
 
 /**
  * Recursively lists all files in a directory.
  */
-const getAllFilesIn = (dir) =>
-  readdirSync(dir, { withFileTypes: true }).flatMap((dirent) => {
+function getAllFilesIn(dir) {
+  return readdirSync(dir, { withFileTypes: true }).flatMap((dirent) => {
     if (dirent.isDirectory()) {
       return getAllFilesIn(join(dir, dirent.name))
     }
     return [join(dir, dirent.name)]
   })
+}
 
-const toPosix = (path) => path.split(sep).join(posix.sep)
+function toPosix(path) {
+  return path.split(sep).join(posix.sep)
+}
 
-const getProjectName = (angularJson, failBuild) => {
-  const selectedProject = process.env.ANGULAR_PROJECT
+function getProjectName(angularJson, failBuild) {
+  const selectedProject = env.ANGULAR_PROJECT
 
   if (selectedProject) {
     const project = angularJson.projects[selectedProject]
@@ -46,7 +49,7 @@ const getProjectName = (angularJson, failBuild) => {
   return projectName
 }
 
-const getProject = (angularJson, failBuild, isNxWorkspace = false, projectName = null) => {
+export function getProject(angularJson, failBuild, isNxWorkspace = false, projectName = null) {
   if (isNxWorkspace) {
     return angularJson
   }
@@ -57,9 +60,7 @@ const getProject = (angularJson, failBuild, isNxWorkspace = false, projectName =
   return angularJson.projects[projectName]
 }
 
-module.exports.getProject = getProject
-
-const getBuildInformation = (angularJson, failBuild, workspaceType) => {
+export function getBuildInformation(angularJson, failBuild, workspaceType) {
   const projectName = workspaceType === 'nx' ? '' : getProjectName(angularJson, failBuild)
   const project = getProject(angularJson, failBuild, workspaceType === 'nx', projectName)
 
@@ -79,10 +80,8 @@ const getBuildInformation = (angularJson, failBuild, workspaceType) => {
   return { outputPath, isApplicationBuilder }
 }
 
-module.exports.getBuildInformation = getBuildInformation
-
 // eslint-disable-next-line max-lines-per-function
-const setUpEdgeFunction = async ({ outputPath, constants, failBuild, usedEngine }) => {
+export async function setUpEdgeFunction({ outputPath, constants, failBuild, usedEngine }) {
   const serverDistRoot = join(outputPath, 'server')
   if (!existsSync(serverDistRoot)) {
     console.log('No server output generated, skipping SSR setup.')
@@ -254,6 +253,4 @@ const setUpEdgeFunction = async ({ outputPath, constants, failBuild, usedEngine 
   await writeFile(join(edgeFunctionDir, 'fixup-event.mjs'), fixupEvent)
   await writeFile(join(edgeFunctionDir, 'angular-ssr.mjs'), ssrFunction)
 }
-
-module.exports.setUpEdgeFunction = setUpEdgeFunction
 /* eslint-enable max-lines */

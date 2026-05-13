@@ -3,13 +3,21 @@ const { overrides } = require('@netlify/eslint-config-node')
 module.exports = {
   extends: '@netlify/eslint-config-node',
   rules: {
-    'max-depth': 0,
     complexity: 0,
     'fp/no-let': 0,
     'fp/no-loops': 0,
     'fp/no-mutation': 0,
     'fp/no-mutating-methods': 0,
+    'func-style': ['error', 'declaration'],
     'id-length': 0,
+    'import/extensions': [
+      'error',
+      'ignorePackages',
+      {
+        js: 'always',
+      },
+    ],
+    'max-depth': 0,
     'max-statements': 0,
     'no-await-in-loop': 0,
     'node/exports-style': 0,
@@ -31,4 +39,8 @@ module.exports = {
     'unicorn/no-array-push-push': 0,
   },
   overrides: [...overrides],
+  parserOptions: {
+    ecmaVersion: 'latest',
+    sourceType: 'module',
+  },
 }

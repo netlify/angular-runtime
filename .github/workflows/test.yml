@@ -5,6 +5,9 @@ on:
     branches: [main]
   pull_request:
 
+permissions:
+  contents: read
+
 jobs:
   build:
     runs-on: ${{ matrix.os }}
@@ -12,20 +15,11 @@ jobs:
     strategy:
       matrix:
         os: [ubuntu-latest, macOS-latest, windows-latest]
-        node-version: [18.19.1, 20.19.1, 22]
-        exclude:
-          - os: macOS-latest
-            node-version: 18.19.1
-          - os: windows-latest
-            node-version: 18.19.1
-          - os: macOS-latest
-            node-version: 20.19.1
-          - os: windows-latest
-            node-version: 20.19.1
+        node-version: [22, 24]
       fail-fast: false
 
     steps:
-      - uses: actions/checkout@v5
+      - uses: actions/checkout@v6
       - name: Use Node.js ${{ matrix.node-version }}
         uses: actions/setup-node@v6
         with:
@@ -35,10 +29,9 @@ jobs:
         name: NPM Install
       - name: Linting
         run: npm run format:ci
-        if: "${{ matrix.node-version == '20.19.1' }}"
       - name: Install Deno
-        uses: denoland/setup-deno@v1
+        uses: denoland/setup-deno@v2
         with:
-          deno-version: 2.5.6
+          deno-version: 2.4.5
       - name: Run tests
         run: npm run test

@@ -1,6 +1,6 @@
-const getPrerenderedRoutes = require('./getPrerenderedRoutes')
+import getPrerenderedRoutes from './getPrerenderedRoutes.js'
 
-const setUpHeaders = async ({ outputPath, netlifyConfig }) => {
+export async function setUpHeaders({ outputPath, netlifyConfig }) {
   const prerenderRoutes = await getPrerenderedRoutes(outputPath)
 
   for (const [route, routeConfig] of Object.entries(prerenderRoutes)) {
@@ -13,5 +13,3 @@ const setUpHeaders = async ({ outputPath, netlifyConfig }) => {
     }
   }
 }
-
-module.exports = setUpHeaders

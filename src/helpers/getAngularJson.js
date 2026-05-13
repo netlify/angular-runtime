@@ -1,7 +1,5 @@
-const { join } = require('node:path')
-const process = require('process')
-
-const { existsSync, readJsonSync } = require('fs-extra')
+import { existsSync, readFileSync } from 'node:fs'
+import { join } from 'node:path'
 
 /**
  * Get contents of project's angular.json file
@@ -13,7 +11,7 @@ const { existsSync, readJsonSync } = require('fs-extra')
  *
  * @returns {any}
  */
-const getAngularJson = function ({ failPlugin, siteRoot, workspaceType, packagePath }) {
+export default function getAngularJson({ failPlugin, siteRoot, workspaceType, packagePath }) {
   if (workspaceType === 'nx') {
     if ((packagePath ?? '').length === 0) {
       return failPlugin(
@@ -26,7 +24,7 @@ const getAngularJson = function ({ failPlugin, siteRoot, workspaceType, packageP
     }
 
     try {
-      return readJsonSync(join(siteRoot, packagePath, 'project.json'))
+      return JSON.parse(readFileSync(join(siteRoot, packagePath, 'project.json'), 'utf-8'))
     } catch {
       return failPlugin(`Could not parse the contents of project.json`)
     }
@@ -36,10 +34,8 @@ const getAngularJson = function ({ failPlugin, siteRoot, workspaceType, packageP
     return failPlugin(`No angular.json found at project root`)
   }
   try {
-    return readJsonSync(join(siteRoot, 'angular.json'))
+    return JSON.parse(readFileSync(join(siteRoot, 'angular.json'), 'utf-8'))
   } catch {
     return failPlugin(`Could not parse contents of angular.json`)
   }
 }
-
-module.exports = getAngularJson

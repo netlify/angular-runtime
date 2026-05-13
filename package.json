@@ -5,13 +5,12 @@
   "main": "src/index.js",
   "files": [
     "src/**/*.js",
-    "src/**/*.mjs",
     "src/**/*.json",
-    "src/**/*.d.mts",
-    "context.mjs",
-    "context.d.mts",
-    "common-engine.mjs",
-    "common-engine.d.mts",
+    "src/**/*.d.ts",
+    "context.js",
+    "context.d.ts",
+    "common-engine.js",
+    "common-engine.d.ts",
     "manifest.yml"
   ],
   "exports": {
@@ -22,33 +21,33 @@
       "default": "./src/index.js"
     },
     "./common-engine": {
-      "types": "./src/common-engine.d.mts",
-      "default": "./src/common-engine.mjs"
+      "types": "./src/common-engine.d.ts",
+      "default": "./src/common-engine.js"
     },
-    "./common-engine.mjs": {
-      "types": "./src/common-engine.d.mts",
-      "default": "./src/common-engine.mjs"
+    "./common-engine.js": {
+      "types": "./src/common-engine.d.ts",
+      "default": "./src/common-engine.js"
     },
     "./context": {
-      "types": "./src/context.d.mts",
-      "default": "./src/context.mjs"
+      "types": "./src/context.d.ts",
+      "default": "./src/context.js"
     },
-    "./context.mjs": {
-      "types": "./src/context.d.mts",
-      "default": "./src/context.mjs"
+    "./context.js": {
+      "types": "./src/context.d.ts",
+      "default": "./src/context.js"
     }
   },
   "scripts": {
     "format": "run-s format:check-fix:*",
     "format:ci": "run-s format:check:*",
     "format:check-fix:lint": "run-e format:check:lint format:fix:lint",
-    "format:check:lint": "cross-env-shell eslint $npm_package_config_eslint",
-    "format:fix:lint": "cross-env-shell eslint --fix $npm_package_config_eslint",
+    "format:check:lint": "eslint \"{src,scripts,tests,.github}/**/*.{js,md,html}\"",
+    "format:fix:lint": "eslint --fix \"{src,scripts,tests,.github}/**/*.{js,md,html}\"",
     "format:check-fix:prettier": "run-e format:check:prettier format:fix:prettier",
-    "format:check:prettier": "cross-env-shell prettier --check $npm_package_config_prettier",
-    "format:fix:prettier": "cross-env-shell prettier --write $npm_package_config_prettier",
+    "format:check:prettier": "prettier . --check --log-level warn",
+    "format:fix:prettier": "prettier . --write --log-level warn",
     "prepublishOnly": "npm ci && npm test",
-    "pretest:demo": "semver -r \"<20.19\" \"$(node -v)\" && echo \"Skipping on not supported node version (needed: >=20.19, got: $(node -v))\" || (cd demo && npm ci && netlify build --cwd . --offline)",
+    "pretest:demo": "cd demo && npm ci && netlify build --cwd . --offline",
     "pretest:fixtures": "run-s pretest:fixtures:*",
     "pretest:fixtures:non-angular-project": "cd tests/fixtures/non-angular-project && npm ci",
     "pretest:fixtures:missing-angular-deps": "cd tests/fixtures/missing-angular-deps && npm ci",
@@ -60,9 +59,9 @@
     "pretest:fixtures:angular-19-app-engine": "cd tests/fixtures/angular-19-app-engine && npm ci",
     "pretest:fixtures:angular-19-app-engine-node-module-resolution": "cd tests/fixtures/angular-19-app-engine-node-module-resolution && npm ci",
     "pretest:fixtures:angular-19-prerender-false": "cd tests/fixtures/angular-19-prerender-false && npm ci",
-    "pretest:fixtures:angular-20": "semver -r \"<20.19\" \"$(node -v)\" && echo \"Skipping on not supported node version (needed: >=20.19, got: $(node -v))\" || (cd tests/fixtures/angular-20 && npm ci)",
-    "pretest:fixtures:angular-20-zoneless": "semver -r \"<20.19\" \"$(node -v)\" && echo \"Skipping on not supported node version (needed: >=20.19, got: $(node -v))\" || (cd tests/fixtures/angular-20-zoneless && npm ci)",
-    "pretest:fixtures:angular-21": "semver -r \"<20.19\" \"$(node -v)\" && echo \"Skipping on not supported node version (needed: >=20.19, got: $(node -v))\" || (cd tests/fixtures/angular-21 && npm ci)",
+    "pretest:fixtures:angular-20": "cd tests/fixtures/angular-20 && npm ci",
+    "pretest:fixtures:angular-20-zoneless": "cd tests/fixtures/angular-20-zoneless && npm ci",
+    "pretest:fixtures:angular-21": "cd tests/fixtures/angular-21 && npm ci",
     "pretest:fixtures:nx-angular-19-common-engine": "cd tests/fixtures/nx-angular-19-common-engine && npm ci",
     "pretest:fixtures:nx-angular-19-app-engine": "cd tests/fixtures/nx-angular-19-app-engine && npm ci",
     "pretest": "run-s pretest:*",
@@ -82,33 +81,22 @@
     "netlify",
     "angular"
   ],
-  "config": {
-    "eslint": "--cache --format=codeframe --max-warnings=0 \"{src,scripts,tests,.github}/**/*.{js,md,html}\" \"*.{js,md,html}\" \".*.{js,md,html}\"",
-    "prettier": "--loglevel=warn \"{src,scripts,tests,.github}/**/*.{js,md,yml,json,html}\" \"*.{js,yml,json,html}\" \".*.{js,yml,json,html}\" \"!package-lock.json\""
-  },
-  "husky": {
-    "hooks": {
-      "commit-msg": "commitlint -E HUSKY_GIT_PARAMS",
-      "pre-push": "npm run format"
-    }
-  },
   "engines": {
-    "node": ">=18.13.0"
+    "node": "^22.22.0 || ^24.13.1 || >=26.0.0"
   },
   "devDependencies": {
     "@opentelemetry/api": "~1.8.0",
     "@netlify/eslint-config-node": "^7.0.1",
-    "@types/node": "^22.0.0",
+    "@types/node": "^24.0.0",
     "eslint-plugin-unicorn": "^49.0.0",
-    "husky": "^4.3.0",
-    "netlify-cli": "^23.12.2",
-    "@netlify/build": "^35.5.2",
-    "npm-run-all2": "^6.0.0",
-    "prettier": "^2.1.2"
+    "husky": "^9.1.7",
+    "netlify-cli": "^26.0.1",
+    "@netlify/build": "^35.13.5",
+    "npm-run-all2": "^8.0.4",
+    "prettier": "^3.8.3"
   },
   "dependencies": {
-    "fs-extra": "^11.1.1",
-    "semver": "^7.5.4"
+    "semver": "^7.8.0"
   },
   "jest": {
     "testMatch": [
@@ -116,5 +104,6 @@
     ],
     "verbose": true,
     "testTimeout": 60000
-  }
+  },
+  "type": "module"
 }

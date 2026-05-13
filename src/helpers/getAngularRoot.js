@@ -1,6 +1,6 @@
-const { existsSync } = require('fs')
-const path = require('path')
-const process = require('process')
+import { existsSync } from 'node:fs'
+import { dirname, join, resolve } from 'node:path'
+import { cwd } from 'node:process'
 
 /**
  * If we're in a monorepo then the site root may not be the same as the base directory
@@ -8,12 +8,12 @@ const process = require('process')
  *
  * @returns {{siteRoot: string, workspaceType: 'nx' | 'default'}}
  */
-const getAngularRoot = ({ failBuild, netlifyConfig }) => {
-  let angularRoot = process.cwd()
+export function getAngularRoot({ failBuild, netlifyConfig }) {
+  let angularRoot = cwd()
 
   // This could be an NX repo, so check for the existence of nx.json too
-  let angularJsonExists = existsSync(path.join(angularRoot, 'angular.json'))
-  let nxJsonExists = existsSync(path.join(angularRoot, 'nx.json'))
+  let angularJsonExists = existsSync(join(angularRoot, 'angular.json'))
+  let nxJsonExists = existsSync(join(angularRoot, 'nx.json'))
 
   if (
     !angularJsonExists &&
@@ -21,9 +21,9 @@ const getAngularRoot = ({ failBuild, netlifyConfig }) => {
     netlifyConfig.build.publish &&
     netlifyConfig.build.publish !== angularRoot
   ) {
-    angularRoot = path.dirname(path.resolve(path.join(netlifyConfig.build.publish, '..', '..')))
-    angularJsonExists = existsSync(path.join(angularRoot, 'angular.json'))
-    nxJsonExists = existsSync(path.join(angularRoot, 'nx.json'))
+    angularRoot = dirname(resolve(join(netlifyConfig.build.publish, '..', '..')))
+    angularJsonExists = existsSync(join(angularRoot, 'angular.json'))
+    nxJsonExists = existsSync(join(angularRoot, 'nx.json'))
 
     if (!angularJsonExists && !nxJsonExists) {
       return failBuild(
@@ -33,5 +33,3 @@ const getAngularRoot = ({ failBuild, netlifyConfig }) => {
   }
   return { siteRoot: angularRoot, workspaceType: nxJsonExists ? 'nx' : 'default' }
 }
-
-module.exports = getAngularRoot

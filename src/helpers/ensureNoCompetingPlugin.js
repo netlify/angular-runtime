@@ -1,13 +1,15 @@
+import { createRequire } from 'node:module'
+
 /**
  * Ensures there's no old version of the same plugin installed.
  * @param {string} root
  * @param {function} failBuild
  * @returns {void}
  */
-const ensureNoCompetingPlugin = function (root, failBuild) {
+export default function ensureNoCompetingPlugin(root, failBuild) {
   let packagePath
   try {
-    // eslint-disable-next-line n/no-missing-require
+    const require = createRequire(import.meta.url)
     packagePath = require.resolve('@netlify/plugin-angular-universal', { paths: [root] })
   } catch {}
 
@@ -17,5 +19,3 @@ const ensureNoCompetingPlugin = function (root, failBuild) {
     )
   }
 }
-
-module.exports = ensureNoCompetingPlugin

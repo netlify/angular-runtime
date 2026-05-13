@@ -1,11 +1,11 @@
-const { satisfies } = require('semver')
+import { satisfies } from 'semver'
 
 /**
  * Ensure site is using Angular v17+.
  * @param {string | undefined} version
  * @returns {boolean}
  */
-const validateAngularVersion = function (version) {
+export function validateAngularVersion(version) {
   if (!version) {
     console.warn('This site does not seem to be using Angular.')
     return false
@@ -18,5 +18,3 @@ const validateAngularVersion = function (version) {
 
   return true
 }
-
-module.exports = validateAngularVersion
