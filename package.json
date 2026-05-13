@@ -82,7 +82,7 @@
     "angular"
   ],
   "engines": {
-    "node": ">=22.0.0"
+    "node": "^22.22.0 || ^24.13.1 || >=26.0.0"
   },
   "devDependencies": {
     "@opentelemetry/api": "~1.8.0",
