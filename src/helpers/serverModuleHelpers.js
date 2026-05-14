@@ -123,15 +123,15 @@ export async function fixServerTs({ angularVersion, siteRoot, failPlugin, failBu
   const angularRuntimeVersionInstalledByUser = await getAngularRuntimeVersion(siteRoot)
   if (!angularRuntimeVersionInstalledByUser) {
     failBuild(
-      "Angular@19 SSR on Netlify requires '@netlify/angular-runtime' version 2.2.0 or later to be installed. Please install it and try again.",
+      `Angular@${angularVersion} SSR on Netlify requires '@netlify/angular-runtime' version 2.2.0 or later to be installed. Please install it and try again.`,
     )
   } else if (!satisfies(angularRuntimeVersionInstalledByUser, '>=2.2.0', { includePrerelease: true })) {
     failBuild(
-      `Angular@19 SSR on Netlify requires '@netlify/angular-runtime' version 2.2.0 or later to be installed. Found version "${angularRuntimeVersionInstalledByUser}". Please update it to version 2.2.0 or later and try again.`,
+      `Angular@${angularVersion} SSR on Netlify requires '@netlify/angular-runtime' version 2.2.0 or later to be installed. Found version "${angularRuntimeVersionInstalledByUser}". Please update it to version 2.2.0 or later and try again.`,
     )
   }
 
-  // check whether project is using stable CommonEngine or Developer Preview AppEngine
+  // check whether project is using CommonEngine or AppEngine
   const serverModuleContents = await readFile(serverModuleLocation, 'utf8')
 
   const usedEngineBasedOnKnownSignatures = getEngineBasedOnKnownSignatures(serverModuleContents)

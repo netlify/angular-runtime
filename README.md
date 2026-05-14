@@ -119,16 +119,16 @@ If you are using Angular 20 or Angular 19 with App Engine Developer Preview:
 ```ts
 import { AngularAppEngine, createRequestHandler } from '@angular/ssr'
 import { getContext } from '@netlify/angular-runtime/context.js'
+import type { Context } from '@netlify/edge-functions'
 
 const angularAppEngine = new AngularAppEngine()
 
 export async function netlifyAppEngineHandler(request: Request): Promise<Response> {
-  const context = getContext()
+  const context: Context = getContext()
 
   // Example API endpoints can be defined here.
   // Uncomment and define endpoints as necessary.
-  // const pathname = new URL(request.url).pathname;
-  // if (pathname === '/api/hello') {
+  // if (context.url.pathname === '/api/hello') {
   //   return Response.json({ message: 'Hello from the API' });
   // }
 
@@ -147,14 +147,14 @@ If you are using Angular 19 and did not opt into the App Engine Developer Previe
 ```ts
 import { CommonEngine } from '@angular/ssr/node'
 import { render } from '@netlify/angular-runtime/common-engine.js'
+import type { Context } from '@netlify/edge-functions'
 
 const commonEngine = new CommonEngine()
 
-export async function netlifyCommonEngineHandler(request: Request, context: any): Promise<Response> {
+export async function netlifyCommonEngineHandler(request: Request, context: Context): Promise<Response> {
   // Example API endpoints can be defined here.
   // Uncomment and define endpoints as necessary.
-  // const pathname = new URL(request.url).pathname;
-  // if (pathname === '/api/hello') {
+  // if (context.url.pathname === '/api/hello') {
   //   return Response.json({ message: 'Hello from the API' });
   // }
 
@@ -182,8 +182,6 @@ The [`server.ts` file](https://angular.dev/guide/ssr#configure-server-side-rende
 ### Requirements
 
 To use the Angular Runtime while building and deploying with the CLI, you need to have `netlify-cli v26.0.0` installed (or a later version).
-
-Please also make sure to use `ntl deploy --build` (rather than `ntl build && ntl deploy`).
 
 ## Getting Help
 

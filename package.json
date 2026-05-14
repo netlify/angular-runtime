@@ -20,6 +20,14 @@
     ".": {
       "default": "./src/index.js"
     },
+    "./app-engine-config": {
+      "types": "./src/app-engine-config.d.ts",
+      "default": "./src/app-engine-config.js"
+    },
+    "./app-engine-config.js": {
+      "types": "./src/app-engine-config.d.ts",
+      "default": "./src/app-engine-config.js"
+    },
     "./common-engine": {
       "types": "./src/common-engine.d.ts",
       "default": "./src/common-engine.js"
