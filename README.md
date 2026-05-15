@@ -180,7 +180,7 @@ The [`server.ts` file](https://angular.dev/guide/ssr#configure-server-side-rende
 
 ### Requirements
 
-To use the Angular Runtime while building and deploying with the CLI, you need to have `netlify-cli v26.0.0` installed (or a later version).
+To use the Angular Runtime while building and deploying with the CLI, you need to have `netlify-cli v26.0.0` installed (or a later version). To deploy the site via CLI, please use `netlify deploy`. Using `netlify deploy` with the `--no-build` flag is not supported.
 
 ## Getting Help
 
