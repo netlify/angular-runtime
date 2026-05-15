@@ -33,7 +33,7 @@ const NetlifyServerTsAppEngineCommonContent = /* typescript */ `export async fun
 
   // Example API endpoints can be defined here.
   // Uncomment and define endpoints as necessary.
-  // const pathname = new URL(request.url.pathname)
+  // const pathname = new URL(request.url).pathname
   // if (pathname === '/api/hello') {
   //   return Response.json({ message: 'Hello from the API' });
   // }
