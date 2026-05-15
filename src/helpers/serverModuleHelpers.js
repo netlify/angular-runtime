@@ -28,8 +28,7 @@ export async function netlifyCommonEngineHandler(request: Request, context: any)
 
 // eslint-disable-next-line no-inline-comments
 const NetlifyServerTsAppEngine = /* typescript */ `import { AngularAppEngine, createRequestHandler } from '@angular/ssr'
-import { getAllowedHosts, getTrustProxyHeaders } from '@netlify/angular-runtime/app-engine-config.js'
-import { getContext } from '@netlify/angular-runtime/context.js'
+import { getAllowedHosts, getContext, getTrustProxyHeaders } from '@netlify/angular-runtime/app-engine.js'
 
 const angularAppEngine = new AngularAppEngine({
   allowedHosts: getAllowedHosts(),

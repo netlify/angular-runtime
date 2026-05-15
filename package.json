@@ -7,8 +7,8 @@
     "src/**/*.js",
     "src/**/*.json",
     "src/**/*.d.ts",
-    "context.js",
-    "context.d.ts",
+    "app-engine.js",
+    "app-engine.d.ts",
     "common-engine.js",
     "common-engine.d.ts",
     "manifest.yml"
@@ -20,13 +20,13 @@
     ".": {
       "default": "./src/index.js"
     },
-    "./app-engine-config": {
-      "types": "./src/app-engine-config.d.ts",
-      "default": "./src/app-engine-config.js"
+    "./app-engine": {
+      "types": "./src/app-engine.d.ts",
+      "default": "./src/app-engine.js"
     },
-    "./app-engine-config.js": {
-      "types": "./src/app-engine-config.d.ts",
-      "default": "./src/app-engine-config.js"
+    "./app-engine.js": {
+      "types": "./src/app-engine.d.ts",
+      "default": "./src/app-engine.js"
     },
     "./common-engine": {
       "types": "./src/common-engine.d.ts",
@@ -35,14 +35,6 @@
     "./common-engine.js": {
       "types": "./src/common-engine.d.ts",
       "default": "./src/common-engine.js"
-    },
-    "./context": {
-      "types": "./src/context.d.ts",
-      "default": "./src/context.js"
-    },
-    "./context.js": {
-      "types": "./src/context.d.ts",
-      "default": "./src/context.js"
     }
   },
   "scripts": {

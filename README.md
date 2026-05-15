@@ -118,7 +118,7 @@ If you are using Angular 20 or Angular 19 with App Engine Developer Preview:
 
 ```ts
 import { AngularAppEngine, createRequestHandler } from '@angular/ssr'
-import { getContext } from '@netlify/angular-runtime/context.js'
+import { getContext } from '@netlify/angular-runtime/app-engine.js'
 
 const angularAppEngine = new AngularAppEngine()
 
