@@ -119,12 +119,11 @@ If you are using Angular 20 or Angular 19 with App Engine Developer Preview:
 ```ts
 import { AngularAppEngine, createRequestHandler } from '@angular/ssr'
 import { getContext } from '@netlify/angular-runtime/context.js'
-import type { Context } from '@netlify/edge-functions'
 
 const angularAppEngine = new AngularAppEngine()
 
 export async function netlifyAppEngineHandler(request: Request): Promise<Response> {
-  const context: Context = getContext()
+  const context = getContext()
 
   // Example API endpoints can be defined here.
   // Uncomment and define endpoints as necessary.
