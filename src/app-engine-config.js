@@ -2,10 +2,15 @@ import { env } from 'node:process'
 
 export function getAllowedHosts() {
   const allowedHosts = []
+  const environmentVariables = ['DEPLOY_ID', 'DEPLOY_PRIME_URL', 'DEPLOY_URL', 'SITE_ID', 'SITE_NAME', 'URL']
 
-  if (!env.DEPLOY_ID || !env.DEPLOY_PRIME_URL || !env.DEPLOY_URL || !env.SITE_ID || !env.SITE_NAME || !env.URL) {
-    console.warn('Missing Netlify-specific environment variable(s). `allowedHosts` config might be incomplete.')
-    return allowedHosts
+  for (const environmentVariable in environmentVariables) {
+    if (!env[environmentVariable] || env[environmentVariable] === 'undefined') {
+      console.warn(
+        `Missing Netlify-specific environment variable ${environmentVariable}. \`allowedHosts\` config might be incomplete.`,
+      )
+      return allowedHosts
+    }
   }
 
   const deployPrimeUrlHostname = new URL(env.DEPLOY_PRIME_URL).hostname
