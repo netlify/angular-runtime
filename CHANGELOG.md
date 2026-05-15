@@ -1,5 +1,16 @@
 # Changelog
 
+## [4.0.0](https://github.com/netlify/angular-runtime/compare/v3.0.1...v4.0.0) (2026-05-15)
+
+
+### ⚠ BREAKING CHANGES
+
+* require Node 22+ and ship as ESM ([#424](https://github.com/netlify/angular-runtime/issues/424))
+
+### Features
+
+* require Node 22+ and ship as ESM ([#424](https://github.com/netlify/angular-runtime/issues/424)) ([7c188c2](https://github.com/netlify/angular-runtime/commit/7c188c26e0d70b11dbe45b0127f8e70f771551b7))
+
 ## [3.0.1](https://github.com/netlify/angular-runtime/compare/v3.0.0...v3.0.1) (2025-11-07)
 
 
