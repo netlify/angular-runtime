@@ -118,7 +118,7 @@ If you are using Angular 20 or Angular 19 with App Engine Developer Preview:
 
 ```ts
 import { AngularAppEngine, createRequestHandler } from '@angular/ssr'
-import { getContext } from '@netlify/angular-runtime/context.js'
+import { getContext } from '@netlify/angular-runtime/app-engine.js'
 
 const angularAppEngine = new AngularAppEngine()
 
@@ -127,7 +127,7 @@ export async function netlifyAppEngineHandler(request: Request): Promise<Respons
 
   // Example API endpoints can be defined here.
   // Uncomment and define endpoints as necessary.
-  // const pathname = new URL(request.url).pathname;
+  // const pathname = new URL(request.url.pathname)
   // if (pathname === '/api/hello') {
   //   return Response.json({ message: 'Hello from the API' });
   // }
@@ -153,7 +153,7 @@ const commonEngine = new CommonEngine()
 export async function netlifyCommonEngineHandler(request: Request, context: any): Promise<Response> {
   // Example API endpoints can be defined here.
   // Uncomment and define endpoints as necessary.
-  // const pathname = new URL(request.url).pathname;
+  // const pathname = new URL(request.url).pathname
   // if (pathname === '/api/hello') {
   //   return Response.json({ message: 'Hello from the API' });
   // }
@@ -181,9 +181,7 @@ The [`server.ts` file](https://angular.dev/guide/ssr#configure-server-side-rende
 
 ### Requirements
 
-To use the Angular Runtime while building and deploying with the CLI, you need to have `netlify-cli v26.0.0` installed (or a later version).
-
-Please also make sure to use `ntl deploy --build` (rather than `ntl build && ntl deploy`).
+To use the Angular Runtime while building and deploying with the CLI, you need to have `netlify-cli v26.0.0` installed (or a later version). To deploy the site via CLI, please use `netlify deploy`. Using `netlify deploy` with the `--no-build` flag is not supported.
 
 ## Getting Help
 

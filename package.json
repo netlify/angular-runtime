@@ -7,8 +7,8 @@
     "src/**/*.js",
     "src/**/*.json",
     "src/**/*.d.ts",
-    "context.js",
-    "context.d.ts",
+    "app-engine.js",
+    "app-engine.d.ts",
     "common-engine.js",
     "common-engine.d.ts",
     "manifest.yml"
@@ -20,6 +20,14 @@
     ".": {
       "default": "./src/index.js"
     },
+    "./app-engine": {
+      "types": "./src/app-engine.d.ts",
+      "default": "./src/app-engine.js"
+    },
+    "./app-engine.js": {
+      "types": "./src/app-engine.d.ts",
+      "default": "./src/app-engine.js"
+    },
     "./common-engine": {
       "types": "./src/common-engine.d.ts",
       "default": "./src/common-engine.js"
@@ -27,14 +35,6 @@
     "./common-engine.js": {
       "types": "./src/common-engine.d.ts",
       "default": "./src/common-engine.js"
-    },
-    "./context": {
-      "types": "./src/context.d.ts",
-      "default": "./src/context.js"
-    },
-    "./context.js": {
-      "types": "./src/context.d.ts",
-      "default": "./src/context.js"
     }
   },
   "scripts": {
@@ -85,13 +85,14 @@
     "node": "^22.22.0 || ^24.13.1 || >=26.0.0"
   },
   "devDependencies": {
-    "@opentelemetry/api": "~1.8.0",
+    "@netlify/build": "^35.13.5",
+    "@netlify/edge-functions": "^3.0.6",
     "@netlify/eslint-config-node": "^7.0.1",
+    "@opentelemetry/api": "~1.8.0",
     "@types/node": "^24.0.0",
     "eslint-plugin-unicorn": "^49.0.0",
     "husky": "^9.1.7",
     "netlify-cli": "^26.0.1",
-    "@netlify/build": "^35.13.5",
     "npm-run-all2": "^8.0.4",
     "prettier": "^3.8.3"
   },
