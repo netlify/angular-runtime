@@ -21,6 +21,7 @@
       matchPackageNames: ['@angular/**', 'zone.js', '@angular-devkit/**'],
       // Override the schedule to get immediate PRs.
       schedule: null,
+      minimumReleaseAge: null,
       // Apply a unique label so we can trigger additional workflows for these PRs.
       addLabels: ['bump-framework-in-fixtures'],
       // Bump even if the release isn't tagged as `latest`.
