@@ -127,7 +127,8 @@ export async function netlifyAppEngineHandler(request: Request): Promise<Respons
 
   // Example API endpoints can be defined here.
   // Uncomment and define endpoints as necessary.
-  // if (context?.url?.pathname === '/api/hello') {
+  // const pathname = new URL(request.url.pathname)
+  // if (pathname === '/api/hello') {
   //   return Response.json({ message: 'Hello from the API' });
   // }
 
