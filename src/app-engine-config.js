@@ -4,7 +4,7 @@ export function getAllowedHosts() {
   const allowedHosts = []
   const environmentVariables = ['DEPLOY_ID', 'DEPLOY_PRIME_URL', 'DEPLOY_URL', 'SITE_ID', 'SITE_NAME', 'URL']
 
-  for (const environmentVariable in environmentVariables) {
+  for (const environmentVariable of environmentVariables) {
     if (!env[environmentVariable] || env[environmentVariable] === 'undefined') {
       console.warn(
         `Missing Netlify-specific environment variable ${environmentVariable}. \`allowedHosts\` config might be incomplete.`,
