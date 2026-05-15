@@ -1,3 +1,4 @@
+/* eslint-disable max-lines */
 import { existsSync } from 'node:fs'
 import { readFile, writeFile, rename, rm } from 'node:fs/promises'
 import { parse, join } from 'node:path'
@@ -18,24 +19,16 @@ const commonEngine = new CommonEngine()
 export async function netlifyCommonEngineHandler(request: Request, context: any): Promise<Response> {
   // Example API endpoints can be defined here.
   // Uncomment and define endpoints as necessary.
-  // if (context.url?.pathname === '/api/hello') {
+  // const pathname = new URL(request.url).pathname
+  // if (pathname === '/api/hello') {
   //   return Response.json({ message: 'Hello from the API' });
   // }
 
   return await render(commonEngine)
 }
 `
-
 // eslint-disable-next-line no-inline-comments
-const NetlifyServerTsAppEngine = /* typescript */ `import { AngularAppEngine, createRequestHandler } from '@angular/ssr'
-import { getAllowedHosts, getContext, getTrustProxyHeaders } from '@netlify/angular-runtime/app-engine.js'
-
-const angularAppEngine = new AngularAppEngine({
-  allowedHosts: getAllowedHosts(),
-  trustProxyHeaders: getTrustProxyHeaders(),
-})
-
-export async function netlifyAppEngineHandler(request: Request): Promise<Response> {
+const NetlifyServerTsAppEngineCommonContent = /* typescript */ `export async function netlifyAppEngineHandler(request: Request): Promise<Response> {
   const context = getContext()
 
   // Example API endpoints can be defined here.
@@ -53,6 +46,35 @@ export async function netlifyAppEngineHandler(request: Request): Promise<Respons
  */
 export const reqHandler = createRequestHandler(netlifyAppEngineHandler)
 `
+
+// eslint-disable-next-line no-inline-comments
+const NetlifyServerTsAppEngine21Dot2 = /* typescript */ `import { AngularAppEngine, createRequestHandler } from '@angular/ssr'
+import { getAllowedHosts, getContext, getTrustProxyHeaders } from '@netlify/angular-runtime/app-engine.js'
+
+const angularAppEngine = new AngularAppEngine({
+  allowedHosts: getAllowedHosts(),
+  trustProxyHeaders: getTrustProxyHeaders(),
+})
+
+${NetlifyServerTsAppEngineCommonContent}`
+
+// eslint-disable-next-line no-inline-comments
+const NetlifyServerTsAppEngine21Dot1 = /* typescript */ `import { AngularAppEngine, createRequestHandler } from '@angular/ssr'
+import { getAllowedHosts, getContext } from '@netlify/angular-runtime/app-engine.js'
+
+const angularAppEngine = new AngularAppEngine({
+  allowedHosts: getAllowedHosts(),
+})
+
+${NetlifyServerTsAppEngineCommonContent}`
+
+// eslint-disable-next-line no-inline-comments
+const NetlifyServerTsAppEngine21Dot0 = /* typescript */ `import { AngularAppEngine, createRequestHandler } from '@angular/ssr'
+import { getContext } from '@netlify/angular-runtime/app-engine.js'
+
+const angularAppEngine = new AngularAppEngine()
+
+${NetlifyServerTsAppEngineCommonContent}`
 
 let needSwapping = false
 let serverModuleLocation
@@ -109,6 +131,17 @@ export async function fixServerTs({ angularVersion, siteRoot, failPlugin, failBu
   }
 
   const angularJson = getAngularJson({ failPlugin, siteRoot, workspaceType, packagePath })
+
+  // Angular v21.1 introduced `allowedHosts`: https://github.com/angular/angular-cli/blob/21.1.x/packages/angular/ssr/src/app-engine.ts
+  // Angular v21.2 introduced `trustProxyHeaders` as well: https://github.com/angular/angular-cli/blob/21.2.x/packages/angular/ssr/src/app-engine.ts
+  // we cannot add the config if the version doesn't support it
+  // because TypeScript complains about invalid properties
+  let NetlifyServerTsAppEngine = NetlifyServerTsAppEngine21Dot0
+  if (satisfies(angularVersion, '>=21.2.0', { includePrerelease: true })) {
+    NetlifyServerTsAppEngine = NetlifyServerTsAppEngine21Dot2
+  } else if (satisfies(angularVersion, '>=21.1.0', { includePrerelease: true })) {
+    NetlifyServerTsAppEngine = NetlifyServerTsAppEngine21Dot1
+  }
 
   const project = getProject(angularJson, failBuild, workspaceType === 'nx')
   const build = workspaceType === 'nx' ? project.targets.build : project.architect.build
@@ -218,3 +251,4 @@ export async function revertServerTsFix() {
     needSwapping = false
   }
 }
+/* eslint-enable max-lines */

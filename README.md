@@ -146,14 +146,14 @@ If you are using Angular 19 and did not opt into the App Engine Developer Previe
 ```ts
 import { CommonEngine } from '@angular/ssr/node'
 import { render } from '@netlify/angular-runtime/common-engine.js'
-import type { Context } from '@netlify/edge-functions'
 
 const commonEngine = new CommonEngine()
 
-export async function netlifyCommonEngineHandler(request: Request, context: Context): Promise<Response> {
+export async function netlifyCommonEngineHandler(request: Request, context: any): Promise<Response> {
   // Example API endpoints can be defined here.
   // Uncomment and define endpoints as necessary.
-  // if (context.url.pathname === '/api/hello') {
+  // const pathname = new URL(request.url).pathname
+  // if (pathname === '/api/hello') {
   //   return Response.json({ message: 'Hello from the API' });
   // }
 
