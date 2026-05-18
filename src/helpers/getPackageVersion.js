@@ -3,20 +3,15 @@ import { createRequire } from 'node:module'
 import { join } from 'node:path'
 
 /**
- * Get Angular version from package.json.
+ * Get @angular/core version from package.json.
  * @param {string} root
  * @returns {Promise<string | undefined>}
  */
-export async function getAngularVersion(root) {
+export async function getAngularCoreVersion(root) {
   let packagePath
   try {
     const require = createRequire(import.meta.url)
-
-    // we're checking @angular/ssr version
-    // there could be patch-level differences in this and @angular/core
-    // but in serverModuleHelpers.js, we need patch-level matching of the ssr package
-    // so we cannot rely on the version of core anymore
-    packagePath = require.resolve('@angular/ssr/package.json', { paths: [root] })
+    packagePath = require.resolve('@angular/core/package.json', { paths: [root] })
   } catch {
     // module not found
     return
@@ -37,6 +32,26 @@ export async function getAngularRuntimeVersion(root) {
   try {
     const siteRequire = createRequire(join(root, ':internal:'))
     packagePath = siteRequire.resolve('@netlify/angular-runtime/package.json')
+  } catch {
+    // module not found
+    return
+  }
+
+  const contents = await readFile(packagePath)
+  const { version } = JSON.parse(contents)
+  return version
+}
+
+/**
+ * Get @angular/ssr from package.json.
+ * @param {string} root
+ * @returns {Promise<string | undefined>}
+ */
+export async function getAngularSsrVersion(root) {
+  let packagePath
+  try {
+    const require = createRequire(import.meta.url)
+    packagePath = require.resolve('@angular/ssr/package.json', { paths: [root] })
   } catch {
     // module not found
     return

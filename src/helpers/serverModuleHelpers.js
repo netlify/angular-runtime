@@ -125,22 +125,30 @@ function guessUsedEngine(serverModuleContents) {
  *
  * @returns {'AppEngine' | 'CommonEngine' | undefined}
  */
-export async function fixServerTs({ angularVersion, siteRoot, failPlugin, failBuild, workspaceType, packagePath }) {
-  if (!satisfies(angularVersion, '>=19.0.0-rc', { includePrerelease: true })) {
+export async function fixServerTs({
+  angularCoreVersion,
+  angularSsrVersion,
+  siteRoot,
+  failPlugin,
+  failBuild,
+  workspaceType,
+  packagePath,
+}) {
+  if (!satisfies(angularCoreVersion, '>=19.0.0-rc', { includePrerelease: true })) {
     // for pre-19 versions, we don't need to do anything
     return
   }
 
   const angularJson = getAngularJson({ failPlugin, siteRoot, workspaceType, packagePath })
 
-  // Angular v21.1 introduced `allowedHosts`: https://github.com/angular/angular-cli/blob/21.1.x/packages/angular/ssr/src/app-engine.ts
-  // Angular v21.2.9 introduced `trustProxyHeaders` as well: https://github.com/angular/angular-cli/blob/21.2.x/packages/angular/ssr/src/app-engine.ts
+  // @angular/ssr v21.1.5 introduced `allowedHosts`: https://github.com/angular/angular-cli/releases/tag/v21.1.5
+  // @angular/ssr v21.2.9 introduced `trustProxyHeaders`: https://github.com/angular/angular-cli/releases/tag/v21.2.9
   // we cannot add the config if the version doesn't support it
   // because TypeScript complains about invalid properties
   let NetlifyServerTsAppEngine = NetlifyServerTsAppEngine21Dot0
-  if (satisfies(angularVersion, '>=21.2.9', { includePrerelease: true })) {
+  if (satisfies(angularSsrVersion, '>=21.2.9', { includePrerelease: true })) {
     NetlifyServerTsAppEngine = NetlifyServerTsAppEngine21Dot2Dot9
-  } else if (satisfies(angularVersion, '>=21.1.5', { includePrerelease: true })) {
+  } else if (satisfies(angularSsrVersion, '>=21.1.5', { includePrerelease: true })) {
     NetlifyServerTsAppEngine = NetlifyServerTsAppEngine21Dot1Dot5
   }
 
@@ -158,11 +166,11 @@ export async function fixServerTs({ angularVersion, siteRoot, failPlugin, failBu
   const angularRuntimeVersionInstalledByUser = await getAngularRuntimeVersion(siteRoot)
   if (!angularRuntimeVersionInstalledByUser) {
     failBuild(
-      `Angular@${angularVersion} SSR on Netlify requires '@netlify/angular-runtime' version 2.2.0 or later to be installed. Please install it and try again.`,
+      `Angular@${angularCoreVersion} SSR on Netlify requires '@netlify/angular-runtime' version 2.2.0 or later to be installed. Please install it and try again.`,
     )
   } else if (!satisfies(angularRuntimeVersionInstalledByUser, '>=2.2.0', { includePrerelease: true })) {
     failBuild(
-      `Angular@${angularVersion} SSR on Netlify requires '@netlify/angular-runtime' version 2.2.0 or later to be installed. Found version "${angularRuntimeVersionInstalledByUser}". Please update it to version 2.2.0 or later and try again.`,
+      `Angular@${angularCoreVersion} SSR on Netlify requires '@netlify/angular-runtime' version 2.2.0 or later to be installed. Found version "${angularRuntimeVersionInstalledByUser}". Please update it to version 2.2.0 or later and try again.`,
     )
   }
 
@@ -212,7 +220,7 @@ export async function fixServerTs({ angularVersion, siteRoot, failPlugin, failBu
     return 'CommonEngine'
   }
 
-  if (satisfies(angularVersion, '<20', { includePrerelease: true })) {
+  if (satisfies(angularCoreVersion, '<20', { includePrerelease: true })) {
     // at this point we know that user's server.ts is not Netlify compatible so user intervention is required
     // we will try to inspect server.ts to determine which engine is used and provide more accurate error message
     const guessedUsedEngine = guessUsedEngine(serverModuleContents)
