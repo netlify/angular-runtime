@@ -116,7 +116,8 @@ function guessUsedEngine(serverModuleContents) {
  * to make it Netlify compatible and which they can apply request handling customizations to it (or just leave default in if they generally
  * have default one that just missed our known defaults comparison potentially due to custom formatting etc).
  * @param {Object} obj
- * @param {string} obj.angularVersion Angular version
+ * @param {string} obj.angularCoreVersion `@angular/core` version
+ * @param {string | undefined} obj.angularSsrVersion `@angular/ssr` version
  * @param {string} obj.siteRoot Root directory of an app
  * @param {(msg: string) => never} obj.failPlugin Function to fail the plugin
  * @param {'nx' | 'default'} obj.workspaceType The workspace type being parsed
@@ -160,17 +161,13 @@ export async function fixServerTs({
     return
   }
 
-  // check if user has installed runtime package and if the version is 2.2.0 or newer
+  // check if user has installed runtime package and if the version is 4.0.0 or newer
   // userspace `server.ts` file does import utils from runtime, so it has to be resolvable
   // from site root and auto-installed plugin in `.netlify/plugins` wouldn't suffice for that.
   const angularRuntimeVersionInstalledByUser = await getAngularRuntimeVersion(siteRoot)
   if (!angularRuntimeVersionInstalledByUser) {
     failBuild(
-      `Angular@${angularCoreVersion} SSR on Netlify requires '@netlify/angular-runtime' version 2.2.0 or later to be installed. Please install it and try again.`,
-    )
-  } else if (!satisfies(angularRuntimeVersionInstalledByUser, '>=2.2.0', { includePrerelease: true })) {
-    failBuild(
-      `Angular@${angularCoreVersion} SSR on Netlify requires '@netlify/angular-runtime' version 2.2.0 or later to be installed. Found version "${angularRuntimeVersionInstalledByUser}". Please update it to version 2.2.0 or later and try again.`,
+      `@angular/ssr@${angularSsrVersion} on Netlify requires '@netlify/angular-runtime@^4.0.0' or later to be installed. Please install it and try again.`,
     )
   }
 
