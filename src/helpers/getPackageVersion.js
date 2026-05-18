@@ -12,7 +12,11 @@ export async function getAngularVersion(root) {
   try {
     const require = createRequire(import.meta.url)
 
-    packagePath = require.resolve('@angular/core/package.json', { paths: [root] })
+    // we're checking @angular/ssr version
+    // there could be patch-level differences in this and @angular/core
+    // but in serverModuleHelpers.js, we need patch-level matching of the ssr package
+    // so we cannot rely on the version of core anymore
+    packagePath = require.resolve('@angular/ssr/package.json', { paths: [root] })
   } catch {
     // module not found
     return

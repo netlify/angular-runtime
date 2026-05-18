@@ -49,7 +49,7 @@ export const reqHandler = createRequestHandler(netlifyAppEngineHandler)
 `
 
 // eslint-disable-next-line no-inline-comments
-const NetlifyServerTsAppEngine21Dot2 = /* typescript */ `import { AngularAppEngine, createRequestHandler } from '@angular/ssr'
+const NetlifyServerTsAppEngine21Dot2Dot9 = /* typescript */ `import { AngularAppEngine, createRequestHandler } from '@angular/ssr'
 import { getAllowedHosts, getContext, getTrustProxyHeaders } from '@netlify/angular-runtime/app-engine.js'
 
 const angularAppEngine = new AngularAppEngine({
@@ -60,7 +60,7 @@ const angularAppEngine = new AngularAppEngine({
 ${NetlifyServerTsAppEngineCommonContent}`
 
 // eslint-disable-next-line no-inline-comments
-const NetlifyServerTsAppEngine21Dot1 = /* typescript */ `import { AngularAppEngine, createRequestHandler } from '@angular/ssr'
+const NetlifyServerTsAppEngine21Dot1Dot5 = /* typescript */ `import { AngularAppEngine, createRequestHandler } from '@angular/ssr'
 import { getAllowedHosts, getContext } from '@netlify/angular-runtime/app-engine.js'
 
 const angularAppEngine = new AngularAppEngine({
@@ -134,14 +134,14 @@ export async function fixServerTs({ angularVersion, siteRoot, failPlugin, failBu
   const angularJson = getAngularJson({ failPlugin, siteRoot, workspaceType, packagePath })
 
   // Angular v21.1 introduced `allowedHosts`: https://github.com/angular/angular-cli/blob/21.1.x/packages/angular/ssr/src/app-engine.ts
-  // Angular v21.2 introduced `trustProxyHeaders` as well: https://github.com/angular/angular-cli/blob/21.2.x/packages/angular/ssr/src/app-engine.ts
+  // Angular v21.2.9 introduced `trustProxyHeaders` as well: https://github.com/angular/angular-cli/blob/21.2.x/packages/angular/ssr/src/app-engine.ts
   // we cannot add the config if the version doesn't support it
   // because TypeScript complains about invalid properties
   let NetlifyServerTsAppEngine = NetlifyServerTsAppEngine21Dot0
-  if (satisfies(angularVersion, '>=21.2.0', { includePrerelease: true })) {
-    NetlifyServerTsAppEngine = NetlifyServerTsAppEngine21Dot2
-  } else if (satisfies(angularVersion, '>=21.1.0', { includePrerelease: true })) {
-    NetlifyServerTsAppEngine = NetlifyServerTsAppEngine21Dot1
+  if (satisfies(angularVersion, '>=21.2.9', { includePrerelease: true })) {
+    NetlifyServerTsAppEngine = NetlifyServerTsAppEngine21Dot2Dot9
+  } else if (satisfies(angularVersion, '>=21.1.5', { includePrerelease: true })) {
+    NetlifyServerTsAppEngine = NetlifyServerTsAppEngine21Dot1Dot5
   }
 
   const project = getProject(angularJson, failBuild, workspaceType === 'nx')
