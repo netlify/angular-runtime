@@ -1,3 +1,4 @@
+/* eslint-disable max-lines */
 import { existsSync } from 'node:fs'
 import { readFile, writeFile, rename, rm } from 'node:fs/promises'
 import { parse, join } from 'node:path'
@@ -18,7 +19,7 @@ const commonEngine = new CommonEngine()
 export async function netlifyCommonEngineHandler(request: Request, context: any): Promise<Response> {
   // Example API endpoints can be defined here.
   // Uncomment and define endpoints as necessary.
-  // const pathname = new URL(request.url).pathname;
+  // const pathname = new URL(request.url).pathname
   // if (pathname === '/api/hello') {
   //   return Response.json({ message: 'Hello from the API' });
   // }
@@ -26,19 +27,13 @@ export async function netlifyCommonEngineHandler(request: Request, context: any)
   return await render(commonEngine)
 }
 `
-
 // eslint-disable-next-line no-inline-comments
-const NetlifyServerTsAppEngine = /* typescript */ `import { AngularAppEngine, createRequestHandler } from '@angular/ssr'
-import { getContext } from '@netlify/angular-runtime/context.js'
-
-const angularAppEngine = new AngularAppEngine()
-
-export async function netlifyAppEngineHandler(request: Request): Promise<Response> {
+const NetlifyServerTsAppEngineCommonContent = /* typescript */ `export async function netlifyAppEngineHandler(request: Request): Promise<Response> {
   const context = getContext()
 
   // Example API endpoints can be defined here.
   // Uncomment and define endpoints as necessary.
-  // const pathname = new URL(request.url).pathname;
+  // const pathname = new URL(request.url).pathname
   // if (pathname === '/api/hello') {
   //   return Response.json({ message: 'Hello from the API' });
   // }
@@ -52,6 +47,35 @@ export async function netlifyAppEngineHandler(request: Request): Promise<Respons
  */
 export const reqHandler = createRequestHandler(netlifyAppEngineHandler)
 `
+
+// eslint-disable-next-line no-inline-comments
+const NetlifyServerTsAppEngine21Dot2Dot9 = /* typescript */ `import { AngularAppEngine, createRequestHandler } from '@angular/ssr'
+import { getAllowedHosts, getContext, getTrustProxyHeaders } from '@netlify/angular-runtime/app-engine.js'
+
+const angularAppEngine = new AngularAppEngine({
+  allowedHosts: getAllowedHosts(),
+  trustProxyHeaders: getTrustProxyHeaders(),
+})
+
+${NetlifyServerTsAppEngineCommonContent}`
+
+// eslint-disable-next-line no-inline-comments
+const NetlifyServerTsAppEngine21Dot1Dot5 = /* typescript */ `import { AngularAppEngine, createRequestHandler } from '@angular/ssr'
+import { getAllowedHosts, getContext } from '@netlify/angular-runtime/app-engine.js'
+
+const angularAppEngine = new AngularAppEngine({
+  allowedHosts: getAllowedHosts(),
+})
+
+${NetlifyServerTsAppEngineCommonContent}`
+
+// eslint-disable-next-line no-inline-comments
+const NetlifyServerTsAppEngine21Dot0 = /* typescript */ `import { AngularAppEngine, createRequestHandler } from '@angular/ssr'
+import { getContext } from '@netlify/angular-runtime/app-engine.js'
+
+const angularAppEngine = new AngularAppEngine()
+
+${NetlifyServerTsAppEngineCommonContent}`
 
 let needSwapping = false
 let serverModuleLocation
@@ -92,7 +116,8 @@ function guessUsedEngine(serverModuleContents) {
  * to make it Netlify compatible and which they can apply request handling customizations to it (or just leave default in if they generally
  * have default one that just missed our known defaults comparison potentially due to custom formatting etc).
  * @param {Object} obj
- * @param {string} obj.angularVersion Angular version
+ * @param {string} obj.angularCoreVersion `@angular/core` version
+ * @param {string | undefined} obj.angularSsrVersion `@angular/ssr` version
  * @param {string} obj.siteRoot Root directory of an app
  * @param {(msg: string) => never} obj.failPlugin Function to fail the plugin
  * @param {'nx' | 'default'} obj.workspaceType The workspace type being parsed
@@ -101,13 +126,32 @@ function guessUsedEngine(serverModuleContents) {
  *
  * @returns {'AppEngine' | 'CommonEngine' | undefined}
  */
-export async function fixServerTs({ angularVersion, siteRoot, failPlugin, failBuild, workspaceType, packagePath }) {
-  if (!satisfies(angularVersion, '>=19.0.0-rc', { includePrerelease: true })) {
+export async function fixServerTs({
+  angularCoreVersion,
+  angularSsrVersion,
+  siteRoot,
+  failPlugin,
+  failBuild,
+  workspaceType,
+  packagePath,
+}) {
+  if (!satisfies(angularCoreVersion, '>=19.0.0-rc', { includePrerelease: true })) {
     // for pre-19 versions, we don't need to do anything
     return
   }
 
   const angularJson = getAngularJson({ failPlugin, siteRoot, workspaceType, packagePath })
+
+  // @angular/ssr v21.1.5 introduced `allowedHosts`: https://github.com/angular/angular-cli/releases/tag/v21.1.5
+  // @angular/ssr v21.2.9 introduced `trustProxyHeaders`: https://github.com/angular/angular-cli/releases/tag/v21.2.9
+  // we cannot add the config if the version doesn't support it
+  // because TypeScript complains about invalid properties
+  let NetlifyServerTsAppEngine = NetlifyServerTsAppEngine21Dot0
+  if (satisfies(angularSsrVersion, '>=21.2.9', { includePrerelease: true })) {
+    NetlifyServerTsAppEngine = NetlifyServerTsAppEngine21Dot2Dot9
+  } else if (satisfies(angularSsrVersion, '>=21.1.5', { includePrerelease: true })) {
+    NetlifyServerTsAppEngine = NetlifyServerTsAppEngine21Dot1Dot5
+  }
 
   const project = getProject(angularJson, failBuild, workspaceType === 'nx')
   const build = workspaceType === 'nx' ? project.targets.build : project.architect.build
@@ -117,21 +161,17 @@ export async function fixServerTs({ angularVersion, siteRoot, failPlugin, failBu
     return
   }
 
-  // check if user has installed runtime package and if the version is 2.2.0 or newer
+  // check if user has installed runtime package and if the version is 4.0.0 or newer
   // userspace `server.ts` file does import utils from runtime, so it has to be resolvable
   // from site root and auto-installed plugin in `.netlify/plugins` wouldn't suffice for that.
   const angularRuntimeVersionInstalledByUser = await getAngularRuntimeVersion(siteRoot)
   if (!angularRuntimeVersionInstalledByUser) {
     failBuild(
-      "Angular@19 SSR on Netlify requires '@netlify/angular-runtime' version 2.2.0 or later to be installed. Please install it and try again.",
-    )
-  } else if (!satisfies(angularRuntimeVersionInstalledByUser, '>=2.2.0', { includePrerelease: true })) {
-    failBuild(
-      `Angular@19 SSR on Netlify requires '@netlify/angular-runtime' version 2.2.0 or later to be installed. Found version "${angularRuntimeVersionInstalledByUser}". Please update it to version 2.2.0 or later and try again.`,
+      `@angular/ssr@${angularSsrVersion} on Netlify requires '@netlify/angular-runtime@^4.0.0' or later to be installed. Please install it and try again.`,
     )
   }
 
-  // check whether project is using stable CommonEngine or Developer Preview AppEngine
+  // check whether project is using CommonEngine or AppEngine
   const serverModuleContents = await readFile(serverModuleLocation, 'utf8')
 
   const usedEngineBasedOnKnownSignatures = getEngineBasedOnKnownSignatures(serverModuleContents)
@@ -177,7 +217,7 @@ export async function fixServerTs({ angularVersion, siteRoot, failPlugin, failBu
     return 'CommonEngine'
   }
 
-  if (satisfies(angularVersion, '<20', { includePrerelease: true })) {
+  if (satisfies(angularCoreVersion, '<20', { includePrerelease: true })) {
     // at this point we know that user's server.ts is not Netlify compatible so user intervention is required
     // we will try to inspect server.ts to determine which engine is used and provide more accurate error message
     const guessedUsedEngine = guessUsedEngine(serverModuleContents)
@@ -217,3 +257,4 @@ export async function revertServerTsFix() {
     needSwapping = false
   }
 }
+/* eslint-enable max-lines */

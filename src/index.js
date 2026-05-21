@@ -4,7 +4,7 @@ import ensureNoCompetingPlugin from './helpers/ensureNoCompetingPlugin.js'
 import fixOutputDir from './helpers/fixOutputDir.js'
 import getAngularJson from './helpers/getAngularJson.js'
 import { getAngularRoot } from './helpers/getAngularRoot.js'
-import { getAngularVersion } from './helpers/getPackageVersion.js'
+import { getAngularCoreVersion, getAngularSsrVersion } from './helpers/getPackageVersion.js'
 import { fixServerTs, revertServerTsFix } from './helpers/serverModuleHelpers.js'
 import { getBuildInformation, setUpEdgeFunction } from './helpers/setUpEdgeFunction.js'
 import { setUpHeaders } from './helpers/setUpHeaders.js'
@@ -16,8 +16,16 @@ let usedEngine
 export async function onPreBuild({ netlifyConfig, utils, constants }) {
   const { failBuild, failPlugin } = utils.build
   const { siteRoot, workspaceType } = getAngularRoot({ failBuild, netlifyConfig })
-  const angularVersion = await getAngularVersion(siteRoot)
-  isValidAngularProject = validateAngularVersion(angularVersion)
+
+  // @angular/core and @angular/ssr are only synced to major versions
+  // for minor or patch versions, it's not guaranteed to be in sync
+  // we need to check versions of both deps as @angular/ssr might not
+  // be installed by users not trying to use SSR, but we need
+  // patch-version level detection in serverModuleHelpers.js
+  const angularCoreVersion = await getAngularCoreVersion(siteRoot)
+  const angularSsrVersion = await getAngularSsrVersion(siteRoot)
+
+  isValidAngularProject = validateAngularVersion(angularCoreVersion)
 
   if (!isValidAngularProject) {
     console.warn('Skipping build plugin.')
@@ -40,7 +48,8 @@ export async function onPreBuild({ netlifyConfig, utils, constants }) {
   })
 
   usedEngine = await fixServerTs({
-    angularVersion,
+    angularCoreVersion,
+    angularSsrVersion,
     siteRoot,
     failPlugin,
     failBuild,

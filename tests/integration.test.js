@@ -8,7 +8,7 @@ import { fileURLToPath } from 'node:url'
 import build from '@netlify/build'
 import { satisfies } from 'semver'
 
-import { getAngularVersion } from '../src/helpers/getPackageVersion.js'
+import { getAngularCoreVersion } from '../src/helpers/getPackageVersion.js'
 import { validateAngularVersion } from '../src/helpers/validateAngularVersion.js'
 
 test('project without angular config file fails the plugin execution but does not error', async () => {
@@ -177,7 +177,7 @@ describe('Angular version validation', () => {
     },
     async () => {
       const result = validateAngularVersion(
-        await getAngularVersion(fileURLToPath(new URL('fixtures/angular-21', import.meta.url))),
+        await getAngularCoreVersion(fileURLToPath(new URL('fixtures/angular-21', import.meta.url))),
       )
       assert.strictEqual(result, true)
     },
@@ -189,7 +189,7 @@ describe('Angular version validation', () => {
     },
     async () => {
       const result = validateAngularVersion(
-        await getAngularVersion(fileURLToPath(new URL('fixtures/angular-20', import.meta.url))),
+        await getAngularCoreVersion(fileURLToPath(new URL('fixtures/angular-20', import.meta.url))),
       )
       assert.strictEqual(result, true)
     },
@@ -197,28 +197,28 @@ describe('Angular version validation', () => {
 
   test('checks version for angular 19', async () => {
     const result = validateAngularVersion(
-      await getAngularVersion(fileURLToPath(new URL('fixtures/angular-19-common-engine', import.meta.url))),
+      await getAngularCoreVersion(fileURLToPath(new URL('fixtures/angular-19-common-engine', import.meta.url))),
     )
     assert.strictEqual(result, true)
   })
 
   test('checks version for angular 18', async () => {
     const result = validateAngularVersion(
-      await getAngularVersion(fileURLToPath(new URL('fixtures/application-builder', import.meta.url))),
+      await getAngularCoreVersion(fileURLToPath(new URL('fixtures/application-builder', import.meta.url))),
     )
     assert.strictEqual(result, true)
   })
 
   test('checks version for angular 17', async () => {
     const result = validateAngularVersion(
-      await getAngularVersion(fileURLToPath(new URL('fixtures/angular-17', import.meta.url))),
+      await getAngularCoreVersion(fileURLToPath(new URL('fixtures/angular-17', import.meta.url))),
     )
     assert.strictEqual(result, true)
   })
 
   test('fails angular version validation when angular dependencies are missing', async () => {
     const result = validateAngularVersion(
-      await getAngularVersion(fileURLToPath(new URL('fixtures/missing-angular-deps', import.meta.url))),
+      await getAngularCoreVersion(fileURLToPath(new URL('fixtures/missing-angular-deps', import.meta.url))),
     )
     assert.strictEqual(result, false)
   })

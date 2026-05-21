@@ -102,13 +102,23 @@ export async function setUpEdgeFunction({ outputPath, constants, failBuild, used
     toPosix,
   )
 
-  // buy putting this into a separate module that's imported first,
+  // by putting this into a separate module that's imported first,
   // we ensure this is initialised before any other module
   const polyfills = `
   import process from "node:process"
 
-  globalThis.process = process
   globalThis.DenoEvent = globalThis.Event // storing this for fixup-event.mjs
+  globalThis.process = process
+
+  // setting \`undefined\` as environment variable is not allowed: https://nodejs.org/api/process.html#processenv
+  // so we set it as a string ourselves
+
+  globalThis.process.env.DEPLOY_ID = ${JSON.stringify(env.DEPLOY_ID ?? 'undefined')}
+  globalThis.process.env.DEPLOY_PRIME_URL = ${JSON.stringify(env.DEPLOY_PRIME_URL ?? 'undefined')}
+  globalThis.process.env.DEPLOY_URL = ${JSON.stringify(env.DEPLOY_URL ?? 'undefined')}
+  globalThis.process.env.SITE_ID = ${JSON.stringify(env.SITE_ID ?? 'undefined')}
+  globalThis.process.env.SITE_NAME = ${JSON.stringify(env.SITE_NAME ?? 'undefined')}
+  globalThis.process.env.URL = ${JSON.stringify(env.URL ?? 'undefined')}
   `
 
   // angular's polyfills override the global `Event` with a custom implementation.

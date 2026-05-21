@@ -39,7 +39,7 @@ If you are using Server-Side Rendering you will need to install Angular Runtime 
 
 ### Manual Installation
 
-If you need to pin this plugin to a specific version or if you are using Server-Side Rendering with Angular 19 or Angular 20, you will need to install the plugin manually.
+If you need to pin this plugin to a specific version or if you are using Server-Side Rendering with Angular 19+, you will need to install the plugin manually.
 
 Install it via your package manager:
 
@@ -108,26 +108,29 @@ Note that App Engine in Angular 19 is in Developer Preview and requires explicit
 
 Starting with Angular@19. The build plugin makes use of the `server.ts` file to handle requests. The default Angular scaffolding generates incompatible code for Netlify so the build plugin will swap it for compatible `server.ts` file automatically if it detects default version being used.
 
-Make sure you have `@netlify/angular-runtime` version 2.2.0 or later installed in your project. Netlify compatible `server.ts` file imports utilities from this package and Angular Compiler need to be able to resolve it and it can only do that if it's installed in your project and not when it's auto-installed by Netlify.
+Make sure you have `@netlify/angular-runtime` version 4.0.0 or later installed in your project. Netlify compatible `server.ts` file imports utilities from this package and Angular Compiler need to be able to resolve it and it can only do that if it's installed in your project and not when it's auto-installed by Netlify.
 
 ### Customizing request handling
 
 If you need to customize the request handling, you can do so by copying one of code snippets below to your `server.ts` file.
 
-If you are using Angular 20 or Angular 19 with App Engine Developer Preview:
+If you are using `@angular/ssr@21.2.9+` with AppEngine:
 
 ```ts
 import { AngularAppEngine, createRequestHandler } from '@angular/ssr'
-import { getContext } from '@netlify/angular-runtime/context.js'
+import { getAllowedHosts, getContext, getTrustProxyHeaders } from '@netlify/angular-runtime/app-engine.js'
 
-const angularAppEngine = new AngularAppEngine()
+const angularAppEngine = new AngularAppEngine({
+  allowedHosts: getAllowedHosts(),
+  trustProxyHeaders: getTrustProxyHeaders(),
+})
 
 export async function netlifyAppEngineHandler(request: Request): Promise<Response> {
   const context = getContext()
 
   // Example API endpoints can be defined here.
   // Uncomment and define endpoints as necessary.
-  // const pathname = new URL(request.url).pathname;
+  // const pathname = new URL(request.url).pathname
   // if (pathname === '/api/hello') {
   //   return Response.json({ message: 'Hello from the API' });
   // }
@@ -142,7 +145,12 @@ export async function netlifyAppEngineHandler(request: Request): Promise<Respons
 export const reqHandler = createRequestHandler(netlifyAppEngineHandler)
 ```
 
-If you are using Angular 19 and did not opt into the App Engine Developer Preview:
+> **Note:** The snippet above requires `@angular/ssr@21.2.9+`. We strongly recommend upgrading to this version. If you're on an older release:
+> - **v19, v20, v21 (before 21.1.5):** omit both `getAllowedHosts` and `getTrustProxyHeaders`.
+> - **v21.1.5–21.2.8:** include `getAllowedHosts`, but omit `getTrustProxyHeaders`.
+> - **v21.2.9+:** include both `getAllowedHosts` and `getTrustProxyHeaders` (as shown above).
+
+If you are using `@angular/ssr@19` and did not opt into the App Engine Developer Preview:
 
 ```ts
 import { CommonEngine } from '@angular/ssr/node'
@@ -153,7 +161,7 @@ const commonEngine = new CommonEngine()
 export async function netlifyCommonEngineHandler(request: Request, context: any): Promise<Response> {
   // Example API endpoints can be defined here.
   // Uncomment and define endpoints as necessary.
-  // const pathname = new URL(request.url).pathname;
+  // const pathname = new URL(request.url).pathname
   // if (pathname === '/api/hello') {
   //   return Response.json({ message: 'Hello from the API' });
   // }
@@ -181,9 +189,7 @@ The [`server.ts` file](https://angular.dev/guide/ssr#configure-server-side-rende
 
 ### Requirements
 
-To use the Angular Runtime while building and deploying with the CLI, you need to have `netlify-cli v26.0.0` installed (or a later version).
-
-Please also make sure to use `ntl deploy --build` (rather than `ntl build && ntl deploy`).
+To use the Angular Runtime while building and deploying with the CLI, you need to have `netlify-cli v26.0.0` installed (or a later version). To deploy the site via CLI, please use `netlify deploy`. Using `netlify deploy` with the `--no-build` flag is not supported.
 
 ## Getting Help
 
