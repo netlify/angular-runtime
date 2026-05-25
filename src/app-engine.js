@@ -1,8 +1,16 @@
 import { env } from 'node:process'
 
-export function getAllowedHosts({ allowedHosts = [], injectDefaults = true } = {}) {
-  if (!injectDefaults || allowedHosts.includes('*')) {
-    return [...new Set(allowedHosts)]
+/**
+ * Generate `allowedHosts` config for `AngularAppEngine` from `@angular/ssr`
+ * @param {Object} [config={}]
+ * @param {string[]} [config.additionalAllowedHosts=[]] Additional allowed hosts
+ * @param {boolean} [config.injectDefaults=true] Whether to inject Netlify default hosts
+ *
+ * @returns {string[]}
+ */
+export function getAllowedHosts({ additionalAllowedHosts = [], injectDefaults = true } = {}) {
+  if (!injectDefaults || additionalAllowedHosts.includes('*')) {
+    return [...new Set(additionalAllowedHosts)]
   }
 
   const defaultAllowedHosts = []
@@ -79,14 +87,25 @@ export function getAllowedHosts({ allowedHosts = [], injectDefaults = true } = {
     defaultAllowedHosts.push(`${deployId}--${siteId}.netlify.app`)
   }
 
-  return [...new Set([...defaultAllowedHosts, ...allowedHosts])]
+  return [...new Set([...defaultAllowedHosts, ...additionalAllowedHosts])]
 }
 
+/**
+ * Return Netlify-specific context
+ *
+ * @returns {import('@netlify/edge-functions').Context | undefined}
+ */
 export function getContext() {
   // eslint-disable-next-line no-undef
   return typeof Netlify !== 'undefined' ? Netlify?.context : undefined
 }
 
+/**
+ * Return the value of an environment variable
+ * @param {string} environmentVariable
+ *
+ * @returns {string | undefined}
+ */
 function getEnvironmentVariable(environmentVariable) {
   const value = env[environmentVariable]
 
@@ -103,6 +122,12 @@ function getEnvironmentVariable(environmentVariable) {
   return value
 }
 
+/**
+ * Return hostname from the value of an environment variable
+ * @param {string} environmentVariable
+ *
+ * @returns {string | undefined}
+ */
 function getHostnameFromEnvironmentVariable(environmentVariable) {
   const value = getEnvironmentVariable(environmentVariable)
 
@@ -117,6 +142,22 @@ function getHostnameFromEnvironmentVariable(environmentVariable) {
   }
 }
 
-export function getTrustProxyHeaders() {
-  return ['x-forwarded-for']
+/**
+ * Generate `trustProxyHeaders` config for `AngularAppEngine` from `@angular/ssr`
+ *
+ * @param {{
+ *   additionalTrustProxyHeaders?: string[]
+ * } | {
+ *   trustAll?: boolean
+ * }} [config]
+ *
+ * @returns {boolean | string[]}
+ */
+
+export function getTrustProxyHeaders({ additionalTrustProxyHeaders = [], trustAll = false } = {}) {
+  if (trustAll === true) {
+    return true
+  }
+
+  return [...new Set('x-forwarded-for', ...additionalTrustProxyHeaders)]
 }
