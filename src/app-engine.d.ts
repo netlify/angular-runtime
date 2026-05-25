@@ -4,7 +4,9 @@ export declare function getAllowedHosts(config?: {
   additionalAllowedHosts?: string[]
   injectDefaults?: boolean
 }): string[]
+
 export declare function getContext(): Context | undefined
+
 export declare function getTrustProxyHeaders(
   config?:
     | {
