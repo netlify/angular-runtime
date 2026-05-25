@@ -1,7 +1,7 @@
 import { env } from 'node:process'
 
 export function getAllowedHosts({ allowedHosts = [], injectDefaults = true } = {}) {
-  if (!injectDefaults) {
+  if (!injectDefaults || allowedHosts.includes('*')) {
     return [...new Set(allowedHosts)]
   }
 
