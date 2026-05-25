@@ -13,4 +13,4 @@ export declare function getTrustProxyHeaders(
     | {
         trustAll?: boolean
       },
-): string[]
+): boolean | string[]
