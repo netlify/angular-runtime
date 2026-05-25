@@ -159,5 +159,5 @@ export function getTrustProxyHeaders({ additionalTrustProxyHeaders = [], trustAl
     return true
   }
 
-  return [...new Set('x-forwarded-for', ...additionalTrustProxyHeaders)]
+  return [...new Set(['x-forwarded-for', ...additionalTrustProxyHeaders])]
 }
