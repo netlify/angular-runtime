@@ -8,7 +8,7 @@ import { fileURLToPath } from 'node:url'
 import build from '@netlify/build'
 import { satisfies } from 'semver'
 
-import { getAngularCoreVersion } from '../src/helpers/getPackageVersion.js'
+import { getAngularCoreVersion, getAngularSsrVersion } from '../src/helpers/getPackageVersion.js'
 import { validateAngularVersion } from '../src/helpers/validateAngularVersion.js'
 
 test('project without angular config file fails the plugin execution but does not error', async () => {
@@ -169,17 +169,52 @@ test(
   },
 )
 
+test(
+  'Angular 22',
+  {
+    skip: !satisfies(versions.node, '>=22.22'),
+  },
+  async () => {
+    const { severityCode, success } = await build({
+      repositoryRoot: fileURLToPath(new URL('fixtures/angular-22', import.meta.url)),
+    })
+
+    assert.deepEqual(severityCode, 0)
+    assert.deepEqual(success, true)
+  },
+)
+
 describe('Angular version validation', () => {
+  test(
+    'checks version for angular 22',
+    {
+      skip: !satisfies(versions.node, '>=22.22'),
+    },
+    async () => {
+      const coreResult = validateAngularVersion(
+        await getAngularCoreVersion(fileURLToPath(new URL('fixtures/angular-22', import.meta.url))),
+      )
+      const ssrResult = validateAngularVersion(
+        await getAngularSsrVersion(fileURLToPath(new URL('fixtures/angular-22', import.meta.url))),
+      )
+      assert.strictEqual(coreResult, true)
+      assert.strictEqual(ssrResult, true)
+    },
+  )
   test(
     'checks version for angular 21',
     {
       skip: !satisfies(versions.node, '>=20.19'),
     },
     async () => {
-      const result = validateAngularVersion(
+      const coreResult = validateAngularVersion(
         await getAngularCoreVersion(fileURLToPath(new URL('fixtures/angular-21', import.meta.url))),
       )
-      assert.strictEqual(result, true)
+      const ssrResult = validateAngularVersion(
+        await getAngularSsrVersion(fileURLToPath(new URL('fixtures/angular-21', import.meta.url))),
+      )
+      assert.strictEqual(coreResult, true)
+      assert.strictEqual(ssrResult, true)
     },
   )
   test(

@@ -1,0 +1,39 @@
+{
+  "name": "angular-22",
+  "version": "0.0.0",
+  "scripts": {
+    "ng": "ng",
+    "start": "ng serve",
+    "build": "ng build",
+    "watch": "ng build --watch --configuration development",
+    "test": "ng test",
+    "serve:ssr:angular-22": "node dist/angular-22/server/server.mjs"
+  },
+  "private": true,
+  "packageManager": "npm@11.15.0",
+  "dependencies": {
+    "@angular/common": "next",
+    "@angular/compiler": "next",
+    "@angular/core": "next",
+    "@angular/forms": "next",
+    "@angular/platform-browser": "next",
+    "@angular/platform-server": "next",
+    "@angular/router": "next",
+    "@angular/ssr": "next",
+    "@netlify/angular-runtime": "file:../../..",
+    "express": "^5.1.0",
+    "rxjs": "~7.8.0",
+    "tslib": "^2.3.0"
+  },
+  "devDependencies": {
+    "@angular/build": "next",
+    "@angular/cli": "next",
+    "@angular/compiler-cli": "next",
+    "@types/express": "^5.0.1",
+    "@types/node": "^24",
+    "jsdom": "^28.0.0",
+    "prettier": "^3.8.1",
+    "typescript": "^6.0",
+    "vitest": "^4.0.8"
+  }
+}
