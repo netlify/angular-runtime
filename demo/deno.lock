@@ -11,20 +11,20 @@
   "workspace": {
     "packageJson": {
       "dependencies": [
-        "npm:@angular/animations@^21.0.0-rc.1",
-        "npm:@angular/build@^21.0.0-rc.1",
-        "npm:@angular/cli@^21.0.0-rc.1",
-        "npm:@angular/common@^21.0.0-rc.1",
-        "npm:@angular/compiler-cli@^21.0.0-rc.1",
-        "npm:@angular/compiler@^21.0.0-rc.1",
-        "npm:@angular/core@^21.0.0-rc.1",
-        "npm:@angular/forms@^21.0.0-rc.1",
-        "npm:@angular/platform-browser-dynamic@^21.0.0-rc.1",
-        "npm:@angular/platform-browser@^21.0.0-rc.1",
-        "npm:@angular/platform-server@^21.0.0-rc.1",
-        "npm:@angular/router@^21.0.0-rc.1",
-        "npm:@angular/ssr@^21.0.0-rc.1",
-        "npm:@netlify/edge-functions@^3.0.2",
+        "npm:@angular/animations@next",
+        "npm:@angular/build@next",
+        "npm:@angular/cli@next",
+        "npm:@angular/common@next",
+        "npm:@angular/compiler-cli@next",
+        "npm:@angular/compiler@next",
+        "npm:@angular/core@next",
+        "npm:@angular/forms@next",
+        "npm:@angular/platform-browser-dynamic@next",
+        "npm:@angular/platform-browser@next",
+        "npm:@angular/platform-server@next",
+        "npm:@angular/router@next",
+        "npm:@angular/ssr@next",
+        "npm:@netlify/edge-functions@^3.0.7",
         "npm:@types/express@^4.17.21",
         "npm:@types/jasmine@5.1",
         "npm:@types/node@22",
@@ -38,7 +38,7 @@
         "npm:karma@6.4",
         "npm:rxjs@7.8",
         "npm:tslib@^2.3.0",
-        "npm:typescript@~5.9.3",
+        "npm:typescript@6",
         "npm:zone.js@0.15"
       ]
     }
