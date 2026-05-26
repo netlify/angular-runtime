@@ -2,17 +2,9 @@ import { env } from 'node:process'
 
 /**
  * Generate `allowedHosts` config for `AngularAppEngine` from `@angular/ssr`
- * @param {Object} [config={}]
- * @param {string[]} [config.additionalAllowedHosts=[]] Additional allowed hosts
- * @param {boolean} [config.injectDefaults=true] Whether to inject Netlify default hosts
- *
  * @returns {string[]}
  */
-export function getAllowedHosts({ additionalAllowedHosts = [], injectDefaults = true } = {}) {
-  if (!injectDefaults || additionalAllowedHosts.includes('*')) {
-    return [...new Set(additionalAllowedHosts)]
-  }
-
+export function getAllowedHosts() {
   const defaultAllowedHosts = []
 
   let deployId
@@ -87,12 +79,11 @@ export function getAllowedHosts({ additionalAllowedHosts = [], injectDefaults = 
     defaultAllowedHosts.push(`${deployId}--${siteId}.netlify.app`)
   }
 
-  return [...new Set([...defaultAllowedHosts, ...additionalAllowedHosts])]
+  return [...new Set(defaultAllowedHosts)]
 }
 
 /**
  * Return Netlify-specific context
- *
  * @returns {import('@netlify/edge-functions').Context | undefined}
  */
 export function getContext() {
@@ -144,20 +135,8 @@ function getHostnameFromEnvironmentVariable(environmentVariable) {
 
 /**
  * Generate `trustProxyHeaders` config for `AngularAppEngine` from `@angular/ssr`
- *
- * @param {{
- *   additionalTrustProxyHeaders?: string[]
- * } | {
- *   trustAll?: boolean
- * }} [config]
- *
- * @returns {boolean | string[]}
+ * @returns {string[]}
  */
-
-export function getTrustProxyHeaders({ additionalTrustProxyHeaders = [], trustAll = false } = {}) {
-  if (trustAll === true) {
-    return true
-  }
-
-  return [...new Set(['x-forwarded-for', ...additionalTrustProxyHeaders])]
+export function getTrustProxyHeaders() {
+  return ['x-forwarded-for']
 }
