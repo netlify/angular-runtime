@@ -1,0 +1,38 @@
+name: SSR Tests
+on:
+  pull_request:
+    branches:
+      - main
+
+permissions:
+  contents: read
+  statuses: read
+
+jobs:
+  ssr-tests:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v6
+
+      - name: Wait for Angular Runtime demo deploy preview
+        id: deploy
+        uses: ./.github/actions/wait-for-deploy-preview
+        with:
+          status-context: 'netlify/angular-runtime-demo/deploy-preview'
+        env:
+          GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+
+      - name: Set up Node.js
+        uses: actions/setup-node@v6
+        with:
+          node-version: 24
+          check-latest: true
+
+      - name: Install dependencies
+        run: npm ci
+
+      - name: Run SSR tests
+        run: node ./tests/ssr.js
+        env:
+          DEPLOY_URL: ${{ steps.deploy.outputs.deploy-url }}

@@ -1,0 +1,97 @@
+name: Wait for deploy preview
+description: Polls a GitHub commit status context until a deploy preview URL is available
+
+inputs:
+  status-context:
+    description: The commit status context to wait for (e.g. "netlify/edge/deploy-preview")
+    required: true
+  max-attempts:
+    description: Maximum number of polling attempts
+    required: false
+    default: '60'
+  poll-interval:
+    description: Seconds between polling attempts
+    required: false
+    default: '30'
+
+outputs:
+  deploy-url:
+    description: The deploy preview URL
+    value: ${{ steps.poll.outputs.deploy-url }}
+  deploy-host:
+    description: The deploy preview host (without protocol or path)
+    value: ${{ steps.poll.outputs.deploy-host }}
+
+runs:
+  using: composite
+  steps:
+    - id: poll
+      shell: bash
+      env:
+        STATUS_CONTEXT: ${{ inputs.status-context }}
+        SHA: ${{ github.event.pull_request.head.sha }}
+        REPO: ${{ github.repository }}
+        MAX_ATTEMPTS: ${{ inputs.max-attempts }}
+        POLL_INTERVAL: ${{ inputs.poll-interval }}
+      run: |
+        echo "Waiting for commit status '${STATUS_CONTEXT}' on ${SHA}..."
+
+        for i in $(seq 1 $MAX_ATTEMPTS); do
+          # All status entries for this context on this commit, newest first. We need the full
+          # history (not the rolled-up combined status) because the per-deploy id only appears on
+          # the earlier "processing" entry, not on the final "ready" one.
+          STATUS_LIST=$(gh api "repos/${REPO}/statuses/${SHA}" --jq "[.[] | select(.context == \"${STATUS_CONTEXT}\")]")
+
+          STATUS_STATE=$(echo "$STATUS_LIST" | jq -r 'first | .state // empty')
+          # target_url of the latest entry: once ready, this is the PR-level alias
+          # (deploy-preview-<pr>--<site>.<domain>), which is shared by every commit in the PR.
+          ALIAS_URL=$(echo "$STATUS_LIST" | jq -r 'first | .target_url // empty')
+
+          if [ "$STATUS_STATE" = "success" ]; then
+            echo "Deploy preview is ready!"
+            echo "  State: ${STATUS_STATE}"
+            echo "  Alias URL: ${ALIAS_URL}"
+
+            # The "processing" entry carries a per-deploy URL of the form
+            # https://app.netlify.com/projects/<site>/deploys/<deploy-id>. The deploy id is unique
+            # per commit, so we build a permalink from it to avoid the caching issues caused by
+            # reusing the shared deploy-preview-<pr>--<site> alias across commits.
+            DEPLOY_ID=$(echo "$STATUS_LIST" \
+              | jq -r 'map(select(.target_url // "" | test("/deploys/"))) | first | .target_url // empty' \
+              | sed -E 's|.*/deploys/||; s|[/?#].*||')
+
+            # Strip protocol and any path, leaving just the host (portable, no sed regex quirks).
+            ALIAS_HOST=${ALIAS_URL#*://}
+            ALIAS_HOST=${ALIAS_HOST%%/*}
+
+            if [ -n "$DEPLOY_ID" ] && printf '%s' "$ALIAS_HOST" | grep -q -- '--'; then
+              # Swap the alias label (before "--") for the deploy id, keeping the domain suffix so
+              # this works across environments (netlify.app, netlifystg.app, ...).
+              DOMAIN_SUFFIX=${ALIAS_HOST#*--}
+              DEPLOY_HOST="${DEPLOY_ID}--${DOMAIN_SUFFIX}"
+              DEPLOY_URL="https://${DEPLOY_HOST}"
+              echo "  Deploy id: ${DEPLOY_ID}"
+            else
+              echo "  Could not derive a permalink (deploy id: '${DEPLOY_ID:-none}'), falling back to alias URL"
+              DEPLOY_HOST="$ALIAS_HOST"
+              DEPLOY_URL="$ALIAS_URL"
+            fi
+
+            echo "  Deploy URL: ${DEPLOY_URL}"
+            echo "  Deploy host: ${DEPLOY_HOST}"
+
+            echo "deploy-url=${DEPLOY_URL}" >> "$GITHUB_OUTPUT"
+            echo "deploy-host=${DEPLOY_HOST}" >> "$GITHUB_OUTPUT"
+            exit 0
+          elif [ "$STATUS_STATE" = "failure" ] || [ "$STATUS_STATE" = "error" ]; then
+            echo "Deploy preview failed with state: ${STATUS_STATE}"
+            echo "  Target URL: ${ALIAS_URL}"
+            exit 1
+          fi
+
+          echo "Attempt ${i}/${MAX_ATTEMPTS}: status is '${STATUS_STATE:-not found}', waiting ${POLL_INTERVAL}s..."
+          sleep $POLL_INTERVAL
+        done
+
+        echo "Timed out waiting for deploy preview after $((MAX_ATTEMPTS * POLL_INTERVAL))s"
+        exit 1

@@ -101,7 +101,7 @@
   },
   "jest": {
     "testMatch": [
-      "**/test/**/*.js"
+      "**/test/**/*.test.js"
     ],
     "verbose": true,
     "testTimeout": 60000
