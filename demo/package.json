@@ -11,16 +11,16 @@
   },
   "private": true,
   "dependencies": {
-    "@angular/animations": "^21.2.11",
-    "@angular/common": "^21.2.11",
-    "@angular/compiler": "^21.2.11",
-    "@angular/core": "^21.2.11",
-    "@angular/forms": "^21.2.11",
-    "@angular/platform-browser": "^21.2.11",
-    "@angular/platform-browser-dynamic": "^21.2.11",
-    "@angular/platform-server": "^21.2.11",
-    "@angular/router": "^21.2.11",
-    "@angular/ssr": "^21.2.11",
+    "@angular/animations": "next",
+    "@angular/common": "next",
+    "@angular/compiler": "next",
+    "@angular/core": "next",
+    "@angular/forms": "next",
+    "@angular/platform-browser": "next",
+    "@angular/platform-browser-dynamic": "next",
+    "@angular/platform-server": "next",
+    "@angular/router": "next",
+    "@angular/ssr": "next",
     "@netlify/angular-runtime": "file:..",
     "@netlify/edge-functions": "^3.0.7",
     "express": "^4.21.0",
@@ -29,9 +29,9 @@
     "zone.js": "~0.15.0"
   },
   "devDependencies": {
-    "@angular/build": "^21.2.11",
-    "@angular/cli": "^21.2.11",
-    "@angular/compiler-cli": "^21.2.11",
+    "@angular/build": "next",
+    "@angular/cli": "next",
+    "@angular/compiler-cli": "next",
     "@types/express": "^4.17.21",
     "@types/jasmine": "~5.1.0",
     "@types/node": "^22.0.0",
@@ -42,6 +42,6 @@
     "karma-coverage": "~2.2.0",
     "karma-jasmine": "~5.1.0",
     "karma-jasmine-html-reporter": "~2.1.0",
-    "typescript": "~5.9.3"
+    "typescript": ">=6.0.0 <6.1.0"
   }
 }

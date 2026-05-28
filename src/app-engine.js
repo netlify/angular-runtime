@@ -7,6 +7,10 @@ import { env } from 'node:process'
 export function getAllowedHosts() {
   const defaultAllowedHosts = []
 
+  if (env.NETLIFY_LOCAL === 'true') {
+    return defaultAllowedHosts
+  }
+
   let deployId
   let deployPrimeUrlHostname
   let siteId

@@ -62,6 +62,7 @@
     "pretest:fixtures:angular-20": "cd tests/fixtures/angular-20 && npm ci",
     "pretest:fixtures:angular-20-zoneless": "cd tests/fixtures/angular-20-zoneless && npm ci",
     "pretest:fixtures:angular-21": "cd tests/fixtures/angular-21 && npm ci",
+    "pretest:fixtures:angular-22": "cd tests/fixtures/angular-22 && npm ci",
     "pretest:fixtures:nx-angular-19-common-engine": "cd tests/fixtures/nx-angular-19-common-engine && npm ci",
     "pretest:fixtures:nx-angular-19-app-engine": "cd tests/fixtures/nx-angular-19-app-engine && npm ci",
     "pretest": "run-s pretest:*",
@@ -101,7 +102,7 @@
   },
   "jest": {
     "testMatch": [
-      "**/test/**/*.js"
+      "**/test/**/*.test.js"
     ],
     "verbose": true,
     "testTimeout": 60000
