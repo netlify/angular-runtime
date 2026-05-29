@@ -22,7 +22,7 @@
     "@angular/router": "next",
     "@angular/ssr": "next",
     "@netlify/angular-runtime": "file:..",
-    "@netlify/edge-functions": "^3.0.7",
+    "@netlify/edge-functions": "^3.0.8",
     "express": "^4.21.0",
     "rxjs": "~7.8.0",
     "tslib": "^2.3.0",
