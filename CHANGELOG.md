@@ -1,5 +1,22 @@
 # Changelog
 
+## [4.0.0](https://github.com/netlify/angular-runtime/compare/v3.0.1...v4.0.0) (2026-06-01)
+
+
+### ⚠ BREAKING CHANGES
+
+* require Node 22+ and ship as ESM ([#424](https://github.com/netlify/angular-runtime/issues/424))
+
+### Features
+
+* automatically configure Netlify-specific default `allowedHosts` and `trustProxyHeaders` values for `@angular/ssr@22`. Without these settings, Angular SSR returns 400 Bad Request responses. ([#427](https://github.com/netlify/angular-runtime/issues/427)) ([991174a](https://github.com/netlify/angular-runtime/commit/991174adeb9701ecf77fe61299df18ccd7664f24))
+* require Node 22+ and ship as ESM ([#424](https://github.com/netlify/angular-runtime/issues/424)) ([7c188c2](https://github.com/netlify/angular-runtime/commit/7c188c26e0d70b11dbe45b0127f8e70f771551b7))
+
+
+### Bug Fixes
+
+* generate default allowedHosts with available variables instead of skipping all due to a single missing one ([#441](https://github.com/netlify/angular-runtime/issues/441)) ([2fccaf1](https://github.com/netlify/angular-runtime/commit/2fccaf15ca3c7d0e113570d7a03dad07b4d7f27d))
+
 ## [3.0.1](https://github.com/netlify/angular-runtime/compare/v3.0.0...v3.0.1) (2025-11-07)
 
 
