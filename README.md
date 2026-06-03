@@ -33,7 +33,7 @@ Netlify automatically detects Angular projects and sets up the latest version of
 
 There's no further configuration needed from Netlify users.
 
-### For Angular 19 and Angular 20
+### For Angular 19+
 
 If you are using Server-Side Rendering you will need to install Angular Runtime in your Angular project to be able to import required utilities to successfully deploy request handler to Netlify. See [Manual Installation](#manual-installation) for installations details. See [Request handling](#request-handling) for more information about request handler.
 
